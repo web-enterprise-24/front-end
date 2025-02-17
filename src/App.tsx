@@ -1,27 +1,38 @@
-import { useRef } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useShallow } from "zustand/shallow";
+
+import { Home, Management, Dashboard, Message } from "./pages";
+import MainLayout from "./layouts/MainLayout";
+import { Modal } from "./components";
+import { useGeneralStore } from "./store";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
- const modalRef = useRef<HTMLDialogElement>(null);
+ const [setModalElement, isShowingModal] = useGeneralStore(
+  useShallow((state) => [state.setModalElement, state.isShowingModal])
+ );
+
+ const modalRef = useRef<HTMLDialogElement | null>(null);
+
+ useEffect(() => {
+  if (modalRef.current) {
+   setModalElement(modalRef.current);
+  }
+ }, [modalRef]);
+
  return (
-  <div className="font-koh-santepheap w-screen h-screen bg-green-300">
-   <button
-    className="btn font-light"
-    onClick={() => modalRef.current?.showModal()}
-   >
-    open modal
-   </button>
-   <dialog ref={modalRef} id="my_modal_3" className="modal">
-    <div className="modal-box">
-     <form method="dialog">
-      {/* if there is a button in form, it will close the modal */}
-      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-       ✕
-      </button>
-     </form>
-     <h3 className="font-bold text-lg">Hello!</h3>
-     <p className="py-4">Press ESC key or click on ✕ button to close</p>
-    </div>
-   </dialog>
+  <div className="font-koh-santepheap">
+   <Routes>
+    <Route element={<MainLayout />}>
+     <Route path="/" element={<Home />} />
+    </Route>
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/management" element={<Management />} />
+    <Route path="/message" element={<Message />} />
+   </Routes>
+   <Modal ref={modalRef} />
+   {!isShowingModal && <Toaster position="top-center" />}
   </div>
  );
 };
