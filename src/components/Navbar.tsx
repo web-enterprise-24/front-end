@@ -9,7 +9,7 @@ const Navbar = () => {
      <img
       className="w-full h-full object-cover"
       src="/logo-background-transparent.webp"
-      alt="Logo"
+      alt="Logo"  
      />
     </div>
     <nav className="h-full flex flex-row gap-6">
@@ -47,9 +47,10 @@ const Navbar = () => {
        </li>
       </ul>
      </div>
-    </div>
+    </div>  
    </div>
   </div>
+  
  );
 };
 
