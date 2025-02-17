@@ -1,11 +1,23 @@
 import { House, MessageCircleMore, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 import MobileNavbar from "./MobileNavbar";
 import { SidebarHomeItems, UserDropdownItems } from "../constants";
 import Dropdown from "./Dropdown";
+import { useAuthStore, useGeneralStore } from "../store";
 
 const Navbar = () => {
+ const [modalElement, setIsShowingModal] = useGeneralStore(
+  useShallow((state) => [state.modalElement, state.setIsShowingModal])
+ );
+ const authUser = useAuthStore((state) => state.authUser);
+
+ const handleClickLogin = () => {
+  modalElement?.showModal();
+  setIsShowingModal();
+ };
+
  return (
   <div className="max-md:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
    <MobileNavbar items={SidebarHomeItems} />
@@ -33,23 +45,31 @@ const Navbar = () => {
        className="input input-bordered border-2 rounded-full w-24 h-10 md:w-auto"
       />
      </div>
-     <Dropdown items={[]} variant={"notification"}>
-      <div tabIndex={0} className="relative w-7 h-7 cursor-pointer">
-       <span className="animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline" />
-       <span className="w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline" />
-       <Bell className="w-full h-full" />
-      </div>
-     </Dropdown>
-     <Dropdown items={UserDropdownItems} variant={"user"}>
-      <div tabIndex={0} className="avatar cursor-pointer">
-       <div className="w-14 rounded-full">
-        <img
-         src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-         alt="Avatar"
-        />
-       </div>
-      </div>
-     </Dropdown>
+     {authUser ? (
+      <>
+       <Dropdown items={[]} variant={"notification"}>
+        <div tabIndex={0} className="relative w-7 h-7 cursor-pointer">
+         <span className="animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline" />
+         <span className="w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline" />
+         <Bell className="w-full h-full" />
+        </div>
+       </Dropdown>
+       <Dropdown items={UserDropdownItems} variant={"user"}>
+        <div tabIndex={0} className="avatar cursor-pointer">
+         <div className="w-14 rounded-full">
+          <img
+           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+           alt="Avatar"
+          />
+         </div>
+        </div>
+       </Dropdown>
+      </>
+     ) : (
+      <button className="btn btn-primary rounded-xl" onClick={handleClickLogin}>
+       Login
+      </button>
+     )}
     </div>
    </div>
   </div>

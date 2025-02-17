@@ -10,7 +10,7 @@ type PropsType = {
 
 const Sidebar = ({ items }: PropsType) => {
  return (
-  <div className="drawer md:hidden w-[58px]">
+  <div className="drawer md:hidden w-[58px] ">
    <input id="my-drawer" type="checkbox" className="drawer-toggle" />
    <div className="drawer-content">
     {/* Page content here */}
@@ -21,13 +21,13 @@ const Sidebar = ({ items }: PropsType) => {
      <Menu />
     </label>
    </div>
-   <div className="drawer-side">
+   <div className="drawer-side z-[9999]">
     <label
      htmlFor="my-drawer"
      aria-label="close sidebar"
      className="drawer-overlay"
     ></label>
-    <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+    <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 z-[9999]">
      {/* Sidebar content here */}
      <div className="w-full flex flex-col items-center gap-2 pb-2 border-b border-md border-accent-content">
       <div className="avatar">
