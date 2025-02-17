@@ -1,11 +1,11 @@
 import { Upcoming } from "../components";
 
-const Home = () => {
+const Message = () => {
  return (
-  <div className="w-screen h-screen">
+  <div>
    <Upcoming />
   </div>
  );
 };
 
-export default Home;
+export default Message;
