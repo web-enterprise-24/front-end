@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import { Home, Management, Dashboard } from "./pages";
+import { Home, Management, Dashboard, Message } from "./pages";
 import MainLayout from "./layouts/MainLayout";
 
 const App = () => {
@@ -9,9 +9,10 @@ const App = () => {
    <Routes>
     <Route element={<MainLayout />}>
      <Route path="/" element={<Home />} />
-     <Route path="/dashboard" element={<Dashboard />} />
-     <Route path="/management" element={<Management />} />
     </Route>
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/management" element={<Management />} />
+    <Route path="/message" element={<Message />} />
    </Routes>
   </div>
  );

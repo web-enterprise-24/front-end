@@ -1,5 +1,11 @@
+import { Upcoming } from "../components";
+
 const Dashboard = () => {
- return <div>Dashboard</div>;
+ return (
+  <div>
+   <Upcoming />
+  </div>
+ );
 };
 
 export default Dashboard;
