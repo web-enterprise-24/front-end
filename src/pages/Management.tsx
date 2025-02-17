@@ -1,5 +1,11 @@
+import { Upcoming } from "../components";
+
 const Management = () => {
- return <div>Management</div>;
+ return (
+  <div>
+   <Upcoming />
+  </div>
+ );
 };
 
 export default Management;
