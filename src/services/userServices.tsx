@@ -1,3 +1,5 @@
+import { isAxiosError } from "axios";
+
 import { axios } from "../utils";
 
 import { UserLoginType, UserSignUpType } from "../types";
@@ -12,8 +14,8 @@ export const getCurrentUser = async (token: string | null) => {
    },
   });
   return res.data.data;
- } catch (err) {
-  console.log(err);
+ } catch (err: unknown) {
+  if (isAxiosError(err)) throw err;
  }
 };
 
@@ -26,8 +28,8 @@ export const signup = async (data: UserSignUpType) => {
    },
   });
   return res.data.data;
- } catch (err) {
-  console.log(err);
+ } catch (err: unknown) {
+  if (isAxiosError(err)) throw err;
  }
 };
 
@@ -40,7 +42,21 @@ export const login = async (data: UserLoginType) => {
    },
   });
   return res.data.data;
- } catch (err) {
-  console.log(err);
+ } catch (err: unknown) {
+  if (isAxiosError(err)) throw err;
+ }
+};
+
+export const logout = async (token: string | null) => {
+ try {
+  await axios.get("/logout", {
+   headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+    "x-api-key": import.meta.env.VITE_X_API_KEY,
+   },
+  });
+ } catch (err: unknown) {
+  if (isAxiosError(err)) throw err;
  }
 };

@@ -8,9 +8,10 @@ import { useShallow } from "zustand/shallow";
 type PropsType = {
  page?: string;
  items?: SidebarItemsHomeType[];
+ onClick?: (title?: string) => void;
 };
 
-const Sidebar = ({ items, page }: PropsType) => {
+const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
  const authUser = useAuthStore((state) => state.authUser);
  const [modalElement, setIsShowingModal, setForm] = useGeneralStore(
   useShallow((state) => [
@@ -45,15 +46,17 @@ const Sidebar = ({ items, page }: PropsType) => {
        <>
         <div className="avatar">
          <div className="w-20 rounded-full">
-          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          <img src={authUser.profilePicUrl} alt="Avatar" />
          </div>
         </div>
-        <p>Bruno Mar</p>
-        {page === "home" && (
-         <Link to="/management" className="text-xs italic underline">
-          Go to management page
-         </Link>
-        )}
+        <p>{authUser.name}</p>
+        {page === "home" &&
+         authUser &&
+         authUser.roles?.[0]?.code === "ADMIN" && (
+          <Link to="/management" className="text-xs italic underline">
+           Go to management page
+          </Link>
+         )}
        </>
       ) : (
        <div className="flex flex-row gap-2">
@@ -97,6 +100,7 @@ const Sidebar = ({ items, page }: PropsType) => {
            className={`mt-2 ${
             item.title === "Logout" && !authUser && "hidden"
            }`}
+           onClick={() => onClick(item.title)}
           >
            <Component {...prop}>
             <item.icon />

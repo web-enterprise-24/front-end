@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import { UserType, UserSignUpType, UserLoginType } from "../types";
-import { getCurrentUser, login, signup } from "../services";
+import { getCurrentUser, login, logout, signup } from "../services";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
@@ -14,6 +14,7 @@ type AuthStoreType = {
  authUser: UserType | null;
  signUpUser: (data: UserSignUpType) => void;
  loginUser: (data: UserLoginType) => void;
+ logoutUser: (accessToken: string | null) => void;
  checkAuth: (accessToken: string | null) => void;
 };
 
@@ -51,13 +52,12 @@ const useAuthStore = create<AuthStoreType>((set) => ({
    set({ refreshToken: res.tokens.refreshToken });
    localStorage.setItem("access", res.tokens.accessToken);
    toast.success("Signed up successfully");
-   setTimeout(() => window.location.reload(), 1500);
+   setTimeout(() => (window.location.href = "/"), 1500);
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err.response?.data?.message);
     toast.error("Sign up failed");
    }
-   toast.error("Sign up failed");
    set({ authUser: null });
    set({ accessToken: null });
    set({ refreshToken: null });
@@ -74,14 +74,36 @@ const useAuthStore = create<AuthStoreType>((set) => ({
    set({ refreshToken: res.tokens.refreshToken });
    localStorage.setItem("access", res.tokens.accessToken);
    toast.success("Logged in successfully");
-   setTimeout(() => window.location.reload(), 1500);
+   setTimeout(() => (window.location.href = "/"), 1500);
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err.response?.data?.message);
-    toast.error("Log in failed");
+    if ([400, 401, 402, 403].includes(err.response?.status || 0)) {
+     toast.error(err.response?.data?.message);
+    } else {
+     toast.error("Log in failed");
+    }
    }
+   set({
+    authUser: null,
+    accessToken: null,
+    refreshToken: null,
+   });
   } finally {
    set({ isLoggingIn: false });
+  }
+ },
+ logoutUser() {
+  try {
+   logout(accessToken);
+   localStorage.removeItem("access");
+   toast.success("Logged out successfully");
+   setTimeout(() => (window.location.href = "/"), 1500);
+  } catch (err) {
+   if (err instanceof AxiosError) {
+    console.log(err.response?.data?.message);
+    toast.error(err.response?.data?.message);
+   }
   }
  },
 }));

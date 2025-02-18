@@ -11,7 +11,7 @@ const items: UserDropdownItemsType[] = [
  },
  {
   id: 2,
-  title: "Logout",
+  title: "Log out",
   icon: LogOut,
  },
 ];
