@@ -18,22 +18,6 @@ const Modal = forwardRef(
   return (
    <dialog ref={ref} className="modal modal-lg">
     <div className="modal-box hero-content flex-col lg:flex-row w-full max-w-4xl h-[70vh]">
-    <button className="btn btn-circle top-4 right-4 absolute "
-    onClick={() => ref.current?.close()}
-    >
-    <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor">
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M6 18L18 6M6 6l12 12" />
-  </svg>
-</button>
     <div className="text-center lg:text-left">
      <Toaster position="top-center" />
      <div className="flex flex-col items-center gap-3">
