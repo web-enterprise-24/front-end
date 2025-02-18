@@ -5,6 +5,7 @@ type UserDropdownItemsType = {
  title: string;
  icon: LucideIcon;
  to?: string;
+ onClick?: () => void;
 };
 
 export default UserDropdownItemsType;

@@ -1,14 +1,26 @@
-import { Eye, EyeClosed } from "lucide-react";
-import { useState } from "react";
+import { Eye, EyeClosed, LoaderCircle } from "lucide-react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { UserLoginType } from "../types";
 import { useAuthStore } from "../store";
+import { useShallow } from "zustand/shallow";
 
 const LoginForm = () => {
- const loginUser = useAuthStore((state) => state.loginUser);
+ const [loginUser, isLoggingIn] = useAuthStore(
+  useShallow((state) => [state.loginUser, state.isLoggingIn])
+ );
  const [userData, setUserData] = useState<UserLoginType>({});
  const [showPassword, setShowPassword] = useState(false);
+
+ const loginBtnRef = useRef<HTMLButtonElement | null>(null);
+ window.onkeydown = (e) => {
+  if (e.key === "Enter") {
+   if (loginBtnRef.current) {
+    loginBtnRef.current.click();
+   }
+  }
+ };
 
  const handleChangeInput = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -74,11 +86,8 @@ const LoginForm = () => {
       )}
      </div>
     </label>
-    <button
-     className="btn btn-primary"
-     onClick={() => toast.error("Test toaster")}
-    >
-     Log in
+    <button ref={loginBtnRef} className="btn btn-primary">
+     {isLoggingIn ? <LoaderCircle className="animate-spin" /> : "Log in"}
     </button>
    </form>
    <p className="text-sm font-normal italic mt-2 cursor-pointer">
