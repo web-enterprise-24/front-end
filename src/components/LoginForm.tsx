@@ -28,7 +28,7 @@ const LoginForm = () => {
  };
  return (
   <>
-   <form onSubmit={(e) => handleSubmit(e)} className="mt-8 flex flex-col gap-6">
+   <form onSubmit={(e) => handleSubmit(e)} className="card-body">
     <label className="input input-bordered flex items-center gap-2">
      <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +64,7 @@ const LoginForm = () => {
       type={showPassword ? "text" : "password"}
       className="grow"
       autoComplete="off"
+      placeholder="Password"
       onChange={(e) => handleChangeInput(e, "password")}
      />
      <div className="mr-2 flex items-center absolute right-0">
@@ -74,16 +75,16 @@ const LoginForm = () => {
       )}
      </div>
     </label>
+    <p className="text-sm font-normal italic mt-2 cursor-pointer">
+    Forgot your password?
+   </p>
     <button
-     className="btn btn-primary"
+     className="btn btn-primary "
      onClick={() => toast.error("Test toaster")}
     >
      Log in
     </button>
    </form>
-   <p className="text-sm font-normal italic mt-2 cursor-pointer">
-    Forgot your password?
-   </p>
   </>
  );
 };

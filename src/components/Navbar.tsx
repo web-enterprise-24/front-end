@@ -35,14 +35,16 @@ const Navbar = () => {
    {/* Large screen nav */}
    <div className="hidden md:flex flex-row justify-between container mx-auto px-4 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
+    <Link to={"/"} className="h-full flex items-center cursor-pointer">
      <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
+     </Link>
     </div>
-    <nav className="h-full flex flex-row gap-6">
+    <nav className="h-full flex flex-row gap-6 ">
      <Link to={"/"} className="h-full flex items-center cursor-pointer">
       <House className="w-8 h-8" />
      </Link>
      <Link to={"/message"} className="h-full flex items-center cursor-pointer">
-      <MessageCircleMore className="w-8 h-8" />
+      <MessageCircleMore className="w-8 h-8"/>
      </Link>
     </nav>
     <div className="flex flex-row h-full items-center gap-8">
@@ -87,7 +89,7 @@ const Navbar = () => {
        >
         Log in
        </button>
-       <button className="btn btn-ghost" onClick={handleClickSignup}>
+       <button className="btn btn-ghost rounded-xl" onClick={handleClickSignup}>
         Sign up
        </button>
       </div>
