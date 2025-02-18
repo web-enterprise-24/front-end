@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/shallow";
+import { Toaster } from "react-hot-toast";
 
 import { Home, Management, Dashboard, Message } from "./pages";
-import MainLayout from "./layouts/MainLayout";
+import { MainLayout, LayoutSidebar } from "./layouts";
 import { Modal } from "./components";
 import { useGeneralStore } from "./store";
-import { Toaster } from "react-hot-toast";
 
 const App = () => {
  const [setModalElement, isShowingModal] = useGeneralStore(
@@ -19,6 +19,7 @@ const App = () => {
   if (modalRef.current) {
    setModalElement(modalRef.current);
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [modalRef]);
 
  return (
@@ -26,10 +27,16 @@ const App = () => {
    <Routes>
     <Route element={<MainLayout />}>
      <Route path="/" element={<Home />} />
+     <Route path="/message" element={<Message />} />
+    </Route>
+    <Route element={<LayoutSidebar />}>
+     <Route path="/management" element={<Management />}>
+      <Route path="add-user" element={<p>Add new user</p>} />
+      <Route path="student-management" element={<p>Student management</p>} />
+      <Route path="tutor-management" element={<p>Tutor management</p>} />
+     </Route>
     </Route>
     <Route path="/dashboard" element={<Dashboard />} />
-    <Route path="/management" element={<Management />} />
-    <Route path="/message" element={<Message />} />
    </Routes>
    <Modal ref={modalRef} />
    {!isShowingModal && <Toaster position="top-center" />}
