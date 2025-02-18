@@ -66,7 +66,7 @@ const SignupForm = () => {
 
  return (
   <>
-   <form onSubmit={(e) => handleSubmit(e)} className="mt-8 flex flex-col gap-6">
+   <form onSubmit={(e) => handleSubmit(e)} className="card-body">
     <label className="input input-bordered flex items-center gap-2">
      <svg
       xmlns="http://www.w3.org/2000/svg"
