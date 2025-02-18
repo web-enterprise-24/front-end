@@ -13,7 +13,7 @@ const MobileNavbar = ({ items }: PropsType) => {
  return (
   <>
    {/* Mobile nav */}
-   <Sidebar items={items} />
+   <Sidebar items={items} page="home" />
    <div className=" md:hidden w-24 h-full">
     <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
    </div>
