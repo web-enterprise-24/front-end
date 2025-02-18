@@ -16,7 +16,7 @@ const Modal = forwardRef(
   const form = useGeneralStore((state) => state.form);
 
   return (
-   <dialog ref={ref} className="modal modal-lg">
+   <dialog ref={ref} className="modal">
     <div className="modal-box">
      <Toaster position="top-center" />
      <div className="flex flex-col items-center gap-4">
