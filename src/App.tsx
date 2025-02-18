@@ -6,9 +6,17 @@ import { Toaster } from "react-hot-toast";
 import { Home, Management, Dashboard, Message } from "./pages";
 import { MainLayout, LayoutSidebar } from "./layouts";
 import { Modal } from "./components";
-import { useGeneralStore } from "./store";
+import { useAuthStore, useGeneralStore } from "./store";
+import { Loader } from "lucide-react";
 
 const App = () => {
+ const [isCheckingAuth, checkAuth, accessToken] = useAuthStore(
+  useShallow((state) => [
+   state.isCheckingAuth,
+   state.checkAuth,
+   state.accessToken,
+  ])
+ );
  const [setModalElement, isShowingModal] = useGeneralStore(
   useShallow((state) => [state.setModalElement, state.isShowingModal])
  );
@@ -16,11 +24,22 @@ const App = () => {
  const modalRef = useRef<HTMLDialogElement | null>(null);
 
  useEffect(() => {
-  if (modalRef.current) {
+  checkAuth(accessToken);
+ }, []);
+
+ useEffect(() => {
+  if (!isCheckingAuth && modalRef.current) {
    setModalElement(modalRef.current);
   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [modalRef]);
+ }, [isCheckingAuth, modalRef, setModalElement]);
+
+ if (isCheckingAuth) {
+  return (
+   <div className="w-screen h-screen flex items-center justify-center">
+    <Loader className="size-30 animate-spin" />
+   </div>
+  );
+ }
 
  return (
   <div className="font-koh-santepheap">

@@ -7,9 +7,10 @@ type Props = {
  children: ReactNode;
  items: UserDropdownItemsType[];
  variant: "notification" | "user";
+ onClick?: (title?: string) => void;
 };
 
-const Dropdown = ({ children, items, variant }: Props) => {
+const Dropdown = ({ children, items, variant, onClick = () => {} }: Props) => {
  if (variant === "user") {
   return (
    <div className="dropdown dropdown-end">
@@ -28,7 +29,7 @@ const Dropdown = ({ children, items, variant }: Props) => {
        }
 
        return (
-        <li key={item.id}>
+        <li key={item.id} onClick={() => onClick(item.title)}>
          <Component {...prop}>
           <item.icon />
           {item.title}

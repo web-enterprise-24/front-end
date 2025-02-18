@@ -28,7 +28,7 @@ const items: SidebarItemsHomeType[] = [
  },
  {
   id: 4,
-  title: "Logout",
+  title: "Log out",
   icon: LogOut,
  },
 ];

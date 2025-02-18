@@ -8,25 +8,42 @@ import Dropdown from "./Dropdown";
 import { useAuthStore, useGeneralStore } from "../store";
 
 const Navbar = () => {
- const [modalElement, setIsShowingModal] = useGeneralStore(
-  useShallow((state) => [state.modalElement, state.setIsShowingModal])
+ const [modalElement, setForm, setIsShowingModal] = useGeneralStore(
+  useShallow((state) => [
+   state.modalElement,
+   state.setForm,
+   state.setIsShowingModal,
+  ])
  );
- const authUser = useAuthStore((state) => state.authUser);
+ const [authUser, accessToken, logoutUser] = useAuthStore(
+  useShallow((state) => [state.authUser, state.accessToken, state.logoutUser])
+ );
 
  const handleClickLogin = () => {
+  setForm("login");
   modalElement?.showModal();
   setIsShowingModal();
  };
 
- return (
+ const handleClickSignup = () => {
+  setForm("signup");
+  modalElement?.showModal();
+  setIsShowingModal();
+ };
 
+ const handleClickItem = (title?: string) => {
+  if (title === "Log out") {
+   logoutUser(accessToken);
+  }
+ };
+
+ return (
   <div className="max-md:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
    <MobileNavbar items={SidebarHomeItems} />
    {/* Large screen nav */}
    <div className="hidden md:flex flex-row justify-between container mx-auto px-4 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
      <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
-
     </div>
     <nav className="h-full flex flex-row gap-6">
      <Link to={"/"} className="h-full flex items-center cursor-pointer">
@@ -37,9 +54,11 @@ const Navbar = () => {
      </Link>
     </nav>
     <div className="flex flex-row h-full items-center gap-8">
-     <Link to={"/management"} className="btn btn-ghost font-bold">
-      Management
-     </Link>
+     {authUser && authUser.roles?.[0]?.code === "ADMIN" && (
+      <Link to={"/management"} className="btn btn-ghost font-bold">
+       Management
+      </Link>
+     )}
      <div className="form-control">
       <input
        type="text"
@@ -57,27 +76,34 @@ const Navbar = () => {
          <Bell className="w-full h-full" />
         </div>
        </Dropdown>
-       <Dropdown items={UserDropdownItems} variant={"user"}>
+       <Dropdown
+        items={UserDropdownItems}
+        variant={"user"}
+        onClick={handleClickItem}
+       >
         <div tabIndex={0} className="avatar cursor-pointer">
          <div className="w-14 rounded-full">
-          <img
-           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-           alt="Avatar"
-          />
+          <img src={authUser.profilePicUrl} alt="Avatar" />
          </div>
         </div>
        </Dropdown>
       </>
      ) : (
-      <button className="btn btn-primary rounded-xl" onClick={handleClickLogin}>
-       Login
-      </button>
+      <div className="flex flex-row gap-1">
+       <button
+        className="btn btn-primary rounded-xl"
+        onClick={handleClickLogin}
+       >
+        Log in
+       </button>
+       <button className="btn btn-ghost" onClick={handleClickSignup}>
+        Sign up
+       </button>
+      </div>
      )}
     </div>
-
    </div>
   </div>
-  
  );
 };
 
