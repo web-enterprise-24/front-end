@@ -11,7 +11,7 @@ type PropsType = {
 };
 
 const Modal = forwardRef(
- (props: PropsType, ref: ForwardedRef<HTMLDialogElement>) => {
+ (_: PropsType, ref: ForwardedRef<HTMLDialogElement>) => {
   const [setIsShowingModal, setIsClosingModal, isShowingModal, modalFor] =
    useGeneralStore(
     useShallow((state) => [
