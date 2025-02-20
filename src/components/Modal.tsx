@@ -29,7 +29,7 @@ const Modal = forwardRef(
     <div
      className={`modal-box ${
       modalFor === "login" &&
-      "hero-content flex-col lg:flex-row w-full max-w-4xl h-[70vh]"
+      "hero-content flex-col lg:flex-row w-lg max-w-4xl h-[70vh]"
      }`}
     >
      {modalFor === "login" && (
