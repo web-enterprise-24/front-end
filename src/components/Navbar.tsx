@@ -8,11 +8,11 @@ import Dropdown from "./Dropdown";
 import { useAuthStore, useGeneralStore } from "../store";
 
 const Navbar = () => {
- const [modalElement, setForm, setIsShowingModal] = useGeneralStore(
+ const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
   useShallow((state) => [
    state.modalElement,
-   state.setForm,
    state.setIsShowingModal,
+   state.setModalFor,
   ])
  );
  const [authUser, accessToken, logoutUser] = useAuthStore(
@@ -20,15 +20,9 @@ const Navbar = () => {
  );
 
  const handleClickLogin = () => {
-  setForm("login");
   modalElement?.showModal();
-  setIsShowingModal();
- };
-
- const handleClickSignup = () => {
-  setForm("signup");
-  modalElement?.showModal();
-  setIsShowingModal();
+  setIsShowingModal(true);
+  setModalFor("login");
  };
 
  const handleClickItem = (title?: string) => {
@@ -38,13 +32,13 @@ const Navbar = () => {
  };
 
  return (
-  <div className="max-md:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
+  <div className="max-lg:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
    <MobileNavbar items={SidebarHomeItems} />
    {/* Large screen nav */}
-   <div className="hidden md:flex flex-row justify-between container mx-auto px-4 max-[821px]:px-2 w-full h-full ">
+   <div className="hidden lg:flex flex-row justify-between container mx-auto px-4 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
-    <Link to={"/"} className="h-full flex items-center cursor-pointer">
-     <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
+     <Link to={"/"} className="h-full flex items-center cursor-pointer">
+      <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
      </Link>
     </div>
     <nav className="h-full flex flex-row gap-6 ">
@@ -52,11 +46,11 @@ const Navbar = () => {
       <House className="w-8 h-8" />
      </Link>
      <Link to={"/message"} className="h-full flex items-center cursor-pointer">
-      <MessageCircleMore className="w-8 h-8"/>
+      <MessageCircleMore className="w-8 h-8" />
      </Link>
     </nav>
     <div className="flex flex-row h-full items-center gap-8">
-     {authUser && authUser.roles?.[0]?.code === "ADMIN" && (
+     {authUser && authUser.roles?.[0]?.code === "STAFF" && (
       <Link to={"/management"} className="btn btn-ghost font-bold">
        Management
       </Link>
@@ -78,6 +72,10 @@ const Navbar = () => {
          <Bell className="w-full h-full" />
         </div>
        </Dropdown>
+       <div className="flex flex-col items-end justify-center">
+        <p className="font-bold">{authUser?.name}</p>
+        <p className="text-sm">{authUser?.roles[0]?.code}</p>
+       </div>
        <Dropdown
         items={UserDropdownItems}
         variant={"user"}
@@ -85,7 +83,7 @@ const Navbar = () => {
        >
         <div tabIndex={0} className="avatar cursor-pointer">
          <div className="w-14 rounded-full">
-          <img src={authUser.profilePicUrl} alt="Avatar" />
+          <img src={authUser?.profilePicUrl?.toString()} alt="Avatar" />
          </div>
         </div>
        </Dropdown>
@@ -97,9 +95,6 @@ const Navbar = () => {
         onClick={handleClickLogin}
        >
         Log in
-       </button>
-       <button className="btn btn-ghost rounded-xl" onClick={handleClickSignup}>
-        Sign up
        </button>
       </div>
      )}

@@ -1,0 +1,13 @@
+.react-datepicker__tab-loop {
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 0;
+ width: 0;
+ /* overflow: hidden; */
+}
+
+/* Remove default triangle */
+.react-datepicker__triangle {
+ display: none;
+}

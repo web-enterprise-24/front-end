@@ -1,9 +1,9 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/shallow";
 import { Toaster } from "react-hot-toast";
 
-import { Home, Management, Dashboard, Message } from "./pages";
+import { Home, Management, Dashboard, Message, AddNew } from "./pages";
 import { MainLayout, LayoutSidebar } from "./layouts";
 import { Modal } from "./components";
 import { useAuthStore, useGeneralStore } from "./store";
@@ -17,8 +17,12 @@ const App = () => {
    state.accessToken,
   ])
  );
- const [setModalElement, isShowingModal] = useGeneralStore(
-  useShallow((state) => [state.setModalElement, state.isShowingModal])
+ const [setModalElement, isShowingModal, isClosingModal] = useGeneralStore(
+  useShallow((state) => [
+   state.setModalElement,
+   state.isShowingModal,
+   state.isClosingModal,
+  ])
  );
 
  const modalRef = useRef<HTMLDialogElement | null>(null);
@@ -40,7 +44,7 @@ const App = () => {
    </div>
   );
  }
-
+ console.log(isShowingModal);
  return (
   <div className="font-koh-santepheap">
    <Routes>
@@ -50,7 +54,8 @@ const App = () => {
     </Route>
     <Route element={<LayoutSidebar />}>
      <Route path="/management" element={<Management />}>
-      <Route path="add-user" element={<p>Add new user</p>} />
+      <Route index element={<Navigate to="add-user" />} />
+      <Route path="add-user" element={<AddNew />} />
       <Route path="student-management" element={<p>Student management</p>} />
       <Route path="tutor-management" element={<p>Tutor management</p>} />
      </Route>
@@ -58,7 +63,16 @@ const App = () => {
     <Route path="/dashboard" element={<Dashboard />} />
    </Routes>
    <Modal ref={modalRef} />
-   {!isShowingModal && <Toaster position="top-center" />}
+   {!isShowingModal && (
+    <Toaster
+     position="top-center"
+     toastOptions={{
+      style: {
+       display: isClosingModal ? "none" : "",
+      },
+     }}
+    />
+   )}
   </div>
  );
 };

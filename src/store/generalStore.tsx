@@ -2,26 +2,36 @@ import { create } from "zustand";
 
 type GeneralType = {
  modalElement: HTMLDialogElement | null;
+ modalFor: "login" | "user-info" | null;
  isShowingModal: boolean;
- form: "login" | "signup";
+ isClosingModal: boolean;
  setModalElement: (element: HTMLDialogElement) => void;
- setIsShowingModal: () => void;
- setForm: (form: GeneralType["form"]) => void;
+ setIsShowingModal: (show: boolean) => void;
+ setIsClosingModal: () => void;
+ setModalFor: (modalFor: "login" | "user-info") => void;
 };
 
 const useGeneralStore = create<GeneralType>((set) => ({
  modalElement: null,
+ modalFor: null,
  isShowingModal: false,
- form: "login",
+ isClosingModal: false,
 
  setModalElement(element: HTMLDialogElement) {
   set({ modalElement: element });
  },
- setIsShowingModal() {
-  set((state) => ({ isShowingModal: !state.isShowingModal }));
+ setIsShowingModal(show) {
+  if (!show) {
+   set({ isShowingModal: show });
+  }
+  set({ isShowingModal: show });
  },
- setForm(form: GeneralType["form"]) {
-  set({ form });
+ setIsClosingModal() {
+  set({ isClosingModal: true });
+  setTimeout(() => set({ isClosingModal: false }), 100);
+ },
+ setModalFor(modalFor) {
+  set({ modalFor });
  },
 }));
 
