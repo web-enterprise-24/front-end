@@ -13,7 +13,7 @@ const NavbarOnlyAvatar = ({ items, page }: PropsType) => {
 
  return (
   <div className="w-full h-16 bg-base shadow-md shadow-base-300">
-   <div className="container mx-auto px-4 max-[821px]:px-2 w-full h-full flex items-center justify-between">
+   <div className="container mx-auto px-8 max-[821px]:px-2 w-full h-full flex items-center justify-between">
     <Sidebar items={items} page={page} />
     <div className="w-24 h-24">
      <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
