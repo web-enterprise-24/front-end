@@ -14,8 +14,12 @@ type PropsType = {
 
 const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
  const authUser = useAuthStore((state) => state.authUser);
- const [modalElement, setIsShowingModal] = useGeneralStore(
-  useShallow((state) => [state.modalElement, state.setIsShowingModal])
+ const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
+  useShallow((state) => [
+   state.modalElement,
+   state.setIsShowingModal,
+   state.setModalFor,
+  ])
  );
 
  const drawerRef = useRef<HTMLInputElement | null>(null);
@@ -73,6 +77,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
         onClick={() => {
          modalElement?.showModal();
          setIsShowingModal(true);
+         setModalFor("login");
         }}
        >
         Log in
