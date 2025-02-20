@@ -44,7 +44,7 @@ const App = () => {
    </div>
   );
  }
- console.log(isShowingModal);
+
  return (
   <div className="font-koh-santepheap">
    <Routes>
