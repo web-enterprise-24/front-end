@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
-import { SidebarManagementType } from "../types";
+import { SidebarType } from "../types";
 import { useState } from "react";
-import { ArrowLeftToLine, SquareChevronLeft, SquareChevronRight } from "lucide-react";
+import {
+ ArrowLeftToLine,
+ SquareChevronLeft,
+ SquareChevronRight,
+} from "lucide-react";
 
 type Props = {
- items: SidebarManagementType[];
+ items: SidebarType[];
 };
 
 const SidebarFixed = ({ items }: Props) => {
@@ -16,14 +20,17 @@ const SidebarFixed = ({ items }: Props) => {
    <div
     className={`${
      isSidebarOpen ? "w-72" : "w-20"
-    } bg-base h-[calc(100vh-64px)] hidden md:flex flex-col justify-between py-16 px-4 shadow-lg shadow-base-300 duration-300 relative`}
+    } bg-base h-[calc(100vh-64px)] hidden min-[1025px]:flex flex-col justify-between py-16 px-4 shadow-lg shadow-base-300 duration-300 relative`}
    >
     <button
      className="absolute top-4 right-4"
      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
     >
-      
-     {isSidebarOpen ? <SquareChevronLeft className="w-6 h-6  " /> : <SquareChevronRight className="w-6 h-6 " />}
+     {isSidebarOpen ? (
+      <SquareChevronLeft className="w-6 h-6  " />
+     ) : (
+      <SquareChevronRight className="w-6 h-6 " />
+     )}
     </button>
     <ul className="w-full flex flex-col gap-6">
      {items &&
@@ -40,17 +47,22 @@ const SidebarFixed = ({ items }: Props) => {
          className="flex flex-row items-center max-[1025px]:justify-center gap-3 text-sm font-normal "
         >
          <item.icon className="w-6 h-6 " />
-         <span className={`${!isSidebarOpen && "hidden"} origin-left duration-200`}>{item.title}</span>
+         <span
+          className={`${!isSidebarOpen && "hidden"} origin-left duration-200`}
+         >
+          {item.title}
+         </span>
         </Link>
        </li>
       ))}
     </ul>
     <Link to={"/"} className="btn btn-outline ">
      <ArrowLeftToLine className="" />
-     <span className={`${!isSidebarOpen && "hidden"} origin-left duration-200`}>Back to home</span>
+     <span className={`${!isSidebarOpen && "hidden"} origin-left duration-200`}>
+      Back to home
+     </span>
     </Link>
    </div>
-   
   </div>
  );
 };

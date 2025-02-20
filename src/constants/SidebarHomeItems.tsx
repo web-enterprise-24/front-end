@@ -1,4 +1,4 @@
-import { SidebarItemsHomeType } from "../types";
+import { SidebarType } from "../types";
 
 import {
  House,
@@ -7,7 +7,7 @@ import {
  MessageCircleMore,
 } from "lucide-react";
 
-const items: SidebarItemsHomeType[] = [
+const items: SidebarType[] = [
  {
   id: 1,
   title: "Home",
@@ -29,6 +29,7 @@ const items: SidebarItemsHomeType[] = [
  {
   id: 4,
   title: "Log out",
+  to: "",
   icon: LogOut,
  },
 ];

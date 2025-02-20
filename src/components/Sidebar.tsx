@@ -1,14 +1,14 @@
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { SidebarItemsHomeType } from "../types";
+import { SidebarType } from "../types";
 import { useAuthStore, useGeneralStore } from "../store";
 import { useShallow } from "zustand/shallow";
 import { useRef } from "react";
 
 type PropsType = {
  page?: string;
- items?: SidebarItemsHomeType[];
+ items?: SidebarType[];
  onClick?: (title?: string) => void;
 };
 
@@ -25,9 +25,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
  const drawerRef = useRef<HTMLInputElement | null>(null);
 
  return (
-  <div
-   className={`drawer md:hidden ${page === "home" && "lg:hidden"} w-[58px]`}
-  >
+  <div className={`drawer lg:hidden w-[58px]`}>
    <input
     id="my-drawer"
     type="checkbox"
@@ -84,7 +82,11 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
        </button>
       )}
      </div>
-     <div className={`${page === "management" && "flex"} flex-col gap-96`}>
+     <div
+      className={`${
+       ["management", "dashboard"].includes(page || "") && "flex"
+      } flex-col gap-96`}
+     >
       <div>
        {items &&
         items.map((item) => {
@@ -118,7 +120,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
          );
         })}
       </div>
-      {page === "management" && (
+      {["management", "dashboard"].includes(page || "") && (
        <Link to={"/"} className="btn bg-primary text-base-300">
         Back to home
        </Link>

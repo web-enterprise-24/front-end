@@ -33,7 +33,7 @@ const Navbar = () => {
 
  return (
   <div className="max-lg:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
-   <MobileNavbar items={SidebarHomeItems} />
+   <MobileNavbar items={SidebarHomeItems} page={"home"} />
    {/* Large screen nav */}
    <div className="hidden lg:flex flex-row justify-between container mx-auto px-4 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
