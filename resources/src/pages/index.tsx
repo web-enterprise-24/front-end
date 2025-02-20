@@ -1,4 +1,0 @@
-export { default as Home } from "./Home";
-export { default as Dashboard } from "./Dashboard";
-export { default as Management } from "./Management";
-export { default as Message } from "./Message";
