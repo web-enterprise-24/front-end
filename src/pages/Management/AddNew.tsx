@@ -4,8 +4,8 @@ import AddStudentForm from "./AddUserForm";
 const AddNew = () => {
  const [tabActive, setTabActive] = useState(1);
  return (
-  <div className="flex flex-col items-center justify-center gap-8">
-   <div role="tablist" className="tabs tabs-boxed font-bold">
+  <div className="flex flex-col items-center justify-center gap-8 mt-6">
+   <div role="tablist" className="tabs tabs-boxed font-bold ">
     <a
      role="tab"
      className={`tab ${tabActive === 1 && "tab-active"}`}
