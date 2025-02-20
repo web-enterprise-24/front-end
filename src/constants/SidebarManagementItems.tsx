@@ -1,7 +1,7 @@
 import { UserPlus, UserRound } from "lucide-react";
-import { SidebarManagementType } from "../types";
+import { SidebarType } from "../types";
 
-const items: SidebarManagementType[] = [
+const items: SidebarType[] = [
  {
   id: 1,
   title: "Add new",

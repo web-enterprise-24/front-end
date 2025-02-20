@@ -1,10 +1,10 @@
 import { LucideIcon } from "lucide-react";
 
-type SidebarItemsHomeType = {
+type SidebarType = {
  id: number;
  title: string;
+ to: string;
  icon: LucideIcon;
- to?: string;
 };
 
-export default SidebarItemsHomeType;
+export default SidebarType;

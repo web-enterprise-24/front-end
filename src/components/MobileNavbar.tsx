@@ -1,7 +1,7 @@
 import { Bell } from "lucide-react";
 
 import Sidebar from "./Sidebar";
-import { SidebarItemsHomeType } from "../types";
+import { SidebarType } from "../types";
 import Dropdown from "./Dropdown";
 
 import { useAuthStore } from "../store";
@@ -9,7 +9,7 @@ import { useShallow } from "zustand/shallow";
 
 type PropsType = {
  page?: string;
- items?: SidebarItemsHomeType[];
+ items?: SidebarType[];
 };
 
 const MobileNavbar = ({ items }: PropsType) => {
