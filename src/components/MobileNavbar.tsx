@@ -27,7 +27,7 @@ const MobileNavbar = ({ items }: PropsType) => {
   <>
    {/* Mobile nav */}
    <Sidebar items={items} page="home" onClick={handleClickItem} />
-   <div className=" md:hidden w-24 h-full">
+   <div className=" lg:hidden w-24 h-full">
     <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
    </div>
    <div className="form-control md:hidden">
@@ -38,7 +38,7 @@ const MobileNavbar = ({ items }: PropsType) => {
     />
    </div>
    {authUser && (
-    <div className="md:hidden">
+    <div className="lg:hidden">
      <Dropdown items={[]} variant={"notification"}>
       <div tabIndex={0} className="relative w-7 h-7 cursor-pointer">
        <span className="animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline" />

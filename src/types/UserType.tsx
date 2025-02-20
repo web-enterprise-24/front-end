@@ -1,17 +1,20 @@
-type RoleType = {
- _id: string;
- code: string;
- status: boolean;
- createdAt: string;
- updatedAt: string;
-};
+import RoleType from "./RolesType";
 
 type UserType = {
  id: string;
- name: string;
  roles: RoleType[];
+ name: string;
  email: string;
- profilePicUrl: string;
+ profilePicUrl: string | ArrayBuffer;
+ dateOfBirth: string;
+ gender: string;
+ address: string;
+ city: string;
+ country: string;
+ verified: boolean;
+ status: boolean;
+ createdAt: string;
+ updatedAt: string;
 };
 
 export default UserType;

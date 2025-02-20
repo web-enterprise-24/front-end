@@ -10,7 +10,7 @@ type Props = {
 const SidebarFixed = ({ items }: Props) => {
  const [sidebarItemActive, setSideBarItemActive] = useState(1);
  return (
-  <div className="w-1/6 h-[calc(100vh-64px)] hidden md:flex flex-col justify-between py-16 px-4 shadow-lg shadow-base-300">
+  <div className="w-1/6 h-[calc(100vh-64px)] hidden md:flex flex-col justify-between mt-1 py-16 px-4 shadow-lg shadow-base-300 bg-base-100 rounded-2xl">
    <ul className="w-full flex flex-col gap-6">
     {items &&
      items.map((item) => (

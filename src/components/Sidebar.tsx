@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { SidebarItemsHomeType } from "../types";
 import { useAuthStore, useGeneralStore } from "../store";
 import { useShallow } from "zustand/shallow";
+import { useRef } from "react";
 
 type PropsType = {
  page?: string;
@@ -13,17 +14,22 @@ type PropsType = {
 
 const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
  const authUser = useAuthStore((state) => state.authUser);
- const [modalElement, setIsShowingModal, setForm] = useGeneralStore(
-  useShallow((state) => [
-   state.modalElement,
-   state.setIsShowingModal,
-   state.setForm,
-  ])
+ const [modalElement, setIsShowingModal] = useGeneralStore(
+  useShallow((state) => [state.modalElement, state.setIsShowingModal])
  );
 
+ const drawerRef = useRef<HTMLInputElement | null>(null);
+
  return (
-  <div className="drawer md:hidden w-[58px] ">
-   <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+  <div
+   className={`drawer md:hidden ${page === "home" && "lg:hidden"} w-[58px]`}
+  >
+   <input
+    id="my-drawer"
+    type="checkbox"
+    className="drawer-toggle"
+    ref={drawerRef}
+   />
    <div className="drawer-content">
     {/* Page content here */}
     <label
@@ -46,41 +52,31 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
        <>
         <div className="avatar">
          <div className="w-20 rounded-full">
-          <img src={authUser.profilePicUrl} alt="Avatar" />
+          <img src={authUser?.profilePicUrl?.toString()} alt="Avatar" />
          </div>
         </div>
-        <p>{authUser.name}</p>
+        <div className="flex flex-col items-center gap-1">
+         <p>{authUser.name}</p>
+         <p className="italic text-[10px]">{authUser.roles[0].code}</p>
+        </div>
         {page === "home" &&
          authUser &&
-         authUser.roles?.[0]?.code === "ADMIN" && (
+         authUser.roles?.[0]?.code === "STAFF" && (
           <Link to="/management" className="text-xs italic underline">
            Go to management page
           </Link>
          )}
        </>
       ) : (
-       <div className="flex flex-row gap-2">
-        <button
-         className="btn btn-primary"
-         onClick={() => {
-          setForm("login");
-          modalElement?.showModal();
-          setIsShowingModal();
-         }}
-        >
-         Log in
-        </button>
-        <button
-         className="btn btn-ghost"
-         onClick={() => {
-          setForm("signup");
-          modalElement?.showModal();
-          setIsShowingModal();
-         }}
-        >
-         Sign up
-        </button>
-       </div>
+       <button
+        className="btn btn-primary w-full"
+        onClick={() => {
+         modalElement?.showModal();
+         setIsShowingModal(true);
+        }}
+       >
+        Log in
+       </button>
       )}
      </div>
      <div className={`${page === "management" && "flex"} flex-col gap-96`}>
@@ -98,11 +94,18 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
           <li
            key={item.id}
            className={`mt-2 ${
-            item.title === "Logout" && !authUser && "hidden"
+            item.title === "Log out" && !authUser && "hidden"
            }`}
            onClick={() => onClick(item.title)}
           >
-           <Component {...prop}>
+           <Component
+            {...prop}
+            onClick={() => {
+             if (drawerRef.current) {
+              drawerRef.current.click();
+             }
+            }}
+           >
             <item.icon />
             {item.title}
            </Component>

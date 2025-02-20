@@ -2,7 +2,7 @@ import { isAxiosError } from "axios";
 
 import { axios } from "../utils";
 
-import { UserLoginType, UserSignUpType } from "../types";
+import { UserLoginType } from "../types";
 
 export const getCurrentUser = async (token: string | null) => {
  try {
@@ -19,19 +19,19 @@ export const getCurrentUser = async (token: string | null) => {
  }
 };
 
-export const signup = async (data: UserSignUpType) => {
- try {
-  const res = await axios.post("/signup/basic", data, {
-   headers: {
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
-  return res.data.data;
- } catch (err: unknown) {
-  if (isAxiosError(err)) throw err;
- }
-};
+// export const signup = async (data: UserSignUpType) => {
+//  try {
+//   const res = await axios.post("/signup/basic", data, {
+//    headers: {
+//     "Content-Type": "application/json",
+//     "x-api-key": import.meta.env.VITE_X_API_KEY,
+//    },
+//   });
+//   return res.data.data;
+//  } catch (err: unknown) {
+//   if (isAxiosError(err)) throw err;
+//  }
+// };
 
 export const login = async (data: UserLoginType) => {
  try {
