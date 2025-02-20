@@ -43,28 +43,6 @@ const useAuthStore = create<AuthStoreType>((set) => ({
   }
  },
 
- //  async signUpUser(data: UserSignUpType) {
- //   try {
- //    set({ isSigningUp: true });
- //    const res = await signup(data);
- //    set({ authUser: res.user });
- //    set({ accessToken: res.tokens.accessToken });
- //    set({ refreshToken: res.tokens.refreshToken });
- //    localStorage.setItem("access", res.tokens.accessToken);
- //    toast.success("Signed up successfully");
- //    setTimeout(() => (window.location.href = "/"), 1500);
- //   } catch (err) {
- //    if (err instanceof AxiosError) {
- //     console.log(err);
- //     toast.error("Sign up failed", err.response?.data?.message);
- //    }
- //    set({ authUser: null });
- //    set({ accessToken: null });
- //    set({ refreshToken: null });
- //   } finally {
- //    set({ isSigningUp: false });
- //   }
- //  },
  async loginUser(data) {
   try {
    set({ isLoggingIn: true });

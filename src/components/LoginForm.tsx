@@ -1,5 +1,5 @@
 import { Eye, EyeClosed, LoaderCircle } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { UserLoginType } from "../types";
@@ -12,15 +12,6 @@ const LoginForm = () => {
  );
  const [userData, setUserData] = useState<UserLoginType>({});
  const [showPassword, setShowPassword] = useState(false);
-
- const loginBtnRef = useRef<HTMLButtonElement | null>(null);
- window.onkeydown = (e) => {
-  if (e.key === "Enter") {
-   if (loginBtnRef.current) {
-    loginBtnRef.current.click();
-   }
-  }
- };
 
  const handleChangeInput = (
   e: React.ChangeEvent<HTMLInputElement>,
@@ -38,6 +29,7 @@ const LoginForm = () => {
   //   Call api
   loginUser(userData);
  };
+
  return (
   <>
    <form onSubmit={(e) => handleSubmit(e)} className="card-body">
@@ -88,9 +80,9 @@ const LoginForm = () => {
      </div>
     </label>
     <p className="text-sm font-normal italic mt-2 cursor-pointer">
-    Forgot your password?
-   </p>
-    <button ref={loginBtnRef} className="btn btn-primary">
+     Forgot your password?
+    </p>
+    <button className="btn btn-primary">
      {isLoggingIn ? <LoaderCircle className="animate-spin" /> : "Log in"}
     </button>
    </form>
