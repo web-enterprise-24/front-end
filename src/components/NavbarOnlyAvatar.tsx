@@ -18,7 +18,7 @@ const NavbarOnlyAvatar = ({ items, page }: PropsType) => {
     <div className="w-24 h-24">
      <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
     </div>
-    <div className="hidden min-[1025px]:flex flex-row items-center gap-6">
+    <div className="hidden xl:flex flex-row items-center gap-6">
      <div className="flex flex-col items-end justify-center">
       <p className="font-bold">{authUser?.name}</p>
       <p className="text-sm">{authUser?.roles[0]?.code}</p>

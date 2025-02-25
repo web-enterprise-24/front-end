@@ -25,7 +25,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
  const drawerRef = useRef<HTMLInputElement | null>(null);
 
  return (
-  <div className={`drawer lg:hidden w-[58px]`}>
+  <div className={`drawer xl:hidden w-[58px]`}>
    <input
     id="my-drawer"
     type="checkbox"

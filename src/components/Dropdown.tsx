@@ -1,17 +1,17 @@
 import React, { ReactNode } from "react";
 
-import { UserDropdownItemsType } from "../types";
+import { DropdownItemsType } from "../types";
 import { Link } from "react-router-dom";
 
 type Props = {
  children: ReactNode;
- items: UserDropdownItemsType[];
- variant: "notification" | "user";
+ items: DropdownItemsType[];
+ variant: "notification" | "user" | "management-action";
  onClick?: (title?: string) => void;
 };
 
 const Dropdown = ({ children, items, variant, onClick = () => {} }: Props) => {
- if (variant === "user") {
+ if (["user", "management-action"].includes(variant)) {
   return (
    <div className="dropdown dropdown-end">
     {children}

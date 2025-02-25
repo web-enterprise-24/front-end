@@ -5,6 +5,7 @@ import LoginForm from "./LoginForm";
 import { useGeneralStore } from "../store";
 import { useShallow } from "zustand/shallow";
 import UserInfo from "./UserInfo";
+import EditUserForm from "./EditUserForm";
 
 type PropsType = {
  children?: null;
@@ -12,15 +13,23 @@ type PropsType = {
 
 const Modal = forwardRef(
  (_: PropsType, ref: ForwardedRef<HTMLDialogElement>) => {
-  const [setIsShowingModal, setIsClosingModal, isShowingModal, modalFor] =
-   useGeneralStore(
-    useShallow((state) => [
-     state.setIsShowingModal,
-     state.setIsClosingModal,
-     state.isShowingModal,
-     state.modalFor,
-    ])
-   );
+  const [
+   setIsShowingModal,
+   setIsClosingModal,
+   isShowingModal,
+   modalFor,
+   setShowConfirm,
+  ] = useGeneralStore(
+   useShallow((state) => [
+    state.setIsShowingModal,
+    state.setIsClosingModal,
+    state.isShowingModal,
+    state.modalFor,
+    state.setShowConfirm,
+   ])
+  );
+
+  console.log(modalFor);
 
   return (
    <dialog ref={ref} className="modal modal-lg">
@@ -46,22 +55,34 @@ const Modal = forwardRef(
        </div>
       </>
      )}
-     {modalFor === "user-info" && <UserInfo />}
-     {modalFor === "user-info" && (
-      <div className="modal-action">
-       <form method="dialog">
-        {/* if there is a button in form, it will close the modal */}
-        <button
-         className="btn"
-         onClick={() => {
-          setIsShowingModal(false);
-          setIsClosingModal();
-         }}
-        >
-         Close
-        </button>
-       </form>
-      </div>
+     {(modalFor === "user-info" || modalFor === "edit-user") && (
+      <>
+       {modalFor === "user-info" && <UserInfo />}
+       {modalFor === "edit-user" && <EditUserForm />}
+       <div className="modal-action">
+        {modalFor === "edit-user" && (
+         <button
+          className="btn btn-primary"
+          onClick={() => setShowConfirm(true)}
+         >
+          Save
+         </button>
+        )}
+        <form method="dialog">
+         {/* if there is a button in form, it will close the modal */}
+         <button
+          className="btn"
+          onClick={() => {
+           setIsShowingModal(false);
+           setIsClosingModal();
+           setShowConfirm(false);
+          }}
+         >
+          Close
+         </button>
+        </form>
+       </div>
+      </>
      )}
     </div>
     {modalFor === "login" && (
