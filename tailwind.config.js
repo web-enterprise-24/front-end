@@ -16,7 +16,13 @@ export default {
    },
   },
  },
- plugins: [daisyui],
+ plugins: [
+  daisyui,
+  require("tailwind-scrollbar")({
+   nocompatible: true,
+   preferredStrategy: "pseudoelements",
+  }),
+ ],
  daisyui: {
   themes: ["light", "dark", "cupcake", "emerald"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
   darkTheme: "emerald", // name of one of the included themes for dark mode

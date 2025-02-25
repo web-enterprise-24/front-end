@@ -51,7 +51,7 @@ const LoginForm = () => {
       onChange={(e) => handleChangeInput(e, "email")}
      />
     </label>
-    <label className="input input-bordered flex items-center gap-2 relative">
+    <label className="input input-bordered flex items-center gap-2 relative focus:outline-none">
      <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 16 16"
@@ -71,7 +71,7 @@ const LoginForm = () => {
       placeholder="Password"
       onChange={(e) => handleChangeInput(e, "password")}
      />
-     <div className="mr-2 flex items-center absolute right-0">
+     <div className="mr-2 flex items-center absolute right-0 cursor-pointer">
       {!showPassword ? (
        <EyeClosed onClick={() => setShowPassword(!showPassword)} />
       ) : (
@@ -79,7 +79,7 @@ const LoginForm = () => {
       )}
      </div>
     </label>
-    <p className="text-sm font-normal italic mt-2 cursor-pointer">
+    <p className="text-sm font-normal italic mt-2 cursor-pointer select-none">
      Forgot your password?
     </p>
     <button className="btn btn-primary">

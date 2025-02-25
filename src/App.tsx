@@ -3,7 +3,15 @@ import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/shallow";
 import { Toaster } from "react-hot-toast";
 
-import { Home, Management, Dashboard, Message, AddNew, Profile } from "./pages";
+import {
+ Home,
+ Management,
+ Dashboard,
+ Message,
+ AddNew,
+ Profile,
+ StudentManagement,
+} from "./pages";
 import { MainLayout, LayoutSidebar } from "./layouts";
 import { Modal } from "./components";
 import { useAuthStore, useGeneralStore } from "./store";
@@ -56,7 +64,7 @@ const App = () => {
      <Route path="/management" element={<Management />}>
       <Route index element={<Navigate to="add-user" />} />
       <Route path="add-user" element={<AddNew />} />
-      <Route path="student-management" element={<p>Student management</p>} />
+      <Route path="student-management" element={<StudentManagement />} />
       <Route path="tutor-management" element={<p>Tutor management</p>} />
      </Route>
      <Route path="/dashboard" element={<Dashboard />}>

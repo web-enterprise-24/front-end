@@ -1,8 +1,8 @@
 import { LayoutDashboard, LogOut } from "lucide-react";
 
-import { UserDropdownItemsType } from "../types";
+import { DropdownItemsType } from "../types";
 
-const items: UserDropdownItemsType[] = [
+const items: DropdownItemsType[] = [
  {
   id: 1,
   title: "Dashboard",

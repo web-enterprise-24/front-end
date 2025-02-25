@@ -1,3 +1,4 @@
+import { convertDate } from "../../../utils";
 import PropsType from "./PropsType";
 
 const PersonalInfo = ({ data }: PropsType) => {
@@ -23,13 +24,7 @@ const PersonalInfo = ({ data }: PropsType) => {
      <div className="flex flex-col gap-2">
       <span className="font-bold text-base-content/70">Birthday</span>
       <span className="font-bold">
-       {data?.dateOfBirth
-        ? new Intl.DateTimeFormat("en-US", {
-           day: "numeric",
-           month: "long",
-           year: "numeric",
-          }).format(new Date(data.dateOfBirth))
-        : ""}
+       {data?.dateOfBirth ? convertDate(data?.dateOfBirth) : ""}
       </span>
      </div>
     </div>

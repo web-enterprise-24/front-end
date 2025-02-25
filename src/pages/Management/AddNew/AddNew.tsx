@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AddStudentForm from "./AddUserForm";
+import AddUserForm from "./AddUserForm";
 
 const AddNew = () => {
  const [tabActive, setTabActive] = useState(1);
@@ -37,7 +37,7 @@ const AddNew = () => {
    </div>
    <div className="w-3/5 mx-auto">
     {
-     <AddStudentForm
+     <AddUserForm
       role={tabActive === 1 ? "STUDENT" : tabActive === 2 ? "TUTOR" : "STAFF"}
      />
     }

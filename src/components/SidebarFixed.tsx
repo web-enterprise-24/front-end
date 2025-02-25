@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { SidebarType } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
  ArrowLeftToLine,
  SquareChevronLeft,
@@ -12,15 +12,21 @@ type Props = {
 };
 
 const SidebarFixed = ({ items }: Props) => {
- const [sidebarItemActive, setSideBarItemActive] = useState(1);
+ const [sidebarItemActive, setSideBarItemActive] = useState("add-user");
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+ const location = useLocation();
+
+ useEffect(() => {
+  setSideBarItemActive(location.pathname.slice(12));
+ }, []);
 
  return (
   <div className="flex">
    <div
     className={`${
      isSidebarOpen ? "w-72" : "w-20"
-    } bg-base h-[calc(100vh-64px)] hidden min-[1025px]:flex flex-col justify-between py-16 px-4 shadow-lg shadow-base-300 duration-300 relative`}
+    } bg-base h-full hidden xl:flex flex-col justify-between py-16 px-4 shadow-lg shadow-base-300 duration-300 relative`}
    >
     <button
      className="absolute top-4 right-4"
@@ -38,9 +44,9 @@ const SidebarFixed = ({ items }: Props) => {
        <li
         key={item.id}
         className={`bg-base-200 p-3 rounded-lg border-3  btn ${
-         sidebarItemActive === item.id && "border-2 btn btn-outline"
+         sidebarItemActive === item.to && "border-2 btn btn-outline"
         }`}
-        onClick={() => setSideBarItemActive(item.id)}
+        onClick={() => setSideBarItemActive(item.to)}
        >
         <Link
          to={item.to}
