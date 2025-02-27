@@ -32,31 +32,42 @@ const LoginForm = () => {
 
  return (
   <>
-   <form onSubmit={(e) => handleSubmit(e)} className="card-body">
-    <label className="input input-bordered flex items-center gap-2">
+    <form onSubmit={(e) => handleSubmit(e)} className="card-body">
+    {/* Email Input */}
+    <div className="relative">
      <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 16 16"
       fill="currentColor"
-      className="h-4 w-4 opacity-70"
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70"
      >
       <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
       <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
      </svg>
      <input
       type="email"
-      className="grow"
-      placeholder="Email"
+      className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      placeholder=" "
       autoComplete="on"
       onChange={(e) => handleChangeInput(e, "email")}
+      value={userData.email || ""}
      />
-    </label>
-    <label className="input input-bordered flex items-center gap-2 relative focus:outline-none">
+     <label
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       userData.email ? "top-0 text-sm" : ""
+      }`}
+     >
+      Email
+     </label>
+    </div>
+
+    {/* Password Input */}
+    <div className="relative mt-4">
      <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 16 16"
       fill="currentColor"
-      className="h-4 w-4 opacity-70"
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70"
      >
       <path
        fillRule="evenodd"
@@ -66,23 +77,38 @@ const LoginForm = () => {
      </svg>
      <input
       type={showPassword ? "text" : "password"}
-      className="grow"
+      className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      placeholder=" "
       autoComplete="off"
-      placeholder="Password"
       onChange={(e) => handleChangeInput(e, "password")}
+      value={userData.password || ""}
      />
-     <div className="mr-2 flex items-center absolute right-0 cursor-pointer">
+     <label
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       userData.password ? "top-0 text-sm" : ""
+      }`}
+     >
+      Password
+     </label>
+     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer">
       {!showPassword ? (
-       <EyeClosed onClick={() => setShowPassword(!showPassword)} />
+       <EyeClosed
+        onClick={() => setShowPassword(!showPassword)}
+        className="h-5 w-5 text-gray-500 hover:text-gray-700"
+       />
       ) : (
-       <Eye onClick={() => setShowPassword(!showPassword)} />
+       <Eye
+        onClick={() => setShowPassword(!showPassword)}
+        className="h-5 w-5 text-gray-500 hover:text-gray-700"
+       />
       )}
      </div>
-    </label>
+    </div>
+
     <p className="text-sm font-normal italic mt-2 cursor-pointer select-none">
      Forgot your password?
     </p>
-    <button className="btn btn-primary">
+    <button className="btn btn-primary mt-4">
      {isLoggingIn ? <LoaderCircle className="animate-spin" /> : "Log in"}
     </button>
    </form>
