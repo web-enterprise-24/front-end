@@ -66,7 +66,7 @@ const Table = ({ role }: PropsType) => {
     events={[handleClickConfirmModal]}
    />
    <div className="h-full overflow-x-auto overflow-y-hidden">
-    <table className="h-full table table-zebra">
+    <table className="table table-zebra">
      {/* head */}
      <thead>
       <tr>

@@ -190,6 +190,7 @@ const AddUserForm = ({ role }: PropsType) => {
     }
     popperPlacement="bottom-end"
     placeholderText={"Date of birth"}
+    dateFormat={"dd/MM/yyyy"}
    />
    <label className="input input-bordered flex items-center gap-2">
     <EmailIconDaisyUI />
