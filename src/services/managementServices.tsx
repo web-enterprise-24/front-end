@@ -24,12 +24,14 @@ export const getUsers = async (
  role: string,
  token: string | null,
  pageNumber: number | null,
- status: boolean
+ status: boolean,
+ sortBy: "desc" | "asc",
+ searchResult: string
 ) => {
  try {
   console.log(role, pageNumber, status);
   const res = await axios.get(
-   `/account/?role=${role}&status=${!status}&limit=5&page=${pageNumber}`,
+   `/account/?role=${role}&status=${!status}&limit=5&page=${pageNumber}&sort=${sortBy}&search=${searchResult}`,
    {
     headers: {
      Authorization: `Bearer ${token}`,

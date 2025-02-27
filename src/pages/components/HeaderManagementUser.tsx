@@ -3,36 +3,70 @@ import {
  ArrowUpWideNarrow,
  SlidersHorizontal,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useManagementStore } from "../../store";
 import { useShallow } from "zustand/shallow";
 import { useLocation } from "react-router-dom";
+import { useDebounce } from "../../hooks";
 
 type PropsType = {
  title: string;
 };
 
 const HeaderManagementUser = ({ title }: PropsType) => {
- const [setDisplayInactive, getUserLists, setCurrentPage] = useManagementStore(
+ const [toggleFilter, setToggleFilter] = useState(true);
+ const [searchText, setSearchText] = useState("");
+
+ //  use useDebounce for search
+ const debounceValue = useDebounce(searchText, 1000);
+
+ //  Get role basing on location path name
+ const location = useLocation();
+ const role = useRef("");
+ role.current = location.pathname.includes("student") ? "STUDENT" : "TUTOR";
+
+ const [
+  setDisplayInactive,
+  getUserLists,
+  setCurrentPage,
+  setSortBy,
+  setSearchResult,
+ ] = useManagementStore(
   useShallow((state) => [
    state.setDisplayInactive,
    state.getUserLists,
    state.setCurrentPage,
+   state.setSortBy,
+   state.setSearchResult,
   ])
  );
 
- const location = useLocation();
+ useEffect(() => {
+  console.log(debounceValue);
+  //   if (!debounceValue.trim()) return;
+  setSearchResult(debounceValue);
+  getUserLists(role.current);
+ }, [debounceValue, getUserLists, setSearchResult]);
 
  const handleChangeCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
   setDisplayInactive(e.target.checked);
   setCurrentPage(0, true);
-  const role = location.pathname.toLowerCase().includes("student")
-   ? "STUDENT"
-   : "TUTOR";
-  getUserLists(role);
+  getUserLists(role.current);
  };
 
- const [toggleFilter, setToggleFilter] = useState(false);
+ const handleClickSort = () => {
+  //    set state to change interface
+  setToggleFilter(!toggleFilter);
+
+  //   set sort and call api immediately
+  if (toggleFilter) {
+   setSortBy("asc");
+  } else if (!toggleFilter) {
+   setSortBy("desc");
+  }
+  getUserLists(role.current);
+ };
+
  return (
   <div className="w-full flex flex-row max-md:flex-col max-md:gap-2 justify-between items-center p-2 pr-6">
    <h1 className="font-black text-lg">{title}</h1>
@@ -86,9 +120,7 @@ const HeaderManagementUser = ({ title }: PropsType) => {
 
     <span
      className="size-8 bg-base-200 rounded-full flex items-center justify-center cursor-pointer"
-     onClick={() => {
-      setToggleFilter(!toggleFilter);
-     }}
+     onClick={handleClickSort}
     >
      {!toggleFilter ? (
       <ArrowUpNarrowWide className="size-5" />
@@ -97,7 +129,12 @@ const HeaderManagementUser = ({ title }: PropsType) => {
      )}
     </span>
     <label className="input input-bordered flex items-center gap-2 max-md:input-sm">
-     <input type="text" className="grow" placeholder="Search by name" />
+     <input
+      type="text"
+      className="grow"
+      placeholder="Search by name or email"
+      onChange={(e) => setSearchText(e.target.value.trim())}
+     />
      <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 16 16"

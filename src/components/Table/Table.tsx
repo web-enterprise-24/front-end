@@ -57,7 +57,7 @@ const Table = ({ role }: PropsType) => {
  };
 
  return (
-  <div className="w-full h-[600px] lg:h-[500px] flex flex-col gap-2">
+  <div className="w-full h-[600px] lg:h-[550px] flex flex-col gap-2">
    <ConfirmModal
     ref={dialogRef}
     title={`Are you sure to ${

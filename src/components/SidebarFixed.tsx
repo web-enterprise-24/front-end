@@ -14,9 +14,15 @@ type Props = {
 };
 
 const SidebarFixed = ({ items }: Props) => {
- const [setCurrentPage, setDisplayInactive] = useManagementStore(
-  useShallow((state) => [state.setCurrentPage, state.setDisplayInactive])
- );
+ const [setCurrentPage, setDisplayInactive, setSortBy, setSearchResult] =
+  useManagementStore(
+   useShallow((state) => [
+    state.setCurrentPage,
+    state.setDisplayInactive,
+    state.setSortBy,
+    state.setSearchResult,
+   ])
+  );
  const [sidebarItemActive, setSideBarItemActive] = useState("add-user");
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -55,6 +61,8 @@ const SidebarFixed = ({ items }: Props) => {
          setSideBarItemActive(item.to);
          setCurrentPage(0, true);
          setDisplayInactive(false);
+         setSortBy("desc");
+         setSearchResult("");
         }}
        >
         <Link
