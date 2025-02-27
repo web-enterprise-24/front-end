@@ -6,6 +6,7 @@ import MobileNavbar from "./MobileNavbar";
 import { SidebarHomeItems, UserDropdownItems } from "../constants";
 import Dropdown from "./Dropdown";
 import { useAuthStore, useGeneralStore } from "../store";
+import { transformRole } from "../utils";
 
 const Navbar = () => {
  const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
@@ -74,7 +75,7 @@ const Navbar = () => {
        </Dropdown>
        <div className="flex flex-col items-end justify-center">
         <p className="font-bold">{authUser?.name}</p>
-        <p className="text-sm">{authUser?.roles[0]?.code}</p>
+        <p className="text-sm">{transformRole(authUser?.roles[0]?.code)}</p>
        </div>
        <Dropdown
         items={UserDropdownItems}

@@ -6,12 +6,17 @@ import {
  SquareChevronLeft,
  SquareChevronRight,
 } from "lucide-react";
+import { useManagementStore } from "../store";
+import { useShallow } from "zustand/shallow";
 
 type Props = {
  items: SidebarType[];
 };
 
 const SidebarFixed = ({ items }: Props) => {
+ const [setCurrentPage, setDisplayInactive] = useManagementStore(
+  useShallow((state) => [state.setCurrentPage, state.setDisplayInactive])
+ );
  const [sidebarItemActive, setSideBarItemActive] = useState("add-user");
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -19,7 +24,7 @@ const SidebarFixed = ({ items }: Props) => {
 
  useEffect(() => {
   setSideBarItemActive(location.pathname.slice(12));
- }, []);
+ }, [location.pathname]);
 
  return (
   <div className="flex">
@@ -46,7 +51,11 @@ const SidebarFixed = ({ items }: Props) => {
         className={`bg-base-200 p-3 rounded-lg border-3  btn ${
          sidebarItemActive === item.to && "border-2 btn btn-outline"
         }`}
-        onClick={() => setSideBarItemActive(item.to)}
+        onClick={() => {
+         setSideBarItemActive(item.to);
+         setCurrentPage(0, true);
+         setDisplayInactive(false);
+        }}
        >
         <Link
          to={item.to}

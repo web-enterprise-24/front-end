@@ -1,7 +1,18 @@
 import { create } from "zustand";
 
-import { UserType, UserLoginType } from "../types";
-import { getCurrentUser, login, logout } from "../services";
+import {
+ UserType,
+ UserLoginType,
+ ChangePasswordFirstTimeType,
+ UserSendType,
+} from "../types";
+import {
+ changePasswordFirstTime,
+ editProfile,
+ getCurrentUser,
+ login,
+ logout,
+} from "../services";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
@@ -11,11 +22,15 @@ type AuthStoreType = {
  isCheckingAuth: boolean;
  //  isSigningUp: boolean;
  isLoggingIn: boolean;
+ isChangingPassword: boolean;
+ isChangingProfile: boolean;
  authUser: UserType | null;
  //  signUpUser: (data: UserSignUpType) => void;
  loginUser: (data: UserLoginType) => void;
  logoutUser: (accessToken: string | null) => void;
  checkAuth: (accessToken: string | null) => void;
+ requireChangePassword: (data: ChangePasswordFirstTimeType) => void;
+ changeProfile: (data: UserSendType, userId: string) => void;
 };
 
 // Get data from localStorage
@@ -28,6 +43,8 @@ const useAuthStore = create<AuthStoreType>((set) => ({
  isCheckingAuth: true,
  isSigningUp: false,
  isLoggingIn: false,
+ isChangingPassword: false,
+ isChangingProfile: false,
 
  async checkAuth(token) {
   try {
@@ -78,6 +95,39 @@ const useAuthStore = create<AuthStoreType>((set) => ({
     console.log(err);
     toast.error(err.response?.data?.message);
    }
+  }
+ },
+ async requireChangePassword(data) {
+  try {
+   set({ isChangingPassword: true });
+   await changePasswordFirstTime(data, accessToken);
+   localStorage.removeItem("access");
+   toast.success("Password has been changed successfully");
+   setTimeout(() => {
+    window.location.href = "/";
+   }, 1500);
+  } catch (err) {
+   if (err instanceof AxiosError) {
+    console.log(err);
+    toast.error("Change password failed: ", err.response?.data?.message);
+   }
+  } finally {
+   set({ isChangingPassword: false });
+  }
+ },
+ async changeProfile(data: UserSendType, userId: string) {
+  try {
+   set({ isChangingProfile: true });
+   const res = await editProfile(data, accessToken, userId);
+   set({ authUser: res });
+   toast.success("Profile has been changed successfully");
+  } catch (err) {
+   if (err instanceof AxiosError) {
+    console.log(err);
+    toast.error("Change profile failed: ", err.response?.data?.message);
+   }
+  } finally {
+   set({ isChangingProfile: false });
   }
  },
 }));

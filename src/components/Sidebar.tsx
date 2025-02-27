@@ -9,7 +9,7 @@ import { useRef } from "react";
 type PropsType = {
  page?: string;
  items?: SidebarType[];
- onClick?: (title?: string) => void;
+ onClick?: (title: string) => void;
 };
 
 const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {

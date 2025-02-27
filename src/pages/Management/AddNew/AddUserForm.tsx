@@ -1,4 +1,4 @@
-import { Building2, Globe, LoaderCircle, MapPinHouse } from "lucide-react";
+import { Globe, LoaderCircle, MapPinHouse } from "lucide-react";
 import DatePicker from "react-datepicker";
 import { useEffect, useRef, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,26 +16,34 @@ type PropsType = {
 };
 
 const AddUserForm = ({ role }: PropsType) => {
- const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
-  useShallow((state) => [
-   state.modalElement,
-   state.setIsShowingModal,
-   state.setModalFor,
-  ])
- );
+ const [modalElement, setIsShowingModal, setModalFor, provinces] =
+  useGeneralStore(
+   useShallow((state) => [
+    state.modalElement,
+    state.setIsShowingModal,
+    state.setModalFor,
+    state.provinces,
+   ])
+  );
  const [isCreatingUser, createUser] = useManagementStore(
   useShallow((state) => [state.isCreatingUser, state.createUser])
  );
  const [userData, setUserData] = useState<UserSendType>({
   role,
-  gender: "male",
+  gender: "Male",
+  country: "Viet Nam",
   dateOfBirth: new Date().toISOString(),
  });
 
  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
  useEffect(() => {
-  setUserData({ role, gender: "male", dateOfBirth: new Date().toISOString() });
+  setUserData({
+   role,
+   country: "Viet Nam",
+   gender: "Male",
+   dateOfBirth: new Date().toISOString(),
+  });
   if (fileInputRef.current) {
    fileInputRef.current.value = "";
   }
@@ -91,8 +99,15 @@ const AddUserForm = ({ role }: PropsType) => {
   setUserData({ ...userData, [field]: e.target.value });
  };
 
+ const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  setUserData({ ...userData, city: e.target.value });
+ };
+
  return (
-  <form className="flex flex-col gap-4" onSubmit={(e) => handleSubmit(e)}>
+  <form
+   className="w-full flex flex-col gap-4"
+   onSubmit={(e) => handleSubmit(e)}
+  >
    <label className="input input-bordered flex items-center gap-2">
     <UserIconDaisyUI />
     <input
@@ -113,7 +128,7 @@ const AddUserForm = ({ role }: PropsType) => {
       value={"Male"}
       className="radio"
       autoComplete="off"
-      checked={userData.gender === "male"}
+      checked={userData.gender.toLowerCase() === "male"}
       onChange={(e) => handleChangeInput(e, "gender")}
      />
     </label>
@@ -125,7 +140,7 @@ const AddUserForm = ({ role }: PropsType) => {
       value={"Female"}
       className="radio"
       autoComplete="off"
-      checked={userData.gender === "female"}
+      checked={userData.gender.toLowerCase() === "female"}
       onChange={(e) => handleChangeInput(e, "gender")}
      />
     </label>
@@ -142,26 +157,28 @@ const AddUserForm = ({ role }: PropsType) => {
     />
    </label>
    <div className="flex flex-col xl:flex-row gap-4">
-    <label className="input input-bordered flex items-center gap-2 xl:w-1/2">
-     <Building2 className="w-4 h-4 text-base-content/70" />
-     <input
-      type="text"
-      className="grow"
-      placeholder="City"
-      value={userData.city || ""}
-      autoComplete="on"
-      onChange={(e) => handleChangeInput(e, "city")}
-     />
-    </label>
+    <select
+     className="select select-bordered xl:w-1/2"
+     onChange={(e) => handleChangeSelect(e)}
+    >
+     <option disabled selected>
+      Choose your Province
+     </option>
+     {provinces &&
+      provinces.map((province, index) => (
+       <option key={index}>{province.toString()}</option>
+      ))}
+    </select>
     <label className="input input-bordered flex items-center gap-2 xl:w-1/2">
      <Globe className="w-4 h-4 text-base-content/70" />
      <input
       type="text"
       className="grow"
       placeholder="Country"
-      value={userData.country || ""}
+      value={"Viet Nam"}
       autoComplete="on"
-      onChange={(e) => handleChangeInput(e, "country")}
+      disabled
+      //   onChange={(e) => handleChangeInput(e, "country")}
      />
     </label>
    </div>

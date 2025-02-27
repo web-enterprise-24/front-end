@@ -10,7 +10,7 @@ const items: DropdownItemsType[] = [
  },
  {
   id: 2,
-  title: "Delete",
+  title: "Deactivate",
   icon: UserRoundMinus,
  },
 ];

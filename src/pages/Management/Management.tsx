@@ -7,9 +7,9 @@ const Management = () => {
  return (
   <>
    <NavbarOnlyAvatar items={SidebarManagementItems} page={"management"} />
-   <div className="flex flex-row justify-between w-full bg-base-300">
+   <div className="flex flex-row justify-between h-[calc(100vh-64px-4px)] max-[1025px]:h-screen bg-base-300">
     <SidebarFixed items={SidebarManagementItems} />
-    <div className="w-full h-[calc(100vh-64px)] ml-1 mt-1 shadow-md shadow-base-100 bg-base-100 rounded-2xl">
+    <div className="w-full h-full xl:ml-1 mt-1 shadow-md shadow-base-100 bg-base-100">
      <Outlet />
     </div>
    </div>
