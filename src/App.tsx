@@ -67,6 +67,7 @@ const App = () => {
  if (authUser?.requiredPasswordChange) {
   return (
    <div className="w-screen h-screen flex flex-col justify-center items-center gap-14 max-md:p-4">
+    <Toaster position="top-center" />
     <div className="size-40">
      <img src="/logo.webp" alt="Logo" />
     </div>
