@@ -11,15 +11,23 @@ type PropsType = {
 };
 
 const NavbarOnlyAvatar = ({ items, page }: PropsType) => {
- const [setCurrentPage, setDisplayInactive] = useManagementStore(
-  useShallow((state) => [state.setCurrentPage, state.setDisplayInactive])
- );
+ const [setCurrentPage, setDisplayInactive, setSortBy, setSearchResult] =
+  useManagementStore(
+   useShallow((state) => [
+    state.setCurrentPage,
+    state.setDisplayInactive,
+    state.setSortBy,
+    state.setSearchResult,
+   ])
+  );
  const authUser = useAuthStore((state) => state.authUser);
 
  const handleClick = (title: string) => {
   if (title === "Tutor Management" || title === "Student Management") {
    setCurrentPage(0, true);
    setDisplayInactive(false);
+   setSortBy("desc");
+   setSearchResult("");
   }
  };
 

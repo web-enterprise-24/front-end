@@ -14,6 +14,8 @@ import toast from "react-hot-toast";
 type ManagementStoreType = {
  totalPage: number | null;
  currentPage: number;
+ sortBy: "desc" | "asc";
+ searchResult: string;
  selectedUser: UserType | null;
  userCreated: UserType | null;
  userLists: UserType[] | null;
@@ -28,6 +30,8 @@ type ManagementStoreType = {
  setCurrentPage: (num: number, reset?: boolean) => void;
  setDisplayInactive: (status: boolean) => void;
  changeStatusUser: (userId: string, status: boolean, role: string) => void;
+ setSortBy: (sort: "desc" | "asc") => void;
+ setSearchResult: (result: string) => void;
 };
 
 // Get token
@@ -36,6 +40,8 @@ const accessToken = localStorage.getItem("access");
 const useManagementStore = create<ManagementStoreType>((set, get) => ({
  totalPage: null,
  currentPage: 1,
+ sortBy: "desc",
+ searchResult: "",
  selectedUser: null,
  userCreated: null,
  userLists: null,
@@ -59,14 +65,15 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  },
  async getUserLists(role) {
   try {
-   console.log(get().isDisplayInactive, get().currentPage);
    set({ isGettingUserLists: true });
 
    const res = await getUsers(
     role,
     accessToken,
     get().currentPage,
-    get().isDisplayInactive
+    get().isDisplayInactive,
+    get().sortBy,
+    get().searchResult
    );
    set({ userLists: res.data });
    set({ totalPage: res.totalPages });
@@ -118,6 +125,12 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
     toast.error("Failed: ", err.response?.data?.message);
    }
   }
+ },
+ setSortBy(sort) {
+  set({ sortBy: sort });
+ },
+ setSearchResult(result) {
+  set({ searchResult: result });
  },
 }));
 
