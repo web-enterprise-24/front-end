@@ -15,6 +15,9 @@ type UserType = {
  status: boolean;
  createdAt: string;
  updatedAt: string;
+ requiredPasswordChange: boolean;
+ firstName: string;
+ lastName: string;
 };
 
 export default UserType;

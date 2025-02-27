@@ -1,21 +1,23 @@
-import Header from "../../components/HeaderManagementUser";
-import { Table } from "../../../components";
 import { useEffect } from "react";
+import { Table } from "../../../components";
 import { useManagementStore } from "../../../store";
+import Header from "../../components/HeaderManagementUser";
 
-const StudentManagement = () => {
+const TutorManagement = () => {
  const getUserLists = useManagementStore((state) => state.getUserLists);
+
  useEffect(() => {
-  getUserLists("STUDENT");
+  getUserLists("TUTOR");
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
  }, []);
 
  return (
   <div className="w-full h-full">
-   <Header title="All Students" />
-   <Table role="STUDENT" />
+   <Header title="All Tutors" />
+   <Table role="TUTOR" />
   </div>
  );
 };
 
-export default StudentManagement;
+export default TutorManagement;

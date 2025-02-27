@@ -4,19 +4,23 @@ import { useGeneralStore, useManagementStore } from "../../store";
 import { useShallow } from "zustand/shallow";
 import { UserType } from "../../types";
 import { convertDate } from "../../utils";
+import { UserRoundCheck } from "lucide-react";
 
 type PropsType = {
  data: UserType;
+ changeStatus: (userId: string, status: boolean) => void;
 };
 
-const TableRow = ({ data }: PropsType) => {
- const [setModalFor, modalElement, setIsShowingModal] = useGeneralStore(
-  useShallow((state) => [
-   state.setModalFor,
-   state.modalElement,
-   state.setIsShowingModal,
-  ])
- );
+const TableRow = ({ data, changeStatus }: PropsType) => {
+ const [setModalFor, modalElement, setIsShowingModal, getProvinces] =
+  useGeneralStore(
+   useShallow((state) => [
+    state.setModalFor,
+    state.modalElement,
+    state.setIsShowingModal,
+    state.getProvinces,
+   ])
+  );
  const setSelectedUser = useManagementStore((state) => state.setSelectedUser);
 
  const handleClickAction = (title?: string) => {
@@ -25,6 +29,9 @@ const TableRow = ({ data }: PropsType) => {
    setIsShowingModal(true);
    setModalFor("edit-user");
    setSelectedUser(data);
+   getProvinces();
+  } else if (title === "Deactivate") {
+   changeStatus(data?.id, false);
   }
  };
 
@@ -43,7 +50,7 @@ const TableRow = ({ data }: PropsType) => {
       </div>
      </div>
      <div>
-      <div className="font-bold">{data?.name}</div>
+      <div className="font-bold truncate">{data?.name}</div>
       <div className="text-sm opacity-50">
        {data?.roles[0]?.code.charAt(0) +
         data?.roles[0]?.code.slice(1).toLowerCase()}
@@ -52,24 +59,35 @@ const TableRow = ({ data }: PropsType) => {
     </div>
    </td>
    <td>{data?.gender}</td>
-   <td>{data?.email}</td>
-   <td>{data?.dateOfBirth ? convertDate(data.dateOfBirth) : ""}</td>
-   <td>{data?.address}</td>
+   <td className="truncate">{data?.email}</td>
+   <td className="truncate">
+    {data?.dateOfBirth ? convertDate(data.dateOfBirth) : ""}
+   </td>
+   <td className="truncate">{data?.address}</td>
    <td>
-    {data?.verified ? (
+    {data?.status ? (
      <div className="badge badge-primary">Active</div>
     ) : (
      <div className="badge badge-accent">Inactive</div>
     )}
    </td>
    <th>
-    <Dropdown
-     items={ManagementActionItems}
-     variant={"management-action"}
-     onClick={handleClickAction}
-    >
-     <button className="btn btn-ghost btn-xs">details</button>
-    </Dropdown>
+    {data?.status ? (
+     <Dropdown
+      items={ManagementActionItems}
+      variant={"management-action"}
+      onClick={handleClickAction}
+     >
+      <button className="btn btn-ghost btn-xs">details</button>
+     </Dropdown>
+    ) : (
+     <button
+      className="btn btn-neutral btn-sm hover:underline"
+      onClick={() => changeStatus(data.id, true)}
+     >
+      <UserRoundCheck /> Activate
+     </button>
+    )}
    </th>
   </tr>
  );

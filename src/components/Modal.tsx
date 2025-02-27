@@ -1,11 +1,12 @@
-import { forwardRef, ForwardedRef } from "react";
+import { forwardRef, ForwardedRef, useEffect, useRef } from "react";
 import { Toaster } from "react-hot-toast";
 
 import LoginForm from "./LoginForm";
-import { useGeneralStore } from "../store";
+import { useAuthStore, useGeneralStore, useManagementStore } from "../store";
 import { useShallow } from "zustand/shallow";
 import UserInfo from "./UserInfo";
 import EditUserForm from "./EditUserForm";
+import { LoaderCircle } from "lucide-react";
 
 type PropsType = {
  children?: null;
@@ -19,6 +20,8 @@ const Modal = forwardRef(
    isShowingModal,
    modalFor,
    setShowConfirm,
+   setIsConfirmEdit,
+   isConfirmEdit,
   ] = useGeneralStore(
    useShallow((state) => [
     state.setIsShowingModal,
@@ -26,10 +29,34 @@ const Modal = forwardRef(
     state.isShowingModal,
     state.modalFor,
     state.setShowConfirm,
+    state.setIsConfirmEdit,
+    state.isConfirmEdit,
    ])
   );
+  const isChangingProfile = useAuthStore((state) => state.isChangingProfile);
+  const [isEditing] = useManagementStore(
+   useShallow((state) => [state.isEditing, state.setSelectedUser])
+  );
 
-  console.log(modalFor);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+   if (isConfirmEdit) {
+    // For edit profile
+    if (!isChangingProfile) {
+     if (closeRef.current) {
+      closeRef.current.click();
+     }
+
+     //  For edit user in staff
+     if (!isEditing) {
+      if (closeRef.current) {
+       closeRef.current.click();
+      }
+     }
+    }
+   }
+  }, [isConfirmEdit, isChangingProfile, isEditing]);
 
   return (
    <dialog ref={ref} className="modal modal-lg">
@@ -55,27 +82,36 @@ const Modal = forwardRef(
        </div>
       </>
      )}
-     {(modalFor === "user-info" || modalFor === "edit-user") && (
+     {["user-info", "edit-user", "edit-profile"].includes(modalFor || "") && (
       <>
        {modalFor === "user-info" && <UserInfo />}
-       {modalFor === "edit-user" && <EditUserForm />}
+       {["edit-user", "edit-profile"].includes(modalFor || "") && (
+        <EditUserForm formFor={modalFor as "edit-user" | "edit-profile"} />
+       )}
        <div className="modal-action">
-        {modalFor === "edit-user" && (
+        {["edit-user", "edit-profile"].includes(modalFor || "") && (
          <button
           className="btn btn-primary"
-          onClick={() => setShowConfirm(true)}
+          onClick={() => {
+           setShowConfirm(true);
+          }}
          >
-          Save
+          {isChangingProfile || isEditing ? (
+           <LoaderCircle className="animate-spin" />
+          ) : (
+           "Save"
+          )}
          </button>
         )}
         <form method="dialog">
          {/* if there is a button in form, it will close the modal */}
          <button
+          ref={closeRef}
           className="btn"
           onClick={() => {
            setIsShowingModal(false);
            setIsClosingModal();
-           setShowConfirm(false);
+           setIsConfirmEdit(false);
           }}
          >
           Close
@@ -91,6 +127,7 @@ const Modal = forwardRef(
        onClick={() => {
         setIsShowingModal(false);
         setIsClosingModal();
+        setIsConfirmEdit(false);
        }}
       >
        close

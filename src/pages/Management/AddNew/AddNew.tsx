@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddUserForm from "./AddUserForm";
+import { useGeneralStore } from "../../../store";
 
 const AddNew = () => {
+ const getProvinces = useGeneralStore((state) => state.getProvinces);
+
+ useEffect(() => {
+  getProvinces();
+ }, [getProvinces]);
+
  const [tabActive, setTabActive] = useState(1);
  return (
-  <div className="flex flex-col items-center justify-center gap-8">
+  <div className="w-full flex flex-col items-center justify-center gap-8 mt-4">
    <div role="tablist" className="tabs tabs-boxed font-bold">
     <a
      role="tab"
@@ -35,7 +42,7 @@ const AddNew = () => {
      Staff
     </a>
    </div>
-   <div className="w-3/5 mx-auto">
+   <div className="w-full p-4 xl:p-0 xl:w-3/5 mx-auto">
     {
      <AddUserForm
       role={tabActive === 1 ? "STUDENT" : tabActive === 2 ? "TUTOR" : "STAFF"}
