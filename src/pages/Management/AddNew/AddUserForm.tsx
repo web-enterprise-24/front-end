@@ -42,6 +42,7 @@ const AddUserForm = ({ role }: PropsType) => {
    role,
    country: "Viet Nam",
    gender: "Male",
+   city: "",
    dateOfBirth: new Date().toISOString(),
   });
   if (fileInputRef.current) {
@@ -65,7 +66,13 @@ const AddUserForm = ({ role }: PropsType) => {
    modalElement?.showModal();
    setIsShowingModal(true);
    setModalFor("user-info");
-   setUserData({ role, gender: "male", dateOfBirth: new Date().toISOString() });
+   setUserData({
+    role,
+    country: "Viet Nam",
+    gender: "Male",
+    city: "",
+    dateOfBirth: new Date().toISOString(),
+   });
    if (fileInputRef.current) {
     fileInputRef.current.value = "";
    }
@@ -109,23 +116,23 @@ const AddUserForm = ({ role }: PropsType) => {
    onSubmit={(e) => handleSubmit(e)}
   >
    <label className="relative block">
-  <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
-  <input
-    type="text"
-    className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-    placeholder=" "
-    autoComplete="on"
-    value={userData.name || ""}
-    onChange={(e) => handleChangeInput(e, "name")}
-  />
-  <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+    <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
+    <input
+     type="text"
+     className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+     placeholder=" "
+     autoComplete="on"
+     value={userData.name || ""}
+     onChange={(e) => handleChangeInput(e, "name")}
+    />
+    <span
+     className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
       userData.name ? "top-0 text-sm" : ""
-    }`}
-  >
-    Full name
-  </span>
-</label>
+     }`}
+    >
+     Full name
+    </span>
+   </label>
    <div className="flex flex-row items-center gap-4 h-12">
     <label className="flex flex-row items-center gap-2">
      <span>Male</span>
@@ -163,21 +170,20 @@ const AddUserForm = ({ role }: PropsType) => {
      onChange={(e) => handleChangeInput(e, "address")}
     />
     <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+     className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
       userData.address ? "top-0 text-sm" : ""
-    }`}
-  >
-    Address
-  </span>
+     }`}
+    >
+     Address
+    </span>
    </label>
    <div className="flex flex-col xl:flex-row gap-4 ">
     <select
      className="select select-bordered xl:w-1/2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
      onChange={(e) => handleChangeSelect(e)}
+     value={userData?.city || ""}
     >
-     <option disabled selected>
-      Choose your Province
-     </option>
+     <option value="">Choose your Province</option>
      {provinces &&
       provinces.map((province, index) => (
        <option key={index}>{province.toString()}</option>
@@ -217,12 +223,12 @@ const AddUserForm = ({ role }: PropsType) => {
      onChange={(e) => handleChangeInput(e, "email")}
     />
     <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+     className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
       userData.email ? "top-0 text-sm" : ""
-    }`}
-  >
-    Email
-  </span>
+     }`}
+    >
+     Email
+    </span>
    </label>
    <input
     ref={fileInputRef}
