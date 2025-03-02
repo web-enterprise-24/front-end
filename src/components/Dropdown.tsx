@@ -7,11 +7,22 @@ type Props = {
  children: ReactNode;
  items: DropdownItemsType[];
  variant: "notification" | "user" | "management-action";
+ isHidden?: boolean;
  onClick?: (title?: string) => void;
 };
 
-const Dropdown = ({ children, items, variant, onClick = () => {} }: Props) => {
+const Dropdown = ({
+ children,
+ items,
+ variant,
+ isHidden,
+ onClick = () => {},
+}: Props) => {
  if (["user", "management-action"].includes(variant)) {
+  if (variant === "management-action" && isHidden) {
+   items = items.slice(0, 2);
+  }
+
   return (
    <div className="dropdown dropdown-end">
     {children}

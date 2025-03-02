@@ -18,6 +18,7 @@ const Table = ({ role }: PropsType) => {
   currentPage,
   setCurrentPage,
   changeStatusUser,
+  deallocateStudent,
  ] = useManagementStore(
   useShallow((state) => [
    state.userLists,
@@ -27,9 +28,11 @@ const Table = ({ role }: PropsType) => {
    state.currentPage,
    state.setCurrentPage,
    state.changeStatusUser,
+   state.deallocateStudent,
   ])
  );
  const [statusChange, setStatusChange] = useState(false);
+ const [actionTitle, setActionTitle] = useState("");
 
  const dialogRef = useRef<HTMLDialogElement | null>(null);
  const userIdRef = useRef("");
@@ -52,7 +55,20 @@ const Table = ({ role }: PropsType) => {
   }
  };
 
+ const handleClickDeallocate = (studentId: string) => {
+  setActionTitle("deallocate");
+  userIdRef.current = studentId;
+
+  if (dialogRef.current) {
+   dialogRef.current.showModal();
+  }
+ };
+
  const handleClickConfirmModal = () => {
+  if (actionTitle === "deallocate") {
+   deallocateStudent(userIdRef.current);
+   return;
+  }
   changeStatusUser(userIdRef.current, statusChange, role);
  };
 
@@ -70,12 +86,12 @@ const Table = ({ role }: PropsType) => {
      {/* head */}
      <thead>
       <tr>
-       <th></th>
        <th>Name</th>
        <th>Gender</th>
        <th>Email</th>
        <th>Date of birth</th>
        <th>Address</th>
+       <th>Tutor</th>
        <th>Status</th>
        <th></th>
       </tr>
@@ -83,7 +99,12 @@ const Table = ({ role }: PropsType) => {
      <tbody>
       {userLists && userLists.length > 0 ? (
        userLists.map((user) => (
-        <TableRow key={user?.id} data={user} changeStatus={handleClickAction} />
+        <TableRow
+         key={user?.id}
+         data={user}
+         changeStatus={handleClickAction}
+         deallocate={handleClickDeallocate}
+        />
        ))
       ) : (
        <tr>

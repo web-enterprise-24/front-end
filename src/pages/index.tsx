@@ -4,5 +4,6 @@ export { default as Management } from "./Management/Management";
 export { default as AddNew } from "./Management/AddNew/AddNew";
 export { default as StudentManagement } from "./Management/StudentManagement/StudentManagement";
 export { default as TutorManagement } from "./Management/TutorManagement/TutorManagement";
+export { default as AllocationManagement } from "./Management/AllocationManagement/AllocationManagement";
 export { default as Message } from "./Message";
 export { default as Profile } from "./Dashboard/Profile/Profile";

@@ -9,9 +9,10 @@ import { UserRoundCheck } from "lucide-react";
 type PropsType = {
  data: UserType;
  changeStatus: (userId: string, status: boolean) => void;
+ deallocate: (studentId: string) => void;
 };
 
-const TableRow = ({ data, changeStatus }: PropsType) => {
+const TableRow = ({ data, changeStatus, deallocate }: PropsType) => {
  const [setModalFor, modalElement, setIsShowingModal, getProvinces] =
   useGeneralStore(
    useShallow((state) => [
@@ -32,16 +33,13 @@ const TableRow = ({ data, changeStatus }: PropsType) => {
    getProvinces();
   } else if (title === "Deactivate") {
    changeStatus(data?.id, false);
+  } else if (title === "Deallocate") {
+   deallocate(data.id);
   }
  };
 
  return (
   <tr>
-   <th>
-    <label>
-     <input type="checkbox" className="checkbox" />
-    </label>
-   </th>
    <td>
     <div className="flex items-center gap-3">
      <div className="avatar">
@@ -65,6 +63,30 @@ const TableRow = ({ data, changeStatus }: PropsType) => {
    </td>
    <td className="truncate">{data?.address}</td>
    <td>
+    {data?.studentAllocations[0] ? (
+     <div className="flex items-center gap-3">
+      <div className="avatar">
+       <div className="mask mask-squircle h-12 w-12">
+        <img
+         src={data?.studentAllocations[0]?.tutor?.profilePicUrl?.toString()}
+         alt="Avatar"
+        />
+       </div>
+      </div>
+      <div>
+       <div className="font-bold truncate">
+        {data?.studentAllocations[0]?.tutor?.name}
+       </div>
+       <div className="text-sm opacity-50">
+        {data?.studentAllocations[0]?.tutor?.email}
+       </div>
+      </div>
+     </div>
+    ) : (
+     <span>None</span>
+    )}
+   </td>
+   <td>
     {data?.status ? (
      <div className="badge badge-primary">Active</div>
     ) : (
@@ -76,6 +98,7 @@ const TableRow = ({ data, changeStatus }: PropsType) => {
      <Dropdown
       items={ManagementActionItems}
       variant={"management-action"}
+      isHidden={!data?.studentAllocations[0]}
       onClick={handleClickAction}
      >
       <button className="btn btn-ghost btn-xs">details</button>

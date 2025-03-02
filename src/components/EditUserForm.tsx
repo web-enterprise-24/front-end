@@ -134,63 +134,67 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
 
    <form
     ref={formRef}
-    className="w-full flex flex-col items-center justify-center p-4 gap-4"
+    className="w-full flex flex-col items-center justify-center p-4 gap-4 overflow-x-hidden"
     onSubmit={(e) => handleSubmit(e)}
    >
-    <label htmlFor="avatar" className="cursor-pointer">
-     <input
-      id="avatar"
-      type="file"
-      accept="image/*"
-      hidden
-      onChange={(e) => handleChangeInput(e, "file")}
-     />
-     {/* Avatar */}
-     <div className="avatar relative">
-      <div className="w-32 rounded-full">
-       <img src={data?.profilePicUrl?.toString()} alt="Avatar" />
+    <div className="w-full flex flex-col md:max-[1537px]:flex-row md:max-[1537px]:items-center gap-4">
+     <label htmlFor="avatar" className="cursor-pointer self-center flex">
+      <input
+       id="avatar"
+       type="file"
+       accept="image/*"
+       hidden
+       onChange={(e) => handleChangeInput(e, "file")}
+      />
+      {/* Avatar */}
+      <div className="w-32 avatar relative">
+       <div className="w-full rounded-full">
+        <img src={data?.profilePicUrl?.toString()} alt="Avatar" />
+       </div>
+       <span className="absolute bottom-0 right-4 size-6 bg-base-300 flex items-center justify-center rounded-full ring ring-white">
+        <Camera />
+       </span>
       </div>
-      <span className="absolute bottom-0 right-4 size-6 bg-base-300 flex items-center justify-center rounded-full ring ring-white">
-       <Camera />
-      </span>
+     </label>
+     <div className="flex flex-col gap-4 md:max-[1537px]:gap-2 w-full">
+      <label className="input input-bordered flex items-center gap-2 w-full">
+       <UserIconDaisyUI />
+       <input
+        type="text"
+        className="grow"
+        defaultValue={data?.name}
+        placeholder="Full name"
+        autoComplete="on"
+        onChange={(e) => handleChangeInput(e, "name")}
+       />
+      </label>
+      <div className="flex flex-row items-center gap-4 h-12 w-full">
+       <label className="flex flex-row items-center gap-2">
+        <span>Male</span>
+        <input
+         type="radio"
+         name="gender"
+         value={"Male"}
+         className="radio"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "male"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+       </label>
+       <label className="flex flex-row items-center gap-2">
+        <span>Female</span>
+        <input
+         type="radio"
+         name="gender"
+         value={"Female"}
+         className="radio"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "female"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+       </label>
+      </div>
      </div>
-    </label>
-    <label className="input input-bordered flex items-center gap-2 w-full">
-     <UserIconDaisyUI />
-     <input
-      type="text"
-      className="grow"
-      defaultValue={data?.name}
-      placeholder="Full name"
-      autoComplete="on"
-      onChange={(e) => handleChangeInput(e, "name")}
-     />
-    </label>
-    <div className="flex flex-row items-center gap-4 h-12 w-full">
-     <label className="flex flex-row items-center gap-2">
-      <span>Male</span>
-      <input
-       type="radio"
-       name="gender"
-       value={"Male"}
-       className="radio"
-       autoComplete="off"
-       checked={data?.gender?.toLowerCase() === "male"}
-       onChange={(e) => handleChangeInput(e, "gender")}
-      />
-     </label>
-     <label className="flex flex-row items-center gap-2">
-      <span>Female</span>
-      <input
-       type="radio"
-       name="gender"
-       value={"Female"}
-       className="radio"
-       autoComplete="off"
-       checked={data?.gender?.toLowerCase() === "female"}
-       onChange={(e) => handleChangeInput(e, "gender")}
-      />
-     </label>
     </div>
     <label className="input input-bordered flex items-center gap-2 w-full">
      <MapPinHouse className="w-4 h-4 text-base-content/70" />
