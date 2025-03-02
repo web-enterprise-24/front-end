@@ -1,4 +1,4 @@
-import { UserRoundMinus, UserRoundPen } from "lucide-react";
+import { Unplug, UserRoundMinus, UserRoundPen } from "lucide-react";
 
 import { DropdownItemsType } from "../types";
 
@@ -12,6 +12,11 @@ const items: DropdownItemsType[] = [
   id: 2,
   title: "Deactivate",
   icon: UserRoundMinus,
+ },
+ {
+  id: 3,
+  title: "Deallocate",
+  icon: Unplug,
  },
 ];
 

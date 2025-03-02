@@ -18,6 +18,9 @@ type UserType = {
  requiredPasswordChange: boolean;
  firstName: string;
  lastName: string;
+ studentAllocations: {
+  tutor: UserType;
+ }[];
 };
 
 export default UserType;

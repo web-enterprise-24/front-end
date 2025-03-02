@@ -1,4 +1,4 @@
-import { UserPlus, UserRound } from "lucide-react";
+import { Cable, UserPlus, UserRound } from "lucide-react";
 import { SidebarType } from "../types";
 
 const items: SidebarType[] = [
@@ -19,6 +19,12 @@ const items: SidebarType[] = [
   title: "Tutor Management",
   to: "tutor-management",
   icon: UserRound,
+ },
+ {
+  id: 4,
+  title: "Allocation",
+  to: "allocation-management",
+  icon: Cable,
  },
 ];
 

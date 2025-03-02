@@ -7,22 +7,14 @@ import {
  SquareChevronRight,
 } from "lucide-react";
 import { useManagementStore } from "../store";
-import { useShallow } from "zustand/shallow";
+// import { useShallow } from "zustand/shallow";
 
 type Props = {
  items: SidebarType[];
 };
 
 const SidebarFixed = ({ items }: Props) => {
- const [setCurrentPage, setDisplayInactive, setSortBy, setSearchResult] =
-  useManagementStore(
-   useShallow((state) => [
-    state.setCurrentPage,
-    state.setDisplayInactive,
-    state.setSortBy,
-    state.setSearchResult,
-   ])
-  );
+ const reset = useManagementStore((state) => state.reset);
  const [sidebarItemActive, setSideBarItemActive] = useState("add-user");
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -59,10 +51,7 @@ const SidebarFixed = ({ items }: Props) => {
         }`}
         onClick={() => {
          setSideBarItemActive(item.to);
-         setCurrentPage(0, true);
-         setDisplayInactive(false);
-         setSortBy("desc");
-         setSearchResult("");
+         reset();
         }}
        >
         <Link

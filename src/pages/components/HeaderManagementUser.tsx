@@ -8,6 +8,7 @@ import { useManagementStore } from "../../store";
 import { useShallow } from "zustand/shallow";
 import { useLocation } from "react-router-dom";
 import { useDebounce } from "../../hooks";
+import { SearchIconDaisyUI } from "../../components";
 
 type PropsType = {
  title: string;
@@ -18,7 +19,7 @@ const HeaderManagementUser = ({ title }: PropsType) => {
  const [searchText, setSearchText] = useState("");
 
  //  use useDebounce for search
- const debounceValue = useDebounce(searchText, 1000);
+ const debounceValue = useDebounce(searchText, 1500);
 
  //  Get role basing on location path name
  const location = useLocation();
@@ -42,8 +43,6 @@ const HeaderManagementUser = ({ title }: PropsType) => {
  );
 
  useEffect(() => {
-  console.log(debounceValue);
-  //   if (!debounceValue.trim()) return;
   setSearchResult(debounceValue);
   getUserLists(role.current);
  }, [debounceValue, getUserLists, setSearchResult]);
@@ -135,18 +134,7 @@ const HeaderManagementUser = ({ title }: PropsType) => {
       placeholder="Search by name or email"
       onChange={(e) => setSearchText(e.target.value.trim())}
      />
-     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      className="h-4 w-4 opacity-70"
-     >
-      <path
-       fillRule="evenodd"
-       d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-       clipRule="evenodd"
-      />
-     </svg>
+     <SearchIconDaisyUI />
     </label>
    </div>
   </div>
