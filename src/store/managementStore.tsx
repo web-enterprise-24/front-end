@@ -22,6 +22,7 @@ type ManagementStoreType = {
  currentPageStudent: number;
  sortBy: "desc" | "asc";
  searchResult: string;
+ allocation: "allocated" | "unallocated" | "";
  selectedUser: UserType | null;
  userCreated: UserType | null;
  userLists: UserType[] | null;
@@ -50,6 +51,7 @@ type ManagementStoreType = {
  setStudentLists: () => void;
  allocateStudent: (data: AllocateSendType) => void;
  deallocateStudent: (studentId: string) => void;
+ setAllocation: (allocate: "allocated" | "unallocated" | "") => void;
 };
 
 // Get token
@@ -64,6 +66,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  currentPageStudent: 1,
  sortBy: "desc" as const,
  searchResult: "",
+ allocation: "" as const,
  selectedUser: null,
  userCreated: null,
  userLists: null,
@@ -112,12 +115,11 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
     limit,
     get().sortBy,
     get().searchResult,
-    isAllocation ? "unallocated" : ""
+    get().allocation
    );
    if (!isAllocation) {
     set({ userLists: res.data });
     set({ totalPage: res.totalPages });
-    console.log(get().currentPage);
    } else if (isAllocation) {
     if (role === "TUTOR") {
      set({ tutorLists: [...get().tutorLists, ...res.data] });
@@ -125,22 +127,6 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
     } else if (role === "STUDENT") {
      set({ studentLists: [...get().studentLists, ...res.data] });
      set({ totalPageStudent: res.totalPages });
-     // Remove all students that have been allocated a tutor
-     //  const modifiedResponse = res.data.filter(
-     //   (student: UserType) => !student.studentAllocations[0]
-     //  );
-     //  set({ studentLists: [...get().studentLists, ...modifiedResponse] });
-     //  set({ totalPageStudent: res.totalPages });
-
-     //  if (
-     //   get().studentLists.length < 7 &&
-     //   get().currentPageStudent !== get().totalPage
-     //  ) {
-     //   get().setCurrentPageStudent(1);
-     //   get().getUserLists("STUDENT", true);
-     //   set({ currentPage: get().currentPage - 1 });
-     //  }
-     //  console.log(get().studentLists);
     }
    }
   } catch (err) {
@@ -275,6 +261,9 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
     toast.error("Deallocation failed: ", err.response?.data?.message);
    }
   }
+ },
+ setAllocation(allocate) {
+  set({ allocation: allocate });
  },
 }));
 

@@ -25,6 +25,7 @@ const AllocationManagement = () => {
   setStudentLists,
   allocateStudent,
   isAllocating,
+  setAllocation,
  ] = useManagementStore(
   useShallow((state) => [
    state.getUserLists,
@@ -43,6 +44,7 @@ const AllocationManagement = () => {
    state.setStudentLists,
    state.allocateStudent,
    state.isAllocating,
+   state.setAllocation,
   ])
  );
  const [tutor, setTutor] = useState<UserType>({} as UserType);
@@ -65,11 +67,13 @@ const AllocationManagement = () => {
   // reset previous value
   setTutorLists();
   setCurrentPageTutor(0, true);
+  setAllocation("unallocated");
 
   setSearchResult(tutorSearchDebounce);
   getUserLists("TUTOR", true);
  }, [
   getUserLists,
+  setAllocation,
   setCurrentPageTutor,
   setSearchResult,
   setTutorLists,

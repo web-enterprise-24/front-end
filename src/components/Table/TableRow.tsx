@@ -4,7 +4,7 @@ import { useGeneralStore, useManagementStore } from "../../store";
 import { useShallow } from "zustand/shallow";
 import { UserType } from "../../types";
 import { convertDate } from "../../utils";
-import { UserRoundCheck } from "lucide-react";
+import { EllipsisVertical, UserRoundCheck } from "lucide-react";
 
 type PropsType = {
  data: UserType;
@@ -101,10 +101,12 @@ const TableRow = ({ data, role, changeStatus, deallocate }: PropsType) => {
      <Dropdown
       items={ManagementActionItems}
       variant={"management-action"}
-      isHidden={role === "TUTOR" && !data?.studentAllocations?.[0]}
+      isHidden={role === "STUDENT" ? !data?.studentAllocations?.[0] : true}
       onClick={handleClickAction}
      >
-      <button className="btn btn-ghost btn-xs">details</button>
+      <button className="btn btn-ghost btn-xs">
+       <EllipsisVertical />
+      </button>
      </Dropdown>
     ) : (
      <button

@@ -47,6 +47,7 @@ const Table = ({ role }: PropsType) => {
 
  //  When clicking on deactivate or activate button
  const handleClickAction = (userId: string, status: boolean) => {
+  setActionTitle("");
   setStatusChange(status);
   userIdRef.current = userId;
 
@@ -76,9 +77,13 @@ const Table = ({ role }: PropsType) => {
   <div className="w-full h-[600px] lg:h-[550px] flex flex-col gap-2">
    <ConfirmModal
     ref={dialogRef}
-    title={`Are you sure to ${
-     statusChange ? "activate" : "deactivate"
-    } this account?`}
+    title={
+     actionTitle === "deallocate"
+      ? "Are you sure to deallocate this student?"
+      : `Are you sure to ${
+         statusChange ? "activate" : "deactivate"
+        } this account?`
+    }
     events={[handleClickConfirmModal]}
    />
    <div className="h-full overflow-x-auto overflow-y-hidden">
