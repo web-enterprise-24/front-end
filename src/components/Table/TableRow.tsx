@@ -8,11 +8,12 @@ import { UserRoundCheck } from "lucide-react";
 
 type PropsType = {
  data: UserType;
+ role: "STUDENT" | "TUTOR";
  changeStatus: (userId: string, status: boolean) => void;
  deallocate: (studentId: string) => void;
 };
 
-const TableRow = ({ data, changeStatus, deallocate }: PropsType) => {
+const TableRow = ({ data, role, changeStatus, deallocate }: PropsType) => {
  const [setModalFor, modalElement, setIsShowingModal, getProvinces] =
   useGeneralStore(
    useShallow((state) => [
@@ -57,35 +58,37 @@ const TableRow = ({ data, changeStatus, deallocate }: PropsType) => {
     </div>
    </td>
    <td>{data?.gender}</td>
-   <td className="truncate">{data?.email}</td>
+   <td className="max-w-[100px] truncate">{data?.email}</td>
    <td className="truncate">
     {data?.dateOfBirth ? convertDate(data.dateOfBirth) : ""}
    </td>
-   <td className="truncate">{data?.address}</td>
-   <td>
-    {data?.studentAllocations[0] ? (
-     <div className="flex items-center gap-3">
-      <div className="avatar">
-       <div className="mask mask-squircle h-12 w-12">
-        <img
-         src={data?.studentAllocations[0]?.tutor?.profilePicUrl?.toString()}
-         alt="Avatar"
-        />
+   <td className="max-w-[100px] truncate">{data?.address}</td>
+   {role === "STUDENT" && (
+    <td>
+     {data?.studentAllocations?.[0] ? (
+      <div className="flex items-center gap-3">
+       <div className="avatar">
+        <div className="mask mask-squircle h-12 w-12">
+         <img
+          src={data?.studentAllocations[0]?.tutor?.profilePicUrl?.toString()}
+          alt="Avatar"
+         />
+        </div>
+       </div>
+       <div>
+        <div className="font-bold truncate">
+         {data?.studentAllocations[0]?.tutor?.name}
+        </div>
+        <div className="text-sm opacity-50">
+         {data?.studentAllocations[0]?.tutor?.email}
+        </div>
        </div>
       </div>
-      <div>
-       <div className="font-bold truncate">
-        {data?.studentAllocations[0]?.tutor?.name}
-       </div>
-       <div className="text-sm opacity-50">
-        {data?.studentAllocations[0]?.tutor?.email}
-       </div>
-      </div>
-     </div>
-    ) : (
-     <span>None</span>
-    )}
-   </td>
+     ) : (
+      <span>None</span>
+     )}
+    </td>
+   )}
    <td>
     {data?.status ? (
      <div className="badge badge-primary">Active</div>
@@ -98,7 +101,7 @@ const TableRow = ({ data, changeStatus, deallocate }: PropsType) => {
      <Dropdown
       items={ManagementActionItems}
       variant={"management-action"}
-      isHidden={!data?.studentAllocations[0]}
+      isHidden={role === "TUTOR" && !data?.studentAllocations?.[0]}
       onClick={handleClickAction}
      >
       <button className="btn btn-ghost btn-xs">details</button>

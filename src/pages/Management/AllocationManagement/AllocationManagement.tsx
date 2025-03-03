@@ -160,6 +160,8 @@ const AllocationManagement = () => {
   allocateStudent(data);
   setTutorSearch("");
   setStudentSearch("");
+  setTutor({} as UserType);
+  setStudents([]);
  };
 
  return (
@@ -169,8 +171,8 @@ const AllocationManagement = () => {
     title="Please confirm your action."
     events={[handleClickConfirmAllocation]}
    />
-   <div className="flex flex-col gap-20">
-    <div className="flex flex-row justify-around">
+   <div className="w-full h-full flex flex-col gap-10">
+    <div className="flex flex-row max-[1025px]:flex-col max-[1025px]:gap-6 justify-around">
      {/* Choose tutor */}
      <Selection
       title="Please choose tutor"

@@ -111,27 +111,36 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
     get().isDisplayInactive,
     limit,
     get().sortBy,
-    get().searchResult
+    get().searchResult,
+    isAllocation ? "unallocated" : ""
    );
    if (!isAllocation) {
     set({ userLists: res.data });
     set({ totalPage: res.totalPages });
+    console.log(get().currentPage);
    } else if (isAllocation) {
     if (role === "TUTOR") {
      set({ tutorLists: [...get().tutorLists, ...res.data] });
      set({ totalPageTutor: res.totalPages });
     } else if (role === "STUDENT") {
-     // Remove all students that have been allocated a tutor
-     const modifiedResponse = [...res.data];
-
-     modifiedResponse.forEach((student, index) => {
-      if (student.studentAllocations[0]) {
-       modifiedResponse.splice(index, 1);
-      }
-     });
-
-     set({ studentLists: [...get().studentLists, ...modifiedResponse] });
+     set({ studentLists: [...get().studentLists, ...res.data] });
      set({ totalPageStudent: res.totalPages });
+     // Remove all students that have been allocated a tutor
+     //  const modifiedResponse = res.data.filter(
+     //   (student: UserType) => !student.studentAllocations[0]
+     //  );
+     //  set({ studentLists: [...get().studentLists, ...modifiedResponse] });
+     //  set({ totalPageStudent: res.totalPages });
+
+     //  if (
+     //   get().studentLists.length < 7 &&
+     //   get().currentPageStudent !== get().totalPage
+     //  ) {
+     //   get().setCurrentPageStudent(1);
+     //   get().getUserLists("STUDENT", true);
+     //   set({ currentPage: get().currentPage - 1 });
+     //  }
+     //  console.log(get().studentLists);
     }
    }
   } catch (err) {
@@ -241,10 +250,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
    set({ studentLists: [] });
    set({ currentPageTutor: 1 });
    set({ currentPageStudent: 1 });
-
-   //    Recall getUsers
-   get().getUserLists("TUTOR", true);
-   get().getUserLists("STUDENT", true);
+   set({ currentPage: 1 });
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err);
@@ -252,6 +258,10 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
    }
   } finally {
    set({ isAllocating: false });
+   console.log(get().currentPage);
+   //    Recall getUsers
+   await get().getUserLists("TUTOR", true);
+   await get().getUserLists("STUDENT", true);
   }
  },
  async deallocateStudent(studentId) {

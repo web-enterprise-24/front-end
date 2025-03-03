@@ -1,4 +1,4 @@
-import { UserRoundPen } from "lucide-react";
+import { ChartNoAxesColumnIncreasing, UserRoundPen } from "lucide-react";
 import { SidebarType } from "../types";
 
 const items: SidebarType[] = [
@@ -7,6 +7,12 @@ const items: SidebarType[] = [
   title: "Profile",
   to: "profile",
   icon: UserRoundPen,
+ },
+ {
+  id: 2,
+  title: "Dashboard",
+  to: "detailed-dashboard",
+  icon: ChartNoAxesColumnIncreasing,
  },
 ];
 

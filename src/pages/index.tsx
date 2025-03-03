@@ -7,3 +7,4 @@ export { default as TutorManagement } from "./Management/TutorManagement/TutorMa
 export { default as AllocationManagement } from "./Management/AllocationManagement/AllocationManagement";
 export { default as Message } from "./Message";
 export { default as Profile } from "./Dashboard/Profile/Profile";
+export { default as DetailedDashboard } from "./Dashboard/DetailedDashboard/DetailedDashboard";
