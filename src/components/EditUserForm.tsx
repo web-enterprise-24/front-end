@@ -104,6 +104,7 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
    email,
    firstName,
    lastName,
+   studentAllocations,
    ...submitData
   } = data;
   // Call api
