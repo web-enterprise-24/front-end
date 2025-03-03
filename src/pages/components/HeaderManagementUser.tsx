@@ -44,8 +44,9 @@ const HeaderManagementUser = ({ title }: PropsType) => {
 
  useEffect(() => {
   setSearchResult(debounceValue);
+  setCurrentPage(0, true);
   getUserLists(role.current);
- }, [debounceValue, getUserLists, setSearchResult]);
+ }, [debounceValue, getUserLists, setCurrentPage, setSearchResult]);
 
  const handleChangeCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
   setDisplayInactive(e.target.checked);

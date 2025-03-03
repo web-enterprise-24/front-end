@@ -13,6 +13,7 @@ import {
  StudentManagement,
  TutorManagement,
  AllocationManagement,
+ DetailedDashboard,
 } from "./pages";
 import { MainLayout, LayoutSidebar } from "./layouts";
 import { Modal } from "./components";
@@ -98,6 +99,7 @@ const App = () => {
      <Route path="/dashboard" element={<Dashboard />}>
       <Route index element={<Navigate to="profile" />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="detailed-dashboard" element={<DetailedDashboard />} />
      </Route>
     </Route>
    </Routes>

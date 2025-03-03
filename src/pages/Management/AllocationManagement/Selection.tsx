@@ -51,14 +51,15 @@ const Selection = ({
   const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
 
   // If scrolled to bottom (or near bottom with 20px threshold)
-  if (scrollTop + clientHeight >= scrollHeight) {
+  if (scrollTop + clientHeight >= scrollHeight - 20) {
    const role = title.includes("student") ? "STUDENT" : "TUTOR";
    getUserOnScroll(role);
+   console.log("scroll");
   }
  };
 
  return (
-  <div className="flex flex-col gap-2">
+  <div className="flex flex-col gap-2 max-[1025px]:items-center">
    <div
     className={`flex flex-row items-center gap-2 ${
      isSelected && "text-success"
@@ -67,7 +68,7 @@ const Selection = ({
     <p className="font-bold">{title}</p>
     {isSelected && <CircleCheckBig />}
    </div>
-   <div className="flex flex-col gap-2">
+   <div className="w-[500px] max-[1025px]:w-[600px] max-[769px]:w-full h-[400px] flex flex-col gap-2">
     <label className="input input-bordered flex items-center gap-2">
      <input
       type="text"
@@ -81,7 +82,7 @@ const Selection = ({
     <div
      ref={scrollContainerRef}
      onScroll={handleScroll}
-     className="w-[500px] h-[500px] border border-base-200 rounded-lg p-6 overflow-y-auto"
+     className="w-full h-full border border-base-200 rounded-lg p-6 overflow-y-auto"
     >
      {isLoading && !data?.[0] ? (
       <div className="w-full h-full flex items-center justify-center">

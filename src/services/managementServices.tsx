@@ -27,12 +27,12 @@ export const getUsers = async (
  status: boolean,
  limit: number,
  sortBy: "desc" | "asc",
- searchResult: string
+ searchResult: string,
+ allocate: "unallocated" | "allocated" | ""
 ) => {
  try {
-  console.log(role, pageNumber, status);
   const res = await axios.get(
-   `/account/?role=${role}&status=${!status}&limit=${limit}&page=${pageNumber}&sort=${sortBy}&search=${searchResult}`,
+   `/account/?role=${role}&status=${!status}&limit=${limit}&page=${pageNumber}&sort=${sortBy}&search=${searchResult}&filter=${allocate}`,
    {
     headers: {
      Authorization: `Bearer ${token}`,

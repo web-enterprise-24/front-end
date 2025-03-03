@@ -82,7 +82,7 @@ const Table = ({ role }: PropsType) => {
     events={[handleClickConfirmModal]}
    />
    <div className="h-full overflow-x-auto overflow-y-hidden">
-    <table className="table table-zebra">
+    <table className="table table-zebra table-auto">
      {/* head */}
      <thead>
       <tr>
@@ -91,7 +91,7 @@ const Table = ({ role }: PropsType) => {
        <th>Email</th>
        <th>Date of birth</th>
        <th>Address</th>
-       <th>Tutor</th>
+       {role === "STUDENT" && <th>Tutor</th>}
        <th>Status</th>
        <th></th>
       </tr>
@@ -104,6 +104,7 @@ const Table = ({ role }: PropsType) => {
          data={user}
          changeStatus={handleClickAction}
          deallocate={handleClickDeallocate}
+         role={role}
         />
        ))
       ) : (

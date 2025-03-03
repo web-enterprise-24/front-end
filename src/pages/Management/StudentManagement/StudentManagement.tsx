@@ -11,7 +11,7 @@ const StudentManagement = () => {
  }, []);
 
  return (
-  <div className="w-full h-full">
+  <div className="w-full h-full overflow-x-auto">
    <Header title="All Students" />
    <Table role="STUDENT" />
   </div>
