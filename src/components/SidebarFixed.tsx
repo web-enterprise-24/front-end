@@ -7,14 +7,16 @@ import {
  SquareChevronRight,
 } from "lucide-react";
 import { useManagementStore } from "../store";
-// import { useShallow } from "zustand/shallow";
+import { useShallow } from "zustand/shallow";
 
 type Props = {
  items: SidebarType[];
 };
 
 const SidebarFixed = ({ items }: Props) => {
- const reset = useManagementStore((state) => state.reset);
+ const [reset, setAllocation] = useManagementStore(
+  useShallow((state) => [state.reset, state.setAllocation])
+ );
  const [sidebarItemActive, setSideBarItemActive] = useState("add-user");
  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -52,6 +54,14 @@ const SidebarFixed = ({ items }: Props) => {
         onClick={() => {
          setSideBarItemActive(item.to);
          reset();
+         if (item.title === "Allocation") {
+          setAllocation("unallocated");
+         } else if (
+          item.title === "Student Management" ||
+          item.title === "Tutor Management"
+         ) {
+          setAllocation("");
+         }
         }}
        >
         <Link

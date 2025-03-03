@@ -9,6 +9,7 @@ import { useShallow } from "zustand/shallow";
 import { useLocation } from "react-router-dom";
 import { useDebounce } from "../../hooks";
 import { SearchIconDaisyUI } from "../../components";
+import CheckFilter from "./CheckFilter";
 
 type PropsType = {
  title: string;
@@ -17,6 +18,13 @@ type PropsType = {
 const HeaderManagementUser = ({ title }: PropsType) => {
  const [toggleFilter, setToggleFilter] = useState(true);
  const [searchText, setSearchText] = useState("");
+ const [isAllocation, setIsAllocation] = useState({
+  allocated: false,
+  unallocated: false,
+ });
+
+ const allocatedRef = useRef<HTMLInputElement | null>(null);
+ const unallocatedRef = useRef<HTMLInputElement | null>(null);
 
  //  use useDebounce for search
  const debounceValue = useDebounce(searchText, 1500);
@@ -32,6 +40,7 @@ const HeaderManagementUser = ({ title }: PropsType) => {
   setCurrentPage,
   setSortBy,
   setSearchResult,
+  setAllocation,
  ] = useManagementStore(
   useShallow((state) => [
    state.setDisplayInactive,
@@ -39,6 +48,7 @@ const HeaderManagementUser = ({ title }: PropsType) => {
    state.setCurrentPage,
    state.setSortBy,
    state.setSearchResult,
+   state.setAllocation,
   ])
  );
 
@@ -48,10 +58,59 @@ const HeaderManagementUser = ({ title }: PropsType) => {
   getUserLists(role.current);
  }, [debounceValue, getUserLists, setCurrentPage, setSearchResult]);
 
+ useEffect(() => {
+  console.log(
+   `allocated: ${isAllocation.allocated}, unallocated: ${isAllocation.unallocated}`
+  );
+ }, [isAllocation]);
+
  const handleChangeCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
   setDisplayInactive(e.target.checked);
   setCurrentPage(0, true);
   getUserLists(role.current);
+ };
+
+ const handleChangeAllocated = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (unallocatedRef.current && unallocatedRef.current.checked) {
+   unallocatedRef.current.checked = false;
+  }
+  if (e.target.checked) {
+   setIsAllocation({ unallocated: false, allocated: true });
+   setAllocation("allocated");
+   setCurrentPage(0, true);
+   getUserLists(role.current);
+
+   return;
+  }
+
+  if (!isAllocation.unallocated) {
+   setAllocation("");
+   getUserLists(role.current);
+  }
+
+  setIsAllocation({ unallocated: false, allocated: false });
+ };
+
+ const handleChangeUnallocated = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (allocatedRef.current && allocatedRef.current.checked) {
+   allocatedRef.current.checked = false;
+  }
+
+  if (e.target.checked) {
+   setIsAllocation({ allocated: false, unallocated: true });
+   setAllocation("unallocated");
+   setCurrentPage(0, true);
+   getUserLists(role.current);
+
+   return;
+  }
+
+  if (!isAllocation.allocated) {
+   setAllocation("");
+   getUserLists(role.current);
+  }
+
+  setIsAllocation({ allocated: false, unallocated: false });
  };
 
  const handleClickSort = () => {
@@ -72,10 +131,10 @@ const HeaderManagementUser = ({ title }: PropsType) => {
    <h1 className="font-black text-lg">{title}</h1>
    <div className="flex flex-row gap-2 items-center">
     {/* Show for mobile screen */}
-    <div className="dropdown md:hidden">
+    <div className="dropdown">
      <span
       tabIndex={0}
-      className="size-8 bg-base-200 rounded-full flex items-center justify-center cursor-pointer"
+      className="lg:hidden size-8 bg-base-200 rounded-full flex items-center justify-center cursor-pointer"
      >
       <SlidersHorizontal className="size-5" />
      </span>
@@ -84,40 +143,65 @@ const HeaderManagementUser = ({ title }: PropsType) => {
       className="dropdown-content menu bg-base-100 rounded-box z-[1] w-60 p-2 shadow"
      >
       <li>
-       <label
-        htmlFor="check-active"
-        className="flex flex-row items-center gap-2"
-       >
-        <span className="font-bold text-xs">{`Show inactive ${
+       <CheckFilter
+        id={"check-active"}
+        title={`Show inactive ${
          title.toLowerCase().includes("students") ? "students" : "tutors"
-        }`}</span>
-        <input
-         id="check-active"
-         type="checkbox"
-         className="toggle toggle-sm"
-         onChange={(e) => handleChangeCheck(e)}
-        />
-       </label>
+        }`}
+        onChange={handleChangeCheck}
+       />
       </li>
+      {role.current === "STUDENT" && (
+       <>
+        <li>
+         <CheckFilter
+          ref={allocatedRef}
+          id={"check-allocated"}
+          title={"Show allocated"}
+          onChange={handleChangeAllocated}
+         />
+        </li>
+        <li>
+         <CheckFilter
+          ref={unallocatedRef}
+          id={"check-unallocated"}
+          title={"Show unallocated"}
+          onChange={handleChangeUnallocated}
+         />
+        </li>
+       </>
+      )}
      </ul>
     </div>
 
     {/* Show for large screen */}
-    <label
-     htmlFor="check-active"
-     className="hidden md:flex flex-row items-center gap-2"
-    >
-     <span className="font-bold text-sm">{`Show inactive ${
-      title.toLowerCase().includes("students") ? "students" : "tutors"
-     }`}</span>
-     <input
-      id="check-active"
-      type="checkbox"
-      className="toggle toggle-sm"
-      onChange={(e) => handleChangeCheck(e)}
-     />
-    </label>
-
+    {
+     <div className="hidden lg:flex items-center gap-2">
+      <CheckFilter
+       id={"check-active"}
+       title={`Show inactive ${
+        title.toLowerCase().includes("students") ? "students" : "tutors"
+       }`}
+       onChange={handleChangeCheck}
+      />
+      {role.current === "STUDENT" && (
+       <>
+        <CheckFilter
+         ref={allocatedRef}
+         id={"check-allocated"}
+         title={"Show allocated"}
+         onChange={handleChangeAllocated}
+        />
+        <CheckFilter
+         ref={unallocatedRef}
+         id={"check-unallocated"}
+         title={"Show unallocated"}
+         onChange={handleChangeUnallocated}
+        />
+       </>
+      )}
+     </div>
+    }
     <span
      className="size-8 bg-base-200 rounded-full flex items-center justify-center cursor-pointer"
      onClick={handleClickSort}

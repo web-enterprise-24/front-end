@@ -64,7 +64,8 @@ const useAuthStore = create<AuthStoreType>((set) => ({
   try {
    set({ isLoggingIn: true });
    const res = await login(data);
-   set({ authUser: res.user });
+
+   if (res.user) set({ authUser: res.user });
    set({ accessToken: res.tokens.accessToken });
    set({ refreshToken: res.tokens.refreshToken });
    localStorage.setItem("access", res.tokens.accessToken);
