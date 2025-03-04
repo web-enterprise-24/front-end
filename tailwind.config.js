@@ -22,6 +22,7 @@ export default {
    nocompatible: true,
    preferredStrategy: "pseudoelements",
   }),
+  require("tailwind-scrollbar-hide"),
  ],
  daisyui: {
   themes: ["light", "dark", "cupcake", "emerald"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
