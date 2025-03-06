@@ -33,10 +33,10 @@ const Navbar = () => {
  };
 
  return (
-  <div className="max-lg:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
+  <div className="max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
    <MobileNavbar items={SidebarHomeItems} page={"home"} />
    {/* Large screen nav */}
-   <div className="hidden lg:flex flex-row justify-between container mx-auto px-8 max-[821px]:px-2 w-full h-full ">
+   <div className="hidden xl:flex flex-row justify-between container mx-auto px-8 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
      <Link to={"/"} className="h-full flex items-center cursor-pointer">
       <img className="w-full h-full object-cover" src="/logo.webp" alt="Logo" />
@@ -60,9 +60,10 @@ const Navbar = () => {
       <input
        type="text"
        placeholder="Search"
-       className="input input-bordered border-2 rounded-full w-24 h-10 md:w-auto focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+       className="input input-bordered border-2 rounded-full w-24 h-10 md:w-auto"
       />
      </div>
+
      {authUser ? (
       <>
        <Dropdown items={[]} variant={"notification"}>

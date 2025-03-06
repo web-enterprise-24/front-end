@@ -5,7 +5,7 @@ import { DropdownItemsType } from "../types";
 const items: DropdownItemsType[] = [
  {
   id: 1,
-  title: "Dashboard",
+  title: "Setting",
   icon: LayoutDashboard,
   to: "/dashboard",
  },

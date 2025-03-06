@@ -49,7 +49,7 @@ const SidebarFixed = ({ items }: Props) => {
        <li
         key={item.id}
         className={`bg-base-200 p-3 rounded-lg border-3  btn ${
-         sidebarItemActive === item.to && "border-2 btn btn-outline skeleton"
+         sidebarItemActive === item.to && "border-2 btn btn-outline"
         }`}
         onClick={() => {
          setSideBarItemActive(item.to);
