@@ -128,7 +128,7 @@ const Sidebar = () => {
    {isUserLoading
     ? new Array(8)
        .fill(null)
-       .map((item, index) => <SkeletonUserChat key={index} />)
+       .map((item, index) => <SkeletonUserChat key={index+item} />)
     : users.map((user) => (
        <UserItem key={user.id} data={user} onClick={handleClick} />
       ))}
