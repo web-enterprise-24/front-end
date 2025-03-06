@@ -18,6 +18,7 @@ type UserType = {
  requiredPasswordChange: boolean;
  firstName: string;
  lastName: string;
+ myTutor?: null;
  studentAllocations?: {
   tutor: UserType;
  }[];

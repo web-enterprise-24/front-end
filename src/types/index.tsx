@@ -6,3 +6,5 @@ export type { default as UserType } from "./UserType";
 export type { default as ChangePasswordFirstTimeType } from "./ChangePasswordFirstTimeType";
 export type { default as ProvinceType } from "./ProvinceType";
 export type { default as AllocateSendType } from "./AllocateSendType";
+export type { default as MessageType } from "./MessageType";
+export type { default as MessageSendType } from "./MessageSendType";

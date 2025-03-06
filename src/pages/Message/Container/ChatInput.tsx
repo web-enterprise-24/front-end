@@ -1,8 +1,14 @@
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Send, Smile } from "lucide-react";
 import { useRef, useState } from "react";
+import { useMessageStore } from "../../../store";
+import { useShallow } from "zustand/shallow";
+import { MessageSendType } from "../../../types";
 
 const ChatInput = () => {
+ const [sendMessage, selectedUser] = useMessageStore(
+  useShallow((state) => [state.sendMessage, state.selectedUser])
+ );
  const [showEmoji, setShowEmoji] = useState(false);
  const [message, setMessage] = useState("");
 
@@ -25,7 +31,16 @@ const ChatInput = () => {
 
  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  console.log("Submitting...");
+
+  if (!selectedUser?.id) return;
+
+  const dataSend: MessageSendType = {
+   receiverId: selectedUser.id,
+   content: message,
+  };
+
+  sendMessage(dataSend);
+  setMessage("");
  };
 
  const onEmojiClick = (emojiData: EmojiClickData) => {
@@ -68,7 +83,7 @@ const ChatInput = () => {
        }
       }
      }}
-     className="textarea textarea-bordered text-lg leading-tight w-full resize-none min-h-10 max-h-20 scrollbar-hide"
+     className="textarea textarea-bordered text-lg w-full resize-none min-h-14 max-h-20 scrollbar-hide py-3 leading-relaxed"
     />
     <span
      className="cursor-pointer size-10 hover:bg-base-300 flex items-center justify-center rounded-lg transition-colors ease-linear duration-100"
@@ -76,7 +91,11 @@ const ChatInput = () => {
     >
      <Smile />
     </span>
-    <button ref={submitBtnRef} className="btn btn-ghost">
+    <button
+     ref={submitBtnRef}
+     className="btn btn-ghost"
+     disabled={!message ? true : false}
+    >
      <Send />
     </button>
    </form>

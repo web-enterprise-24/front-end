@@ -9,6 +9,7 @@ import { UserType } from "../types";
 import { useShallow } from "zustand/shallow";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
+import { UploadImage } from "../utils";
 
 type PropsType = {
  formFor?: "edit-user" | "edit-profile";
@@ -35,11 +36,16 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
  );
  const changeProfile = useAuthStore((state) => state.changeProfile);
  const [data, setData] = useState<UserType>(selectedUser || ({} as UserType));
+ const [isUploading, setIsUploading] = useState(false);
 
  const dialogRef = useRef<HTMLDialogElement | null>(null);
  const formRef = useRef<HTMLFormElement | null>(null);
 
  const location = useLocation();
+
+ useEffect(() => {
+  console.log(data);
+ }, [data]);
 
  useEffect(() => {
   if (dialogRef.current) {
@@ -65,15 +71,19 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
    const file = e.target?.files?.[0];
    if (!file) return;
 
-   const reader = new FileReader();
-   reader.readAsDataURL(file);
-
-   reader.onload = () => {
-    const base64Image = reader.result;
-    if (base64Image) {
-     setData({ ...data, profilePicUrl: base64Image });
+   const generateImageLink = async () => {
+    try {
+     setIsUploading(true);
+     const result = await UploadImage(file);
+     setData({ ...data, profilePicUrl: result });
+    } catch (err) {
+     console.log(err);
+    } finally {
+     setIsUploading(false);
     }
    };
+
+   generateImageLink();
    return;
   }
   setData({ ...data, [field]: e.target.value });
@@ -105,6 +115,7 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
    firstName,
    lastName,
    studentAllocations,
+   myTutor,
    ...submitData
   } = data;
   // Call api
@@ -148,7 +159,7 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
        onChange={(e) => handleChangeInput(e, "file")}
       />
       {/* Avatar */}
-      <div className="w-32 avatar relative">
+      <div className={`w-32 avatar relative ${isUploading && "animate-pulse"}`}>
        <div className="w-full rounded-full">
         <img src={data?.profilePicUrl?.toString()} alt="Avatar" />
        </div>
@@ -158,73 +169,59 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
       </div>
      </label>
      <div className="flex flex-col gap-4 md:max-[1537px]:gap-2 w-full">
-     <label className="relative block">
-  <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
-  <input
-    type="text"
-    className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-    placeholder=" "
-    autoComplete="on"
-    value={data?.name || ""}
-    onChange={(e) => handleChangeInput(e, "name")}
-  />
-  <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-      data?.name ? "top-0 text-sm" : ""
-    }`}
-  >
-    Full name
-  </span>
-</label>
-<div className="flex flex-row items-center gap-4 h-12 w-full">
-  <label className="flex flex-row items-center gap-2">
-    <input
-      type="radio"
-      name="gender"
-      value={"Male"}
-      className="radio peer"
-      autoComplete="off"
-      checked={data?.gender?.toLowerCase() === "male"}
-      onChange={(e) => handleChangeInput(e, "gender")}
-    />
-    <span className="peer-checked:text-blue-500">Male</span>
-  </label>
-  <label className="flex flex-row items-center gap-2">
-    <input
-      type="radio"
-      name="gender"
-      value={"Female"}
-      className="radio peer"
-      autoComplete="off"
-      checked={data?.gender?.toLowerCase() === "female"}
-      onChange={(e) => handleChangeInput(e, "gender")}
-    />
-    <span className="peer-checked:text-blue-500">Female</span>
-  </label>
-</div>
+      <label className="input input-bordered flex items-center gap-2 w-full">
+       <UserIconDaisyUI />
+       <input
+        type="text"
+        className="grow"
+        defaultValue={data?.name}
+        placeholder="Full name"
+        autoComplete="on"
+        onChange={(e) => handleChangeInput(e, "name")}
+       />
+      </label>
+      <div className="flex flex-row items-center gap-4 h-12 w-full">
+       <label className="flex flex-row items-center gap-2">
+        <span>Male</span>
+        <input
+         type="radio"
+         name="gender"
+         value={"Male"}
+         className="radio"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "male"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+       </label>
+       <label className="flex flex-row items-center gap-2">
+        <span>Female</span>
+        <input
+         type="radio"
+         name="gender"
+         value={"Female"}
+         className="radio"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "female"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+       </label>
+      </div>
      </div>
     </div>
-    <label className="relative block w-full flex-col md:max-[1537px]:flex-row md:max-[1537px]:items-center gap-4">
-     <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
+    <label className="input input-bordered flex items-center gap-2 w-full">
+     <MapPinHouse className="w-4 h-4 text-base-content/70" />
      <input
       type="text"
-      className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-      placeholder=" "
+      className="grow"
+      placeholder="Address"
       autoComplete="on"
-      value={data?.address || ""}
+      defaultValue={data?.address}
       onChange={(e) => handleChangeInput(e, "address")}
      />
-     <span
-      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-       data?.address ? "top-0 text-sm" : ""
-      }`}
-     >
-      Address
-     </span>
     </label>
-    <div className="flex flex-col gap-4 w-full relative">
+    <div className="flex flex-col gap-4 w-full">
      <select
-      className="select select-bordered focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      className="select select-bordered"
       defaultValue={data?.city}
       onChange={(e) => handleChangeSelect(e)}
      >
@@ -236,36 +233,20 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
         <option key={index}>{province.toString()}</option>
        ))}
      </select>
-     <span
-       className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-        data?.city ? "top-0 text-sm" : ""
-       }`}
-      >
-       Province
-      </span>
-     
-      <label className="relative block">
-      <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
+     <label className="input input-bordered flex items-center gap-2 ">
+      <Globe className="w-4 h-4 text-base-content/70" />
       <input
        type="text"
-       className="peer h-12 w-full pl-10 pr-4 py-2 border rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-       placeholder=" "
-       value={"Viet Nam"}
+       className="grow max-w-md"
+       placeholder="Country"
        autoComplete="on"
+       defaultValue={"Viet Nam"}
        disabled
       />
-      <span
-       className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-        data?.country ? "top-0 text-sm" : ""
-       }`}
-      >
-       Country
-      </span>
      </label>
     </div>
-    <div className="w-full flex flex-col gap-4 relative">
     <DatePicker
-     className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+     className="input input-bordered flex items-center gap-2 w-full"
      wrapperClassName="w-full"
      selected={data?.dateOfBirth ? new Date(data?.dateOfBirth) : new Date()}
      onChange={(date) =>
@@ -275,31 +256,16 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
      placeholderText={"Date of birth"}
      dateFormat={"dd/MM/yyyy"}
     />
-    <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-      data.dateOfBirth ? "top-0 text-sm" : ""
-    }`}
-  >
-    Date of birth
-  </span>
-    </div>
-    <label className="flex flex-col gap-4 w-full relative ">
-      <EmailIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
-      <input
-        type="email"
-        className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-        placeholder=" "
-        defaultValue={data?.email}
-        autoComplete="on"
-        disabled
-      />
-      <span
-        className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-          data?.email ? "top-0 text-sm" : ""
-        }`}
-      >
-        Email
-      </span>
+    <label className="input input-bordered flex items-center gap-2 w-full">
+     <EmailIconDaisyUI />
+     <input
+      type="email"
+      className="grow"
+      placeholder="Email"
+      defaultValue={data?.email}
+      autoComplete="on"
+      disabled
+     />
     </label>
    </form>
   </>
