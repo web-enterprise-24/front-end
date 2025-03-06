@@ -135,28 +135,30 @@ const AddUserForm = ({ role }: PropsType) => {
    </label>
    <div className="flex flex-row items-center gap-4 h-12">
     <label className="flex flex-row items-center gap-2">
-     <span>Male</span>
+     
      <input
       type="radio"
       name="gender"
       value={"Male"}
-      className="radio"
+      className="radio peer"
       autoComplete="off"
       checked={userData.gender.toLowerCase() === "male"}
       onChange={(e) => handleChangeInput(e, "gender")}
      />
+     <span className="peer-checked:text-blue-500">Male</span>
     </label>
     <label className="flex flex-row items-center gap-2">
-     <span>Female</span>
+   
      <input
       type="radio"
       name="gender"
       value={"Female"}
-      className="radio"
+      className="radio peer"
       autoComplete="off"
       checked={userData.gender.toLowerCase() === "female"}
       onChange={(e) => handleChangeInput(e, "gender")}
      />
+      <span className="peer-checked:text-blue-500">Female</span>
     </label>
    </div>
    <label className="relative block">
@@ -178,8 +180,9 @@ const AddUserForm = ({ role }: PropsType) => {
     </span>
    </label>
    <div className="flex flex-col xl:flex-row gap-4 ">
+   <label className="relative flex flex-col xl:w-1/2 text-sm ">
     <select
-     className="select select-bordered xl:w-1/2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+     className="select select-bordered focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
      onChange={(e) => handleChangeSelect(e)}
      value={userData?.city || ""}
     >
@@ -189,7 +192,16 @@ const AddUserForm = ({ role }: PropsType) => {
        <option key={index}>{province.toString()}</option>
       ))}
     </select>
-    <label className="input input-bordered flex items-center gap-2 xl:w-1/2">
+    <span
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       userData?.city ? "top-0 text-sm" : ""
+      }`}
+     >
+      Province
+     </span>
+    </label>
+    <label className="relative flex-col xl:w-1/2">
+    <label className="input input-bordered flex items-center gap-2  relative">
      <Globe className="w-4 h-4 text-base-content/70" />
      <input
       type="text"
@@ -200,8 +212,18 @@ const AddUserForm = ({ role }: PropsType) => {
       disabled
       //   onChange={(e) => handleChangeInput(e, "country")}
      />
+     <span
+    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+      userData?.country ? "top-0 text-sm" : ""
+    }`}
+  >
+    Country
+  </span>
+     
+    </label>
     </label>
    </div>
+   <div className="w-full flex flex-col gap-4 relative">
    <DatePicker
     className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
     selected={new Date(userData.dateOfBirth)}
@@ -212,6 +234,14 @@ const AddUserForm = ({ role }: PropsType) => {
     placeholderText={"Date of birth"}
     dateFormat={"dd/MM/yyyy"}
    />
+   <span
+    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+      userData.dateOfBirth ? "top-0 text-sm" : ""
+    }`}
+  >
+    Date of birth
+  </span>
+   </div>
    <label className="relative block">
     <EmailIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
     <input
@@ -233,7 +263,7 @@ const AddUserForm = ({ role }: PropsType) => {
    <input
     ref={fileInputRef}
     type="file"
-    className="file-input file-input-bordered w-full"
+    className="file-input file-input-bordered w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
     onChange={(e) => handleChangeInput(e, "file")}
    />
    <button className="btn btn-primary">
