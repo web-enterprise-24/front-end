@@ -58,12 +58,6 @@ const HeaderManagementUser = ({ title }: PropsType) => {
   getUserLists(role.current);
  }, [debounceValue, getUserLists, setCurrentPage, setSearchResult]);
 
- useEffect(() => {
-  console.log(
-   `allocated: ${isAllocation.allocated}, unallocated: ${isAllocation.unallocated}`
-  );
- }, [isAllocation]);
-
  const handleChangeCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
   setDisplayInactive(e.target.checked);
   setCurrentPage(0, true);

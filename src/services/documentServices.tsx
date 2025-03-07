@@ -1,13 +1,11 @@
 import { isAxiosError } from "axios";
 import { axios } from "../utils";
 
-export const uploadDocument = async (data: FormData, token: string | null) => {
+export const uploadDocument = async (data: FormData) => {
  try {
   await axios.post("/upload", data, {
    headers: {
-    Authorization: `Bearer ${token}`,
     "Content-Type": "multipart/form-data",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
    },
   });
  } catch (err) {
@@ -15,14 +13,9 @@ export const uploadDocument = async (data: FormData, token: string | null) => {
  }
 };
 
-export const getMyDocuments = async (token: string | null) => {
+export const getMyDocuments = async () => {
  try {
-  const res = await axios.get("/upload/myDocuments", {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.get("/upload/myDocuments");
 
   return res.data.data;
  } catch (err) {
@@ -30,14 +23,9 @@ export const getMyDocuments = async (token: string | null) => {
  }
 };
 
-export const getStudentDocuments = async (token: string | null) => {
+export const getStudentDocuments = async () => {
  try {
-  const res = await axios.get("/upload/myStudentsDocuments", {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.get("/upload/myStudentsDocuments");
 
   return res.data.data;
  } catch (err) {

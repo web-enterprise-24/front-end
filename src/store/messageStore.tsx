@@ -41,7 +41,7 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
  async getMessages(receiverId) {
   try {
    set({ isMessagesLoading: true });
-   const res = await getMessages(receiverId, accessToken);
+   const res = await getMessages(receiverId);
    set({ messages: res });
   } catch (err) {
    if (err instanceof AxiosError) {
@@ -56,7 +56,7 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
  async getUsers() {
   try {
    set({ isUserLoading: true });
-   const res = await getChatUsers(accessToken);
+   const res = await getChatUsers();
    set({ users: res });
   } catch (err) {
    if (err instanceof AxiosError) {
@@ -70,7 +70,7 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
 
  async sendMessage(data) {
   try {
-   const res = await sendMessage(data, accessToken);
+   const res = await sendMessage(data);
 
    set({ messages: [...get().messages, res] });
   } catch (err) {

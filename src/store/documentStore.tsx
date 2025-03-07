@@ -30,7 +30,7 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
  async upload(data) {
   try {
    set({ isUploadingDocument: true });
-   await uploadDocument(data, accessToken);
+   await uploadDocument(data);
    get().getStudentDocument();
    toast.success("Document uploaded successfully");
   } catch (err) {
@@ -45,7 +45,7 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
  async getStudentDocument() {
   try {
    set({ isGettingDocument: true });
-   const res = await getMyDocuments(accessToken);
+   const res = await getMyDocuments();
    set({ documents: res });
   } catch (err) {
    if (err instanceof AxiosError) {
@@ -59,7 +59,7 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
  async getTutorDocument() {
   try {
    set({ isGettingDocument: true });
-   const res = await getStudentDocuments(accessToken);
+   const res = await getStudentDocuments();
    set({ documents: res });
   } catch (err) {
    if (err instanceof AxiosError) {

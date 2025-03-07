@@ -37,9 +37,19 @@ const Navbar = () => {
   NavComp = Link;
  }
 
+ const itemNoAuth = [...SidebarHomeItems];
+ itemNoAuth.splice(3, 1);
+
  return (
   <div className="max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
-   <MobileNavbar items={SidebarHomeItems} page={"home"} />
+   <MobileNavbar
+    items={
+     authUser && ["STUDENT", "TUTOR"].includes(authUser.roles[0].code)
+      ? SidebarHomeItems
+      : itemNoAuth
+    }
+    page={"home"}
+   />
    {/* Large screen nav */}
    <div className="hidden xl:flex flex-row justify-between container mx-auto px-8 max-[821px]:px-2 w-full h-full ">
     <div className="w-36 h-full">
@@ -62,17 +72,19 @@ const Navbar = () => {
      >
       <MessageCircleMore className="w-8 h-8" />
      </NavComp>
-     <NavComp
-      to={"/document"}
-      className="h-full flex items-center cursor-pointer"
-      onClick={() => {
-       if (!authUser) {
-        handleClickLogin();
-       }
-      }}
-     >
-      <Folder className="w-8 h-8" />
-     </NavComp>
+     {authUser && ["STUDENT", "TUTOR"].includes(authUser.roles[0].code) && (
+      <NavComp
+       to={"/document"}
+       className="h-full flex items-center cursor-pointer"
+       onClick={() => {
+        if (!authUser) {
+         handleClickLogin();
+        }
+       }}
+      >
+       <Folder className="w-8 h-8" />
+      </NavComp>
+     )}
     </nav>
     <div className="flex flex-row h-full items-center gap-8">
      {authUser && authUser.roles?.[0]?.code === "STAFF" && (

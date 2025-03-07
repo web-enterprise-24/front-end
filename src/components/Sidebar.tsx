@@ -90,7 +90,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
       <div>
        {items &&
         items.map((item) => {
-         let Component: React.ElementType | string = "a";
+         let Component: React.ElementType | string = "p";
          const prop: { to?: string } = {};
          if (item.to) {
           Component = Link;
