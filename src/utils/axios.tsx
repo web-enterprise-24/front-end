@@ -1,6 +1,6 @@
 // utils/axios.ts
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 // Create a base axios instance
 const instance = axios.create({
@@ -57,7 +57,7 @@ instance.interceptors.request.use(
  (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle token refresh on 401 errors
+/// Response interceptor - handle token refresh on 401 errors
 instance.interceptors.response.use(
  (response: AxiosResponse) => response,
  async (error: AxiosError) => {
@@ -102,13 +102,9 @@ instance.interceptors.response.use(
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
 
-    // Redirect to login (optional)
-    // if (window.location.pathname !== "/login") {
-    //  window.location.href = "/login";
-    // }
-    toast.error(`Failed to log in ${refreshError}`);
-
-    return Promise.reject(refreshError);
+    // Important: We're now passing along the original error
+    // This allows your service functions to catch it
+    return Promise.reject(error); // Return the original error, not refreshError
    } finally {
     isRefreshing = false;
    }

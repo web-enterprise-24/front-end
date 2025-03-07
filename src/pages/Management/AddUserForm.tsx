@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 
-import { EmailIconDaisyUI, UserIconDaisyUI } from "../../components";
+import { EmailIconDaisyUI, Overlay, UserIconDaisyUI } from "../../components";
 import "./datepicker.css";
 import { UserSendType } from "../../types";
 import { useManagementStore, useGeneralStore } from "../../store";
 import { useShallow } from "zustand/shallow";
 import { AxiosError } from "axios";
+import { UploadImage } from "../../utils";
 
 type PropsType = {
  role: "STUDENT" | "TUTOR" | "STAFF";
@@ -31,6 +32,7 @@ const AddStudentForm = ({ role }: PropsType) => {
   gender: "male",
   dateOfBirth: new Date().toISOString(),
  });
+ const [isUploading, setIsUploading] = useState(false);
 
  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -75,24 +77,31 @@ const AddStudentForm = ({ role }: PropsType) => {
  ) => {
   if (field === "file") {
    const file = e.target?.files?.[0];
+
    if (!file) return;
-
-   const reader = new FileReader();
-   reader.readAsDataURL(file);
-
-   reader.onload = () => {
-    const base64Image = reader.result;
-    if (base64Image) {
-     setUserData({ ...userData, profilePicUrl: base64Image });
+   const generateImageLink = async () => {
+    try {
+     setIsUploading(true);
+     const result = await UploadImage(file);
+     console.log(result);
+     setUserData({ ...userData, profilePicUrl: result });
+    } catch (err) {
+     console.log(err);
+    } finally {
+     setIsUploading(false);
     }
    };
+
+   generateImageLink();
    return;
   }
+
   setUserData({ ...userData, [field]: e.target.value });
  };
 
  return (
   <form className="flex flex-col gap-4" onSubmit={(e) => handleSubmit(e)}>
+   {isUploading && <Overlay isOpenLoader />}
    <label className="input input-bordered flex items-center gap-2">
     <UserIconDaisyUI />
     <input
