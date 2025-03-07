@@ -13,13 +13,13 @@ type PropsType = {
 };
 
 const MobileNavbar = ({ items }: PropsType) => {
- const [authUser, logoutUser, accessToken] = useAuthStore(
-  useShallow((state) => [state.authUser, state.logoutUser, state.accessToken])
+ const [authUser, logoutUser] = useAuthStore(
+  useShallow((state) => [state.authUser, state.logoutUser])
  );
 
  const handleClickItem = (title?: string) => {
   if (title === "Log out") {
-   logoutUser(accessToken);
+   logoutUser();
   }
  };
 

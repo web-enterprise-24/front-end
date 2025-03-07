@@ -27,8 +27,8 @@ type AuthStoreType = {
  authUser: UserType | null;
  socket: Socket | null;
  loginUser: (data: UserLoginType) => void;
- logoutUser: (accessToken: string | null) => void;
- checkAuth: (accessToken: string | null) => void;
+ logoutUser: () => void;
+ checkAuth: () => void;
  requireChangePassword: (data: ChangePasswordFirstTimeType) => void;
  changeProfile: (data: UserSendType, userId: string) => void;
  connectSocket: () => void;
@@ -49,9 +49,9 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
  isChangingPassword: false,
  isChangingProfile: false,
 
- async checkAuth(token) {
+ async checkAuth() {
   try {
-   const res = await getCurrentUser(token);
+   const res = await getCurrentUser(accessToken);
    set({ authUser: res });
    get().connectSocket();
   } catch (err) {
@@ -69,13 +69,15 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
    set({ isLoggingIn: true });
    const res = await login(data);
 
-   set({ authUser: res.user });
-   set({ accessToken: res.tokens.accessToken });
-   set({ refreshToken: res.tokens.refreshToken });
+   set({
+    accessToken: res.tokens.accessToken,
+    refreshToken: res.tokens.refreshToken,
+   });
    get().connectSocket();
    localStorage.setItem("access", res.tokens.accessToken);
    toast.success("Logged in successfully");
-   setTimeout(() => (window.location.href = "/"), 1500);
+   //    setTimeout(() => (window.location.href = "/"), 1500);
+   setTimeout(() => window.location.reload(), 1500);
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err);
@@ -96,7 +98,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
    get().disconnectSocket();
    localStorage.removeItem("access");
    toast.success("Logged out successfully");
-   setTimeout(() => (window.location.href = "/"), 1500);
+   setTimeout(() => window.location.reload(), 1500);
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err);

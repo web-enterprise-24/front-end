@@ -14,21 +14,18 @@ import {
  TutorManagement,
  AllocationManagement,
  DetailedDashboard,
+ Document,
 } from "./pages";
 import { MainLayout, LayoutSidebar } from "./layouts";
-import { Modal } from "./components";
+import { Modal, PageNotFound } from "./components";
 import { useAuthStore, useGeneralStore } from "./store";
 import { Loader } from "lucide-react";
 import ChangePasswordForm from "./components/ChangePasswordForm";
+import { ProtectedRoute } from "./components";
 
 const App = () => {
- const [isCheckingAuth, checkAuth, accessToken, authUser] = useAuthStore(
-  useShallow((state) => [
-   state.isCheckingAuth,
-   state.checkAuth,
-   state.accessToken,
-   state.authUser,
-  ])
+ const [isCheckingAuth, checkAuth, authUser] = useAuthStore(
+  useShallow((state) => [state.isCheckingAuth, state.checkAuth, state.authUser])
  );
  const [setModalElement, isShowingModal, isClosingModal, setModalFor] =
   useGeneralStore(
@@ -43,8 +40,8 @@ const App = () => {
  const modalRef = useRef<HTMLDialogElement | null>(null);
 
  useEffect(() => {
-  checkAuth(accessToken);
- }, [accessToken, checkAuth]);
+  checkAuth();
+ }, [checkAuth]);
 
  useEffect(() => {
   if (!isClosingModal) {
@@ -86,22 +83,60 @@ const App = () => {
    <Routes>
     <Route element={<MainLayout />}>
      <Route path="/" element={<Home />} />
-     <Route path="/message" element={<Message />} />
+     <Route
+      path="/message"
+      element={
+       authUser ? (
+        <ProtectedRoute>
+         <Message />
+        </ProtectedRoute>
+       ) : (
+        <Navigate to={"/"} />
+       )
+      }
+     />
+     <Route
+      path="/document"
+      element={
+       authUser ? (
+        <ProtectedRoute allowedRoles={["STUDENT", "TUTOR"]}>
+         <Document />
+        </ProtectedRoute>
+       ) : (
+        <Navigate to={"/"} />
+       )
+      }
+     />
     </Route>
     <Route element={<LayoutSidebar />}>
-     <Route path="/management" element={<Management />}>
+     <Route
+      path="/management"
+      element={
+       authUser ? (
+        <ProtectedRoute allowedRoles={["STAFF"]}>
+         <Management />
+        </ProtectedRoute>
+       ) : (
+        <Navigate to={"/"} />
+       )
+      }
+     >
       <Route index element={<Navigate to="add-user" />} />
       <Route path="add-user" element={<AddNew />} />
       <Route path="student-management" element={<StudentManagement />} />
       <Route path="tutor-management" element={<TutorManagement />} />
       <Route path="allocation-management" element={<AllocationManagement />} />
      </Route>
-     <Route path="/dashboard" element={<Dashboard />}>
+     <Route
+      path="/dashboard"
+      element={authUser ? <Dashboard /> : <Navigate to={"/"} />}
+     >
       <Route index element={<Navigate to="profile" />} />
       <Route path="profile" element={<Profile />} />
       <Route path="detailed-dashboard" element={<DetailedDashboard />} />
      </Route>
     </Route>
+    <Route path="*" element={<PageNotFound />} />
    </Routes>
    <Modal ref={modalRef} />
    {!isShowingModal && (

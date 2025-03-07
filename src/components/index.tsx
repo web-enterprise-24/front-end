@@ -5,4 +5,7 @@ export { default as Modal } from "./Modal";
 export { default as SidebarFixed } from "./SidebarFixed";
 export { default as NavbarOnlyAvatar } from "./NavbarOnlyAvatar";
 export { default as Table } from "./Table/Table";
+export { default as Overlay } from "./Overlay";
+export { default as ProtectedRoute } from "./ProtectedRoute";
+export { default as PageNotFound } from "./PageNotFound";
 export * from "./Icons";

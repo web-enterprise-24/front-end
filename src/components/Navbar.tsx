@@ -1,4 +1,4 @@
-import { House, MessageCircleMore, Bell } from "lucide-react";
+import { House, MessageCircleMore, Bell, Folder } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useShallow } from "zustand/shallow";
 
@@ -16,8 +16,8 @@ const Navbar = () => {
    state.setModalFor,
   ])
  );
- const [authUser, accessToken, logoutUser] = useAuthStore(
-  useShallow((state) => [state.authUser, state.accessToken, state.logoutUser])
+ const [authUser, logoutUser] = useAuthStore(
+  useShallow((state) => [state.authUser, state.logoutUser])
  );
 
  const handleClickLogin = () => {
@@ -28,9 +28,14 @@ const Navbar = () => {
 
  const handleClickItem = (title?: string) => {
   if (title === "Log out") {
-   logoutUser(accessToken);
+   logoutUser();
   }
  };
+
+ let NavComp = "div" as React.ElementType;
+ if (authUser) {
+  NavComp = Link;
+ }
 
  return (
   <div className="max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base shadow-md shadow-base-300">
@@ -46,9 +51,28 @@ const Navbar = () => {
      <Link to={"/"} className="h-full flex items-center cursor-pointer">
       <House className="w-8 h-8" />
      </Link>
-     <Link to={"/message"} className="h-full flex items-center cursor-pointer">
+     <NavComp
+      to={"/message"}
+      className="h-full flex items-center cursor-pointer"
+      onClick={() => {
+       if (!authUser) {
+        handleClickLogin();
+       }
+      }}
+     >
       <MessageCircleMore className="w-8 h-8" />
-     </Link>
+     </NavComp>
+     <NavComp
+      to={"/document"}
+      className="h-full flex items-center cursor-pointer"
+      onClick={() => {
+       if (!authUser) {
+        handleClickLogin();
+       }
+      }}
+     >
+      <Folder className="w-8 h-8" />
+     </NavComp>
     </nav>
     <div className="flex flex-row h-full items-center gap-8">
      {authUser && authUser.roles?.[0]?.code === "STAFF" && (

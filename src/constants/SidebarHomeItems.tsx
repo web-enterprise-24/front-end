@@ -5,6 +5,7 @@ import {
  LogOut,
  LayoutDashboard,
  MessageCircleMore,
+ Folder,
 } from "lucide-react";
 
 const items: SidebarType[] = [
@@ -28,6 +29,12 @@ const items: SidebarType[] = [
  },
  {
   id: 4,
+  title: "Document",
+  icon: Folder,
+  to: "/document",
+ },
+ {
+  id: 5,
   title: "Log out",
   to: "",
   icon: LogOut,

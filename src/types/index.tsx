@@ -8,3 +8,5 @@ export type { default as ProvinceType } from "./ProvinceType";
 export type { default as AllocateSendType } from "./AllocateSendType";
 export type { default as MessageType } from "./MessageType";
 export type { default as MessageSendType } from "./MessageSendType";
+export type { default as StudentDocumentType } from "./StudentDocumentType";
+export type { default as TutorDocumentType } from "./TutorDocumentType";

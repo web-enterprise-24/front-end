@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import { useAuthStore, useManagementStore } from "../store";
 import { SidebarType } from "../types";
 import { transformRole } from "../utils";
-import { useShallow } from "zustand/shallow";
 
 type PropsType = {
  items: SidebarType[];
@@ -11,23 +10,12 @@ type PropsType = {
 };
 
 const NavbarOnlyAvatar = ({ items, page }: PropsType) => {
- const [setCurrentPage, setDisplayInactive, setSortBy, setSearchResult] =
-  useManagementStore(
-   useShallow((state) => [
-    state.setCurrentPage,
-    state.setDisplayInactive,
-    state.setSortBy,
-    state.setSearchResult,
-   ])
-  );
+ const reset = useManagementStore((state) => state.reset);
  const authUser = useAuthStore((state) => state.authUser);
 
  const handleClick = (title: string) => {
   if (title === "Tutor Management" || title === "Student Management") {
-   setCurrentPage(0, true);
-   setDisplayInactive(false);
-   setSortBy("desc");
-   setSearchResult("");
+   reset();
   }
  };
 
