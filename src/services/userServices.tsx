@@ -1,6 +1,6 @@
 import { isAxiosError } from "axios";
 
-import { axios } from "../utils";
+import { axios } from "../utils/";
 
 import {
  ChangePasswordFirstTimeType,
@@ -8,15 +8,9 @@ import {
  UserSendType,
 } from "../types";
 
-export const getCurrentUser = async (token: string | null) => {
+export const getCurrentUser = async () => {
  try {
-  const res = await axios.get("/profile/my", {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    // "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.get("/profile/my");
   return res.data.data;
  } catch (err: unknown) {
   if (isAxiosError(err)) throw err;
@@ -25,27 +19,16 @@ export const getCurrentUser = async (token: string | null) => {
 
 export const login = async (data: UserLoginType) => {
  try {
-  const res = await axios.post("/login/basic", data, {
-   headers: {
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.post("/login/basic", data);
   return res.data.data;
  } catch (err: unknown) {
   if (isAxiosError(err)) throw err;
  }
 };
 
-export const logout = async (token: string | null) => {
+export const logout = async () => {
  try {
-  await axios.get("/logout", {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  await axios.get("/logout");
  } catch (err: unknown) {
   if (isAxiosError(err)) throw err;
  }
@@ -70,17 +53,10 @@ export const changePasswordFirstTime = async (
 
 export const editProfile = async (
  data: UserSendType | null,
- token: string | null,
  userId: string | null
 ) => {
  try {
-  const res = await axios.put(`/profile/update/${userId}`, data, {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.put(`/profile/update/${userId}`, data);
   return res.data.data;
  } catch (err) {
   if (isAxiosError(err)) throw err;

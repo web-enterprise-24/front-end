@@ -2,18 +2,9 @@ import { isAxiosError } from "axios";
 import { AllocateSendType, UserSendType } from "../types";
 import { axios } from "../utils";
 
-export const createNewUser = async (
- data: UserSendType,
- token: string | null
-) => {
+export const createNewUser = async (data: UserSendType) => {
  try {
-  const res = await axios.post("/profile/create", data, {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  const res = await axios.post("/profile/create", data);
   return res.data.data;
  } catch (err) {
   if (isAxiosError(err)) throw err;
@@ -22,7 +13,6 @@ export const createNewUser = async (
 
 export const getUsers = async (
  role: string,
- token: string | null,
  pageNumber: number | null,
  status: boolean,
  limit: number,
@@ -32,14 +22,7 @@ export const getUsers = async (
 ) => {
  try {
   const res = await axios.get(
-   `/account/?role=${role}&status=${!status}&limit=${limit}&page=${pageNumber}&sort=${sortBy}&search=${searchResult}&filter=${allocate}`,
-   {
-    headers: {
-     Authorization: `Bearer ${token}`,
-     // "Content-Type": "application/json",
-     "x-api-key": import.meta.env.VITE_X_API_KEY,
-    },
-   }
+   `/account/?role=${role}&status=${!status}&limit=${limit}&page=${pageNumber}&sort=${sortBy}&search=${searchResult}&filter=${allocate}`
   );
   return res.data.data;
  } catch (err) {
@@ -47,54 +30,25 @@ export const getUsers = async (
  }
 };
 
-export const changeStatus = async (
- userId: string | null,
- status: boolean,
- token: string | null
-) => {
+export const changeStatus = async (userId: string | null, status: boolean) => {
  try {
-  await axios.patch(
-   `/account/${userId}`,
-   { status },
-   {
-    headers: {
-     Authorization: `Bearer ${token}`,
-     "Content-Type": "application/json",
-     "x-api-key": import.meta.env.VITE_X_API_KEY,
-    },
-   }
-  );
+  await axios.patch(`/account/${userId}`, { status });
  } catch (err) {
   if (isAxiosError(err)) throw err;
  }
 };
 
-export const allocation = async (
- data: AllocateSendType,
- token: string | null
-) => {
+export const allocation = async (data: AllocateSendType) => {
  try {
-  await axios.post("/allocate", data, {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  await axios.post("/allocate", data);
  } catch (err) {
   if (isAxiosError(err)) throw err;
  }
 };
 
-export const deallocation = async (studentId: string, token: string | null) => {
+export const deallocation = async (studentId: string) => {
  try {
-  await axios.delete(`/allocate/${studentId}`, {
-   headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-    "x-api-key": import.meta.env.VITE_X_API_KEY,
-   },
-  });
+  await axios.delete(`/allocate/${studentId}`);
  } catch (err) {
   if (isAxiosError(err)) throw err;
  }

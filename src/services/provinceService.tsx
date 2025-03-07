@@ -1,9 +1,9 @@
 import { isAxiosError } from "axios";
-import { axios } from "../utils";
+import axiosOriginal from "axios";
 
 export const getProvinces = async () => {
  try {
-  const res = await axios.get("https://provinces.open-api.vn/api");
+  const res = await axiosOriginal.get("https://provinces.open-api.vn/api");
   return res.data;
  } catch (err) {
   if (isAxiosError(err)) throw err;

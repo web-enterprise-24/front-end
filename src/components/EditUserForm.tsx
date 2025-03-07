@@ -44,10 +44,6 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
  const location = useLocation();
 
  useEffect(() => {
-  console.log(data);
- }, [data]);
-
- useEffect(() => {
   if (dialogRef.current) {
    if (showConfirm) {
     dialogRef.current.showModal();
@@ -169,51 +165,51 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
       </div>
      </label>
 
-          <div className="flex flex-col gap-4 md:max-[1537px]:gap-2 w-full">
-     <label className="relative block">
-  <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
-  <input
-    type="text"
-    className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-    placeholder=" "
-    autoComplete="on"
-    value={data?.name || ""}
-    onChange={(e) => handleChangeInput(e, "name")}
-  />
-  <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-      data?.name ? "top-0 text-sm" : ""
-    }`}
-  >
-    Full name
-  </span>
-</label>
-<div className="flex flex-row items-center gap-4 h-12 w-full">
-  <label className="flex flex-row items-center gap-2">
-    <input
-      type="radio"
-      name="gender"
-      value={"Male"}
-      className="radio peer"
-      autoComplete="off"
-      checked={data?.gender?.toLowerCase() === "male"}
-      onChange={(e) => handleChangeInput(e, "gender")}
-    />
-    <span className="peer-checked:text-blue-500">Male</span>
-  </label>
-  <label className="flex flex-row items-center gap-2">
-    <input
-      type="radio"
-      name="gender"
-      value={"Female"}
-      className="radio peer"
-      autoComplete="off"
-      checked={data?.gender?.toLowerCase() === "female"}
-      onChange={(e) => handleChangeInput(e, "gender")}
-    />
-    <span className="peer-checked:text-blue-500">Female</span>
-  </label>
-</div>
+     <div className="flex flex-col gap-4 md:max-[1537px]:gap-2 w-full">
+      <label className="relative block">
+       <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
+       <input
+        type="text"
+        className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+        placeholder=" "
+        autoComplete="on"
+        value={data?.name || ""}
+        onChange={(e) => handleChangeInput(e, "name")}
+       />
+       <span
+        className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+         data?.name ? "top-0 text-sm" : ""
+        }`}
+       >
+        Full name
+       </span>
+      </label>
+      <div className="flex flex-row items-center gap-4 h-12 w-full">
+       <label className="flex flex-row items-center gap-2">
+        <input
+         type="radio"
+         name="gender"
+         value={"Male"}
+         className="radio peer"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "male"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+        <span className="peer-checked:text-blue-500">Male</span>
+       </label>
+       <label className="flex flex-row items-center gap-2">
+        <input
+         type="radio"
+         name="gender"
+         value={"Female"}
+         className="radio peer"
+         autoComplete="off"
+         checked={data?.gender?.toLowerCase() === "female"}
+         onChange={(e) => handleChangeInput(e, "gender")}
+        />
+        <span className="peer-checked:text-blue-500">Female</span>
+       </label>
+      </div>
      </div>
     </div>
     <label className="relative block w-full flex-col md:max-[1537px]:flex-row md:max-[1537px]:items-center gap-4">
@@ -249,14 +245,14 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
        ))}
      </select>
      <span
-       className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-        data?.city ? "top-0 text-sm" : ""
-       }`}
-      >
-       Province
-      </span>
-     
-      <label className="relative block">
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       data?.city ? "top-0 text-sm" : ""
+      }`}
+     >
+      Province
+     </span>
+
+     <label className="relative block">
       <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
       <input
        type="text"
@@ -276,42 +272,42 @@ const EditUserForm = ({ formFor = "edit-user" }: PropsType) => {
      </label>
     </div>
     <div className="w-full flex flex-col gap-4 relative">
-    <DatePicker
-     className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-     wrapperClassName="w-full"
-     selected={data?.dateOfBirth ? new Date(data?.dateOfBirth) : new Date()}
-     onChange={(date) =>
-      date && data && setData({ ...data, dateOfBirth: date.toISOString() })
-     }
-     popperPlacement="bottom-end"
-     placeholderText={"Date of birth"}
-     dateFormat={"dd/MM/yyyy"}
-    />
-    <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-      data.dateOfBirth ? "top-0 text-sm" : ""
-    }`}
-  >
-    Date of birth
-  </span>
+     <DatePicker
+      className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      wrapperClassName="w-full"
+      selected={data?.dateOfBirth ? new Date(data?.dateOfBirth) : new Date()}
+      onChange={(date) =>
+       date && data && setData({ ...data, dateOfBirth: date.toISOString() })
+      }
+      popperPlacement="bottom-end"
+      placeholderText={"Date of birth"}
+      dateFormat={"dd/MM/yyyy"}
+     />
+     <span
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       data.dateOfBirth ? "top-0 text-sm" : ""
+      }`}
+     >
+      Date of birth
+     </span>
     </div>
     <label className="flex flex-col gap-4 w-full relative ">
-      <EmailIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
-      <input
-        type="email"
-        className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-        placeholder=" "
-        defaultValue={data?.email}
-        autoComplete="on"
-        disabled
-      />
-      <span
-        className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-          data?.email ? "top-0 text-sm" : ""
-        }`}
-      >
-        Email
-      </span>
+     <EmailIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
+     <input
+      type="email"
+      className="peer h-12 w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      placeholder=" "
+      defaultValue={data?.email}
+      autoComplete="on"
+      disabled
+     />
+     <span
+      className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+       data?.email ? "top-0 text-sm" : ""
+      }`}
+     >
+      Email
+     </span>
     </label>
    </form>
   </>

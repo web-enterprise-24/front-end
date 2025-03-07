@@ -55,7 +55,7 @@ type ManagementStoreType = {
 };
 
 // Get token
-const accessToken = localStorage.getItem("access");
+// const accessToken = localStorage.getItem("access");
 
 const useManagementStore = create<ManagementStoreType>((set, get) => ({
  totalPage: null,
@@ -83,7 +83,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  async createUser(data: UserSendType) {
   try {
    set({ isCreatingUser: true });
-   const res = await createNewUser(data, accessToken);
+   const res = await createNewUser(data);
    set({ userCreated: res });
   } catch (err) {
    if (err instanceof AxiosError) {
@@ -109,7 +109,6 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
 
    const res = await getUsers(
     role,
-    accessToken,
     get().currentPage,
     get().isDisplayInactive,
     limit,
@@ -151,7 +150,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  async editUser(data: UserSendType, userId, role) {
   try {
    set({ isEditing: true });
-   await editProfile(data, accessToken, userId);
+   await editProfile(data, userId);
    get().getUserLists(role);
    toast.success("Profile has been changed successfully");
   } catch (err) {
@@ -193,7 +192,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  },
  async changeStatusUser(userId, status, role) {
   try {
-   await changeStatus(userId, status, accessToken);
+   await changeStatus(userId, status);
    toast.success(`User has been ${status ? "activated" : "deactivated"}`);
    get().getUserLists(role);
   } catch (err) {
@@ -228,7 +227,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  async allocateStudent(data) {
   try {
    set({ isAllocating: true });
-   await allocation(data, accessToken);
+   await allocation(data);
 
    // Clear and toast
    toast.success("Allocated successfully");
@@ -252,7 +251,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
  },
  async deallocateStudent(studentId) {
   try {
-   await deallocation(studentId, accessToken);
+   await deallocation(studentId);
    toast.success("Student has been deallocated successfully");
    get().getUserLists("STUDENT");
   } catch (err) {

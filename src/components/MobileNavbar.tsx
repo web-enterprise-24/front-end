@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import { SidebarType } from "../types";
 import Dropdown from "./Dropdown";
 
-import { useAuthStore } from "../store";
+import { useAuthStore, useGeneralStore } from "../store";
 import { useShallow } from "zustand/shallow";
 
 type PropsType = {
@@ -13,6 +13,13 @@ type PropsType = {
 };
 
 const MobileNavbar = ({ items }: PropsType) => {
+ const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
+  useShallow((state) => [
+   state.modalElement,
+   state.setIsShowingModal,
+   state.setModalFor,
+  ])
+ );
  const [authUser, logoutUser] = useAuthStore(
   useShallow((state) => [state.authUser, state.logoutUser])
  );
@@ -20,6 +27,12 @@ const MobileNavbar = ({ items }: PropsType) => {
  const handleClickItem = (title?: string) => {
   if (title === "Log out") {
    logoutUser();
+  } else if (title === "Dashboard" || title === "Chat") {
+   if (!authUser) {
+    modalElement?.showModal();
+    setIsShowingModal(true);
+    setModalFor("login");
+   }
   }
  };
 
