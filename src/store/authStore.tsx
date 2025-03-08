@@ -15,8 +15,8 @@ import {
  logout,
 } from "../services";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-import { axios } from "../utils";
+import axios, { AxiosError } from "axios";
+import { setRefreshTokenFunction } from "../utils/axios";
 
 type AuthStoreType = {
  accessToken: string | null;
@@ -42,20 +42,25 @@ const accessToken = localStorage.getItem("access");
 const savedrefreshToken = localStorage.getItem("refresh");
 
 // New refresh token service
-export const refreshToken = async (refreshToken: string) => {
+export const refreshToken = async (
+ refreshToken: string,
+ accessToken: string
+) => {
  try {
   const res = await axios.post(
-   "/token/refresh",
+   `${import.meta.env.VITE_BASE_URL}token/refresh`,
    { refreshToken },
    {
     // Skip interceptor for this request to avoid loops
     headers: {
      skipAuthRefresh: "true",
+     Authorization: `Bearer ${accessToken}`,
+     "Content-Type": "application/json",
      "x-api-key": import.meta.env.VITE_X_API_KEY,
     },
    }
   );
-  return res.data.data;
+  return res;
  } catch (err) {
   if (err instanceof AxiosError) throw err;
  }
@@ -74,27 +79,34 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 
  async refreshAccessToken() {
   const currentRefreshToken = get().refreshToken;
+  const currentAccessToken = get().accessToken;
 
   if (!currentRefreshToken) {
    throw new Error("No refresh token available");
   }
 
   try {
-   const res = await refreshToken(currentRefreshToken);
+   const res = await refreshToken(
+    currentRefreshToken,
+    currentAccessToken || ""
+   );
+   if (!res) {
+    throw new Error("Failed to refresh token");
+   }
 
    // Update tokens in store
    set({
-    accessToken: res.accessToken,
-    refreshToken: res.refreshToken || get().refreshToken, // Use new refresh token if provided
+    accessToken: res.data.accessToken,
+    refreshToken: res.data.refreshToken,
    });
 
    // Update localStorage
-   localStorage.setItem("access", res.accessToken);
-   if (res.refreshToken) {
-    localStorage.setItem("refresh", res.refreshToken);
+   localStorage.setItem("access", res.data.accessToken);
+   if (res.data.refreshToken) {
+    localStorage.setItem("refresh", res.data.refreshToken);
    }
 
-   return res.accessToken;
+   return res.data.accessToken;
   } catch (err) {
    // If refresh fails, log the user out silently
    set({
@@ -117,6 +129,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err.response?.data?.message);
+    console.log(err);
    }
    set({ authUser: null });
   } finally {
@@ -224,9 +237,6 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 
 // Connect refreshAccessToken function to the axios instance
 // This completes the circular reference safely
-import { axios as axiosInstance } from "../utils";
-Object.defineProperty(axiosInstance, "refreshAccessToken", {
- get: () => useAuthStore.getState().refreshAccessToken,
-});
+setRefreshTokenFunction(useAuthStore.getState().refreshAccessToken);
 
 export default useAuthStore;

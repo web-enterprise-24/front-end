@@ -8,7 +8,7 @@ import {
  useFloating,
 } from "@floating-ui/react";
 
-import { useManagementStore, useMessageStore } from "../../../store";
+import { useMessageStore } from "../../../store";
 import { UserType } from "../../../types";
 import SkeletonUserChat from "./SkeletonUserChat";
 import UserItem from "./UserItem";
@@ -17,34 +17,47 @@ import { useDebounce } from "../../../hooks";
 import { Loader } from "lucide-react";
 
 const Sidebar = () => {
- const [setSelectedUser, users, isUserLoading] = useMessageStore(
+ const [
+  setSelectedUser,
+  users,
+  isUserLoading,
+  searchUsers,
+  searchUserResult,
+  isSearchingUser,
+  addUserToList,
+ ] = useMessageStore(
   useShallow((state) => [
    state.setSelectedUser,
    state.users,
    state.isUserLoading,
+   state.searchUsers,
+   state.searchUserResult,
+   state.isSearchingUser,
+   state.addUserToList,
   ])
  );
- const [userLists, getUserLists, isGettingUserLists, setSearchResult] =
-  useManagementStore(
-   useShallow((state) => [
-    state.userLists,
-    state.getUserLists,
-    state.isGettingUserLists,
-    state.setSearchResult,
-   ])
-  );
 
  const [isOpen, setIsOpen] = useState(false);
  const [searchText, setSearchText] = useState("");
  const debounceValue = useDebounce(searchText, 1500);
 
  useEffect(() => {
-  setSearchResult(debounceValue);
-  getUserLists("");
- }, [debounceValue, getUserLists, setSearchResult]);
+  if (searchText.trim() !== "") {
+   searchUsers(debounceValue);
+   setIsOpen(true);
+  } else if (searchText.trim() === "") {
+   setIsOpen(false);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [debounceValue, searchUsers]);
 
  const handleClick = (user: UserType) => {
   setSelectedUser(user);
+ };
+
+ const handleClickSearchUser = (user: UserType) => {
+  setSelectedUser(user);
+  addUserToList(user);
  };
 
  const { refs, floatingStyles } = useFloating({
@@ -72,7 +85,7 @@ const Sidebar = () => {
   <div className="w-1/4 max-[1281px]:w-full rounded-2xl p-4 overflow-y-auto border-2 border-base-200 flex flex-col gap-4">
    <label
     ref={refs.setReference}
-    className="input input-bordered flex items-center gap-2"
+    className="input input-bordered flex items-center gap-2 min-h-12"
    >
     <input
      type="text"
@@ -81,6 +94,11 @@ const Sidebar = () => {
      placeholder="Search by name or email"
      autoComplete="off"
      onChange={(e) => setSearchText(e.target.value)}
+     onFocus={() => {
+      if (debounceValue) {
+       setIsOpen(true);
+      }
+     }}
      onBlur={() =>
       setTimeout(() => {
        setIsOpen(false);
@@ -104,18 +122,18 @@ const Sidebar = () => {
     <div
      ref={refs.setFloating}
      style={floatingStyles}
-     className="bg-white shadow-lg rounded-lg p-3 border border-base-300 z-50 scrollbar-hide"
+     className="bg-white shadow-lg rounded-lg p-3 border border-base-300 z-50 max-h-[400px] overflow-y-auto scrollbar-hide"
     >
-     {isGettingUserLists ? (
+     {isSearchingUser ? (
       <span className="animate-spin flex justify-center">
        <Loader />
       </span>
-     ) : userLists ? (
-      userLists.map((user) => (
+     ) : searchUserResult ? (
+      searchUserResult.map((user) => (
        <UserItem
         key={user.id}
         data={user}
-        onClick={() => setSelectedUser(user)}
+        onClick={() => handleClickSearchUser(user)}
        />
       ))
      ) : (
@@ -128,7 +146,7 @@ const Sidebar = () => {
    {isUserLoading
     ? new Array(8)
        .fill(null)
-       .map((item, index) => <SkeletonUserChat key={index+item} />)
+       .map((item, index) => <SkeletonUserChat key={index + item} />)
     : users.map((user) => (
        <UserItem key={user.id} data={user} onClick={handleClick} />
       ))}

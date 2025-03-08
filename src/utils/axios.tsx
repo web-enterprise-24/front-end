@@ -1,6 +1,5 @@
 // utils/axios.ts
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-// import toast from "react-hot-toast";
 
 // Create a base axios instance
 const instance = axios.create({
@@ -35,17 +34,25 @@ const processQueue = (error: AxiosError | null, token: string | null) => {
  failedQueue = [];
 };
 
-// Function to refresh token - will be implemented later
-const refreshAccessToken = async (): Promise<string> => {
- // This function will be filled by our store access
- // We'll define this later in the authStore
+// Create a refreshToken function that can be set from outside
+let refreshTokenFunction: () => Promise<string> = async () => {
  throw new Error("refreshAccessToken not implemented");
+};
+
+// Export a function to set the refresh token function from stores
+export const setRefreshTokenFunction = (fn: () => Promise<string>) => {
+ refreshTokenFunction = fn;
 };
 
 // Request interceptor - add token to requests
 instance.interceptors.request.use(
  (config) => {
-  // Get token from localStorage (you can modify this as needed)
+  // Skip adding token for refresh token requests
+  if (config.headers?.skipAuthRefresh) {
+   return config;
+  }
+
+  // Get token from localStorage
   const token = localStorage.getItem("access");
 
   if (token && config.headers) {
@@ -57,13 +64,18 @@ instance.interceptors.request.use(
  (error) => Promise.reject(error)
 );
 
-/// Response interceptor - handle token refresh on 401 errors
+// Response interceptor - handle token refresh on 401 errors
 instance.interceptors.response.use(
  (response: AxiosResponse) => response,
  async (error: AxiosError) => {
   const originalRequest = error.config;
 
   if (!originalRequest) {
+   return Promise.reject(error);
+  }
+
+  // Skip token refresh for certain requests
+  if (originalRequest.headers?.skipAuthRefresh) {
    return Promise.reject(error);
   }
 
@@ -81,8 +93,8 @@ instance.interceptors.response.use(
    isRefreshing = true;
 
    try {
-    // Attempt to refresh the token
-    const newToken = await refreshAccessToken();
+    // Attempt to refresh the token using the injected function
+    const newToken = await refreshTokenFunction();
 
     // Update original request with new token
     if (originalRequest.headers) {
@@ -102,9 +114,8 @@ instance.interceptors.response.use(
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
 
-    // Important: We're now passing along the original error
-    // This allows your service functions to catch it
-    return Promise.reject(error); // Return the original error, not refreshError
+    // Return the original error
+    return Promise.reject(error);
    } finally {
     isRefreshing = false;
    }

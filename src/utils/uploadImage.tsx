@@ -15,6 +15,7 @@ const uploadImage = async (file: File) => {
 
   // Get the URL of the uploaded image
   const uploadedUrl = response.data.secure_url;
+
   return uploadedUrl;
  } catch (err) {
   console.log(err);

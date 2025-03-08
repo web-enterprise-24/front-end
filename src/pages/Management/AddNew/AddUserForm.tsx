@@ -4,12 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 
-import { EmailIconDaisyUI, UserIconDaisyUI } from "../../../components";
+import {
+ EmailIconDaisyUI,
+ Overlay,
+ UserIconDaisyUI,
+} from "../../../components";
 import "./datepicker.css";
 import { UserSendType } from "../../../types";
 import { useManagementStore, useGeneralStore } from "../../../store";
 import { useShallow } from "zustand/shallow";
 import { AxiosError } from "axios";
+import { UploadImage } from "../../../utils";
 
 type PropsType = {
  role: "STUDENT" | "TUTOR" | "STAFF";
@@ -34,6 +39,7 @@ const AddUserForm = ({ role }: PropsType) => {
   country: "Viet Nam",
   dateOfBirth: new Date().toISOString(),
  });
+ const [isUploading, setIsUploading] = useState(false);
 
  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -91,16 +97,27 @@ const AddUserForm = ({ role }: PropsType) => {
   if (field === "file") {
    const file = e.target?.files?.[0];
    if (!file) return;
+   if (!file.type.includes("image")) {
+    if (fileInputRef.current) {
+     fileInputRef.current.value = "";
+    }
+    toast.error("File type is wrong, please uploading image");
+    return;
+   }
 
-   const reader = new FileReader();
-   reader.readAsDataURL(file);
-
-   reader.onload = () => {
-    const base64Image = reader.result;
-    if (base64Image) {
-     setUserData({ ...userData, profilePicUrl: base64Image });
+   const generateImageLink = async () => {
+    try {
+     setIsUploading(true);
+     const result = await UploadImage(file);
+     setUserData({ ...userData, profilePicUrl: result });
+    } catch (err) {
+     console.log(err);
+    } finally {
+     setIsUploading(false);
     }
    };
+
+   generateImageLink();
    return;
   }
   setUserData({ ...userData, [field]: e.target.value });
@@ -115,6 +132,7 @@ const AddUserForm = ({ role }: PropsType) => {
    className="w-full flex flex-col gap-4"
    onSubmit={(e) => handleSubmit(e)}
   >
+   {isUploading && <Overlay isOpenLoader />}
    <label className="relative block">
     <UserIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
     <input
@@ -135,7 +153,6 @@ const AddUserForm = ({ role }: PropsType) => {
    </label>
    <div className="flex flex-row items-center gap-4 h-12">
     <label className="flex flex-row items-center gap-2">
-     
      <input
       type="radio"
       name="gender"
@@ -148,7 +165,6 @@ const AddUserForm = ({ role }: PropsType) => {
      <span className="peer-checked:text-blue-500">Male</span>
     </label>
     <label className="flex flex-row items-center gap-2">
-   
      <input
       type="radio"
       name="gender"
@@ -158,7 +174,7 @@ const AddUserForm = ({ role }: PropsType) => {
       checked={userData.gender.toLowerCase() === "female"}
       onChange={(e) => handleChangeInput(e, "gender")}
      />
-      <span className="peer-checked:text-blue-500">Female</span>
+     <span className="peer-checked:text-blue-500">Female</span>
     </label>
    </div>
    <label className="relative block">
@@ -180,19 +196,19 @@ const AddUserForm = ({ role }: PropsType) => {
     </span>
    </label>
    <div className="flex flex-col xl:flex-row gap-4 ">
-   <label className="relative flex flex-col xl:w-1/2 text-sm ">
-    <select
-     className="select select-bordered focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-     onChange={(e) => handleChangeSelect(e)}
-     value={userData?.city || ""}
-    >
-     <option value="">Choose your Province</option>
-     {provinces &&
-      provinces.map((province, index) => (
-       <option key={index}>{province.toString()}</option>
-      ))}
-    </select>
-    <span
+    <label className="relative flex flex-col xl:w-1/2 text-sm ">
+     <select
+      className="select select-bordered focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+      onChange={(e) => handleChangeSelect(e)}
+      value={userData?.city || ""}
+     >
+      <option value="">Choose your Province</option>
+      {provinces &&
+       provinces.map((province, index) => (
+        <option key={index}>{province.toString()}</option>
+       ))}
+     </select>
+     <span
       className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
        userData?.city ? "top-0 text-sm" : ""
       }`}
@@ -201,46 +217,45 @@ const AddUserForm = ({ role }: PropsType) => {
      </span>
     </label>
     <label className="relative flex-col xl:w-1/2">
-    <label className="input input-bordered flex items-center gap-2  relative">
-     <Globe className="w-4 h-4 text-base-content/70" />
-     <input
-      type="text"
-      className="grow"
-      placeholder="Country"
-      value={"Viet Nam"}
-      autoComplete="on"
-      disabled
-      //   onChange={(e) => handleChangeInput(e, "country")}
-     />
-     <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
-      userData?.country ? "top-0 text-sm" : ""
-    }`}
-  >
-    Country
-  </span>
-     
-    </label>
+     <label className="input input-bordered flex items-center gap-2  relative">
+      <Globe className="w-4 h-4 text-base-content/70" />
+      <input
+       type="text"
+       className="grow"
+       placeholder="Country"
+       value={"Viet Nam"}
+       autoComplete="on"
+       disabled
+       //   onChange={(e) => handleChangeInput(e, "country")}
+      />
+      <span
+       className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+        userData?.country ? "top-0 text-sm" : ""
+       }`}
+      >
+       Country
+      </span>
+     </label>
     </label>
    </div>
    <div className="w-full flex flex-col gap-4 relative">
-   <DatePicker
-    className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
-    selected={new Date(userData.dateOfBirth)}
-    onChange={(date) =>
-     date && setUserData({ ...userData, dateOfBirth: date.toISOString() })
-    }
-    popperPlacement="bottom-end"
-    placeholderText={"Date of birth"}
-    dateFormat={"dd/MM/yyyy"}
-   />
-   <span
-    className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
+    <DatePicker
+     className="input input-bordered flex items-center gap-2 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
+     selected={new Date(userData.dateOfBirth)}
+     onChange={(date) =>
+      date && setUserData({ ...userData, dateOfBirth: date.toISOString() })
+     }
+     popperPlacement="bottom-end"
+     placeholderText={"Date of birth"}
+     dateFormat={"dd/MM/yyyy"}
+    />
+    <span
+     className={`absolute left-10 top-0 text-sm bg-white px-1 text-gray-500 transition-all duration-200 transform -translate-y-1/2 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-0 peer-focus:text-blue-500 peer-focus:text-sm ${
       userData.dateOfBirth ? "top-0 text-sm" : ""
-    }`}
-  >
-    Date of birth
-  </span>
+     }`}
+    >
+     Date of birth
+    </span>
    </div>
    <label className="relative block">
     <EmailIconDaisyUI className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-70" />
@@ -263,6 +278,7 @@ const AddUserForm = ({ role }: PropsType) => {
    <input
     ref={fileInputRef}
     type="file"
+    accept="image/*"
     className="file-input file-input-bordered w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
     onChange={(e) => handleChangeInput(e, "file")}
    />

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import {
  getChatUsers,
  getMessages,
+ searchUsers,
  sendMessage,
 } from "../services/messageServices";
 import useAuthStore from "./authStore";
@@ -13,12 +14,16 @@ type MessageStoreType = {
  accessToken: string | null;
  messages: MessageType[];
  users: UserType[];
+ searchUserResult: UserType[];
  selectedUser: UserType | null;
  isUserLoading: boolean;
  isMessagesLoading: boolean;
+ isSearchingUser: boolean;
  getMessages: (receiverId: string) => void;
  sendMessage: (messageData: MessageSendType) => void;
  getUsers: () => void;
+ searchUsers: (searchText: string) => void;
+ addUserToList: (user: UserType) => void;
  setSelectedUser: (user: UserType | null) => void;
  subscribeToMessages: () => void;
  unsubscribeFromMessages: () => void;
@@ -30,9 +35,11 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
  accessToken: accessToken || null,
  messages: [],
  users: [],
+ searchUserResult: [],
  selectedUser: null,
  isUserLoading: false,
  isMessagesLoading: false,
+ isSearchingUser: false,
 
  setSelectedUser(user) {
   set({ selectedUser: user });
@@ -61,11 +68,35 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
   } catch (err) {
    if (err instanceof AxiosError) {
     console.log(err);
-    toast.error("Failed to load users, please try again!");
+    // toast.error("Failed to load users, please try again!");
    }
   } finally {
    set({ isUserLoading: false });
   }
+ },
+
+ async searchUsers(searchText) {
+  try {
+   set({ isSearchingUser: true });
+   const res = await searchUsers(searchText);
+   set({ searchUserResult: res });
+  } catch (err) {
+   if (err instanceof AxiosError) {
+    console.log(err);
+    toast.error("Search user failed, please try again");
+   }
+  } finally {
+   set({ isSearchingUser: false });
+  }
+ },
+
+ addUserToList(user) {
+  const userSelect = { ...user };
+  const checkUserExistence = get().users.some(
+   (user) => user.id === userSelect.id
+  );
+  if (checkUserExistence) return;
+  set({ users: [user, ...get().users] });
  },
 
  async sendMessage(data) {
@@ -80,6 +111,7 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
    }
   }
  },
+
  subscribeToMessages() {
   const { selectedUser } = get();
   if (!selectedUser) return;
@@ -93,6 +125,7 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
    });
   });
  },
+
  unsubscribeFromMessages() {
   const socket = useAuthStore.getState().socket;
   socket?.off("newMessage");

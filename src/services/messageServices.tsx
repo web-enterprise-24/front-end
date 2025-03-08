@@ -28,3 +28,12 @@ export const sendMessage = async (data: MessageSendType) => {
   if (isAxiosError(err)) throw err;
  }
 };
+
+export const searchUsers = async (searchText: string) => {
+ try {
+  const res = await axios.get(`/chat/findUserChat?search=${searchText}`);
+  return res.data.data.userChats;
+ } catch (err) {
+  if (isAxiosError(err)) throw err;
+ }
+};
