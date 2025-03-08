@@ -18,7 +18,9 @@ const UserItem = ({ data, onClick }: PropsType) => {
    </div>
    <div className="flex flex-col gap-1">
     <p className="text-primary-content font-bold">{data?.name}</p>
-    <p className="text-primary-content/50 font-bold">{data?.email}</p>
+    <p className="text-primary-content/50 font-bold truncate max-w-[250px]">
+     {data?.email}
+    </p>
    </div>
   </div>
  );

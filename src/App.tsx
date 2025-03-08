@@ -22,10 +22,16 @@ import { useAuthStore, useGeneralStore } from "./store";
 import { Loader } from "lucide-react";
 import ChangePasswordForm from "./components/ChangePasswordForm";
 import { ProtectedRoute } from "./components";
+import { setRefreshTokenFunction } from "./utils/axios";
 
 const App = () => {
- const [isCheckingAuth, checkAuth, authUser] = useAuthStore(
-  useShallow((state) => [state.isCheckingAuth, state.checkAuth, state.authUser])
+ const [isCheckingAuth, checkAuth, authUser, refreshAccessToken] = useAuthStore(
+  useShallow((state) => [
+   state.isCheckingAuth,
+   state.checkAuth,
+   state.authUser,
+   state.refreshAccessToken,
+  ])
  );
  const [setModalElement, isShowingModal, isClosingModal, setModalFor] =
   useGeneralStore(
@@ -38,6 +44,10 @@ const App = () => {
   );
 
  const modalRef = useRef<HTMLDialogElement | null>(null);
+
+ useEffect(() => {
+  setRefreshTokenFunction(refreshAccessToken);
+ }, [refreshAccessToken]);
 
  useEffect(() => {
   checkAuth();
