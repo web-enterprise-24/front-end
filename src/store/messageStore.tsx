@@ -118,6 +118,9 @@ const useMessageStore = create<MessageStoreType>((set, get) => ({
 
   const socket = useAuthStore.getState().socket;
 
+     // First remove any existing listener
+  socket?.off("newMessage");
+
   socket?.on("newMessage", (newMessage) => {
    if (newMessage.senderId !== selectedUser?.id) return;
    set({
