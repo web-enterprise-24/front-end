@@ -13,9 +13,9 @@ export const uploadDocument = async (data: FormData) => {
  }
 };
 
-export const getMyDocuments = async () => {
+export const getMyDocuments = async (link: string) => {
  try {
-  const res = await axios.get("/upload/myDocuments");
+  const res = await axios.get(link ? link : "/upload/myDocuments");
 
   return res.data.data;
  } catch (err) {
@@ -23,9 +23,9 @@ export const getMyDocuments = async () => {
  }
 };
 
-export const getStudentDocuments = async () => {
+export const getStudentDocuments = async (link: string) => {
  try {
-  const res = await axios.get("/upload/myStudentsDocuments");
+  const res = await axios.get(link ? link : "/upload/myStudentsDocuments");
 
   return res.data.data;
  } catch (err) {
