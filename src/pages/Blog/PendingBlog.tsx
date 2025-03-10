@@ -1,23 +1,31 @@
 import { useShallow } from 'zustand/shallow';
 import { useBlogStore } from '../../store';
 import { useEffect } from 'react';
-import { BlogItem, BlogItemSkeleton } from '../../components';
+import { BlogItem, BlogItemSkeleton, Overlay } from '../../components';
 
 const PendingBlog = () => {
-	const [posts, getPendingPosts, isGettingPosts] = useBlogStore(
-		useShallow((state) => [
-			state.posts,
-			state.getPendingPosts,
-			state.isGettingPosts,
-		])
-	);
+	const [posts, getPendingPosts, isGettingPosts, approveBlog, isPushingBlog] =
+		useBlogStore(
+			useShallow((state) => [
+				state.posts,
+				state.getPendingPosts,
+				state.isGettingPosts,
+				state.approveBlog,
+				state.isPushingBlog,
+			])
+		);
 
 	useEffect(() => {
 		getPendingPosts();
 	}, [getPendingPosts]);
 
+	const handleClickApprove = (id: string) => {
+		approveBlog(id);
+	};
+
 	return (
 		<div className='w-5/6 h-full mx-auto flex flex-col gap-4'>
+			{isPushingBlog && <Overlay isOpenLoader />}
 			<div className='w-full flex justify-start items-center'>
 				<h1 className='text-lg font-bold '>Pending blogs</h1>
 			</div>
@@ -32,6 +40,7 @@ const PendingBlog = () => {
 								key={post.id}
 								data={post}
 								isShowActions={true}
+								onClickApprove={handleClickApprove}
 							/>
 					  ))}
 			</div>
