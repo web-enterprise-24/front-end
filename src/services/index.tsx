@@ -1,7 +1,9 @@
-export * from "./userServices";
+export * from './userServices';
 
-export * from "./managementServices";
+export * from './managementServices';
 
-export * from "./provinceService";
+export * from './provinceService';
 
-export * from "./documentServices";
+export * from './documentServices';
+
+export * from './blogServices';
