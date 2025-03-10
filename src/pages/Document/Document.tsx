@@ -69,8 +69,9 @@ const Document = () => {
 
 	return (
 		<div className='w-1/2 max-[821px]:w-full max-[821px]:px-6 min-h-full mx-auto my-6 flex flex-col gap-6'>
-			{isUploadingDocument ||
-				(isGettingDocument && <Overlay isOpenLoader={true} />)}
+			{(isUploadingDocument || isGettingDocument) && (
+				<Overlay isOpenLoader={true} />
+			)}
 			<ConfirmModal
 				ref={dialogRef}
 				title='Are you sure to upload this file?'
