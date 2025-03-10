@@ -1,19 +1,31 @@
 import { create } from 'zustand';
-import { BlogType } from '../types';
+import { BlogSendType, BlogType } from '../types';
 import { AxiosError } from 'axios';
-import { getLatestPosts, getPendingPosts } from '../services';
+import {
+	approveBlog,
+	getLatestPosts,
+	getPendingPosts,
+	postBlog,
+} from '../services';
+import toast from 'react-hot-toast';
 
 type BlogStoreType = {
 	posts: BlogType[] | null;
 	isGettingPosts: boolean;
+	isPostingBlog: boolean;
+	isPushingBlog: boolean;
 
 	getLatestPosts: () => void;
 	getPendingPosts: () => void;
+	postBlog: (data: BlogSendType) => void;
+	approveBlog: (id: string) => void;
 };
 
-const useBlogStore = create<BlogStoreType>((set) => ({
+const useBlogStore = create<BlogStoreType>((set, get) => ({
 	posts: null,
 	isGettingPosts: false,
+	isPostingBlog: false,
+	isPushingBlog: false,
 
 	async getLatestPosts() {
 		try {
@@ -27,11 +39,10 @@ const useBlogStore = create<BlogStoreType>((set) => ({
 				console.log(err);
 			}
 		} finally {
-			setTimeout(() => {
-				set({ isGettingPosts: false });
-			}, 3000);
+			set({ isGettingPosts: false });
 		}
 	},
+
 	async getPendingPosts() {
 		try {
 			set({ isGettingPosts: true });
@@ -43,9 +54,40 @@ const useBlogStore = create<BlogStoreType>((set) => ({
 				console.log(err);
 			}
 		} finally {
-			setTimeout(() => {
-				set({ isGettingPosts: false });
-			}, 3000);
+			set({ isGettingPosts: false });
+		}
+	},
+
+	async postBlog(data) {
+		try {
+			set({ isPostingBlog: true });
+			await postBlog(data);
+
+			toast.success('Blog posted successfully!');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+				console.log(err);
+				toast.error(`Failed to post blog: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isPostingBlog: false });
+		}
+	},
+	async approveBlog(id) {
+		try {
+			set({ isPushingBlog: true });
+			await approveBlog(id);
+			get().getPendingPosts();
+			toast.success('Blog approved successfully!');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+				console.log(err);
+				toast.error(`Failed to approve blog: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isPushingBlog: false });
 		}
 	},
 }));

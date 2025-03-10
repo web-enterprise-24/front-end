@@ -11,3 +11,4 @@ export type { default as MessageSendType } from './MessageSendType';
 export type { default as StudentDocumentType } from './StudentDocumentType';
 export type { default as TutorDocumentType } from './TutorDocumentType';
 export type { default as BlogType } from './BlogType';
+export type { default as BlogSendType } from './BlogSendType';

@@ -5,15 +5,21 @@ import { convertDate } from '../utils';
 type PropsType = {
 	data: BlogType;
 	isShowActions?: boolean;
+	onClickApprove?: (id: string) => void;
 };
 
-const BlogItem = ({ data, isShowActions = false }: PropsType) => {
+const BlogItem = ({
+	data,
+	isShowActions = false,
+	onClickApprove,
+}: PropsType) => {
 	return (
 		<div className='flex flex-col gap-2'>
 			<div className='rounded-md overflow-hidden'>
 				<img
-					className='w-full object-cover'
-					src='https://c4.wallpaperflare.com/wallpaper/446/815/587/landscape-wallpaper-preview.jpg'
+					className='w-full max-h-[280px] object-cover'
+					// https://c4.wallpaperflare.com/wallpaper/446/815/587/landscape-wallpaper-preview.jpg
+					src={data?.imgUrl}
 					alt='Blog'
 				/>
 			</div>
@@ -37,7 +43,12 @@ const BlogItem = ({ data, isShowActions = false }: PropsType) => {
 						<Eye />
 					</button>
 					<div className='flex gap-2'>
-						<button className='btn btn-secondary'>Approve</button>
+						<button
+							className='btn btn-secondary'
+							onClick={() => onClickApprove && onClickApprove(data.id)}
+						>
+							Approve
+						</button>
 						<button className='btn btn-accent'>Reject</button>
 					</div>
 				</div>
