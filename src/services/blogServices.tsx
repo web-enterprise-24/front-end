@@ -39,3 +39,11 @@ export const approveBlog = async (id: string) => {
 		if (isAxiosError(err)) throw err;
 	}
 };
+
+export const rejectBlog = async (id: string) => {
+	try {
+		await axios.put(`/blog/editor/unpublish/${id}`);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};

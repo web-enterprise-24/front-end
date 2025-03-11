@@ -6,6 +6,7 @@ import {
 	getLatestPosts,
 	getPendingPosts,
 	postBlog,
+	rejectBlog,
 } from '../services';
 import toast from 'react-hot-toast';
 
@@ -13,19 +14,20 @@ type BlogStoreType = {
 	posts: BlogType[] | null;
 	isGettingPosts: boolean;
 	isPostingBlog: boolean;
-	isPushingBlog: boolean;
+	isHandlingBlog: boolean;
 
 	getLatestPosts: () => void;
 	getPendingPosts: () => void;
 	postBlog: (data: BlogSendType) => void;
 	approveBlog: (id: string) => void;
+	rejectBlog: (id: string) => void;
 };
 
 const useBlogStore = create<BlogStoreType>((set, get) => ({
 	posts: null,
 	isGettingPosts: false,
 	isPostingBlog: false,
-	isPushingBlog: false,
+	isHandlingBlog: false,
 
 	async getLatestPosts() {
 		try {
@@ -74,9 +76,10 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isPostingBlog: false });
 		}
 	},
+
 	async approveBlog(id) {
 		try {
-			set({ isPushingBlog: true });
+			set({ isHandlingBlog: true });
 			await approveBlog(id);
 			get().getPendingPosts();
 			toast.success('Blog approved successfully!');
@@ -87,7 +90,24 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 				toast.error(`Failed to approve blog: ${err.response?.data?.message}`);
 			}
 		} finally {
-			set({ isPushingBlog: false });
+			set({ isHandlingBlog: false });
+		}
+	},
+
+	async rejectBlog(id) {
+		try {
+			set({ isHandlingBlog: true });
+			await rejectBlog(id);
+			get().getPendingPosts();
+			toast.success('Blog rejected successfully!');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+				console.log(err);
+				toast.error(`Failed to reject blog: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isHandlingBlog: false });
 		}
 	},
 }));

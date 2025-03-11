@@ -48,7 +48,7 @@ const RichTextEditor = ({
 
 	return (
 		<Editor
-			apiKey='du24fjqoe8wbznzwhubwke7v8msf7zjmajya2yd8qnubcbfz'
+			apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
 			onInit={(_, editor) => (editorRef.current = editor)}
 			initialValue={initialValue}
 			value={value}

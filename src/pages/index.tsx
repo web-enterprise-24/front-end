@@ -8,6 +8,7 @@ export { default as AllocationManagement } from './Management/AllocationManageme
 export { default as Message } from './Message/Message';
 export { default as Profile } from './Dashboard/Profile/Profile';
 export { default as DetailedDashboard } from './Dashboard/DetailedDashboard/DetailedDashboard';
+export { default as Theme } from './Dashboard/Theme/Theme';
 export { default as Document } from './Document/Document';
 export { default as Blog } from './Blog/Blog';
 export { default as WritingBlog } from './Blog/WritingBlog';

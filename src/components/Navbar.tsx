@@ -71,20 +71,12 @@ const Navbar = () => {
 					>
 						<House className='w-8 h-8' />
 					</Link>
-					<NavComp
-						to={'/message'}
-						className='h-full flex items-center cursor-pointer'
-						onClick={() => {
-							if (!authUser) {
-								handleClickLogin();
-							}
-						}}
+					<div
+						className='tooltip tooltip-bottom'
+						data-tip='Chatting'
 					>
-						<MessageCircleMore className='w-8 h-8' />
-					</NavComp>
-					{authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code) && (
 						<NavComp
-							to={'/document'}
+							to={'/message'}
 							className='h-full flex items-center cursor-pointer'
 							onClick={() => {
 								if (!authUser) {
@@ -92,15 +84,38 @@ const Navbar = () => {
 								}
 							}}
 						>
-							<Folder className='w-8 h-8' />
+							<MessageCircleMore className='w-8 h-8' />
 						</NavComp>
+					</div>
+					{authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code) && (
+						<div
+							className='tooltip tooltip-bottom'
+							data-tip='Document'
+						>
+							<NavComp
+								to={'/document'}
+								className='h-full flex items-center cursor-pointer'
+								onClick={() => {
+									if (!authUser) {
+										handleClickLogin();
+									}
+								}}
+							>
+								<Folder className='w-8 h-8' />
+							</NavComp>
+						</div>
 					)}
-					<Link
-						to={'/blog'}
-						className='h-full flex items-center cursor-pointer'
+					<div
+						className='tooltip tooltip-bottom'
+						data-tip='Blog'
 					>
-						<BookOpen className='w-8 h-8' />
-					</Link>
+						<Link
+							to={'/blog'}
+							className='h-full flex items-center cursor-pointer'
+						>
+							<BookOpen className='w-8 h-8' />
+						</Link>
+					</div>
 				</nav>
 				<div className='flex flex-row h-full items-center gap-8'>
 					{authUser && authUser.roles?.[0]?.code === 'STAFF' && (

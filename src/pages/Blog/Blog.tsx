@@ -3,10 +3,19 @@ import { useShallow } from 'zustand/shallow';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { SquarePen } from 'lucide-react';
-import { useBlogStore } from '../../store';
+import { useAuthStore, useBlogStore, useGeneralStore } from '../../store';
 import { BlogItem, BlogItemSkeleton } from '../../components';
 
 const Blog = () => {
+	const authUser = useAuthStore((state) => state.authUser);
+	const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
+		useShallow((state) => [
+			state.modalElement,
+			state.setIsShowingModal,
+			state.setModalFor,
+		])
+	);
+
 	const [posts, getLatestPosts, isGettingPosts] = useBlogStore(
 		useShallow((state) => [
 			state.posts,
@@ -24,6 +33,17 @@ const Blog = () => {
 		}
 	}, [getLatestPosts, isMainBlogPage]);
 
+	const handleClickLogin = () => {
+		modalElement?.showModal();
+		setIsShowingModal(true);
+		setModalFor('login');
+	};
+
+	let NavComp = 'div' as React.ElementType;
+	if (authUser) {
+		NavComp = Link;
+	}
+
 	return (
 		<div className='w-full min-h-full my-6'>
 			<Outlet />
@@ -32,18 +52,30 @@ const Blog = () => {
 					<div className='w-full flex justify-between items-center'>
 						<h1 className='font-bold text-lg'>All blogs</h1>
 						<div className='flex items-center gap-2'>
-							<Link
-								to={'pending'}
-								className='btn btn-secondary'
+							{authUser && authUser?.roles[0]?.code === 'STAFF' && (
+								<Link
+									to={'pending'}
+									className='btn btn-secondary'
+								>
+									Pending blogs
+								</Link>
+							)}
+							<div
+								className='tooltip'
+								data-tip='Write a blog'
 							>
-								Pending blogs
-							</Link>
-							<Link
-								to={'write'}
-								className='btn btn-ghost'
-							>
-								<SquarePen />
-							</Link>
+								<NavComp
+									to={'write'}
+									className='btn btn-ghost'
+									onClick={() => {
+										if (!authUser) {
+											handleClickLogin();
+										}
+									}}
+								>
+									<SquarePen />
+								</NavComp>
+							</div>
 						</div>
 					</div>
 					<div className='w-full grid grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4'>

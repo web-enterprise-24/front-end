@@ -6,12 +6,14 @@ type PropsType = {
 	data: BlogType;
 	isShowActions?: boolean;
 	onClickApprove?: (id: string) => void;
+	onClickReject?: (id: string) => void;
 };
 
 const BlogItem = ({
 	data,
 	isShowActions = false,
 	onClickApprove,
+	onClickReject,
 }: PropsType) => {
 	return (
 		<div className='flex flex-col gap-2'>
@@ -49,7 +51,12 @@ const BlogItem = ({
 						>
 							Approve
 						</button>
-						<button className='btn btn-accent'>Reject</button>
+						<button
+							className='btn btn-accent'
+							onClick={() => onClickReject && onClickReject(data.id)}
+						>
+							Reject
+						</button>
 					</div>
 				</div>
 			)}
