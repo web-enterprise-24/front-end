@@ -18,10 +18,11 @@ import {
 	Blog,
 	WritingBlog,
 	PendingBlog,
+	Theme,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound } from './components';
-import { useAuthStore, useGeneralStore } from './store';
+import { useAuthStore, useGeneralStore, useThemeStore } from './store';
 import { Loader } from 'lucide-react';
 import ChangePasswordForm from './components/ChangePasswordForm';
 import { ProtectedRoute } from './components';
@@ -46,7 +47,14 @@ const App = () => {
 			])
 		);
 
+	const theme = useThemeStore((state) => state.theme);
+
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+
+	useEffect(() => {
+		const htmlElement = document.documentElement;
+		htmlElement.setAttribute('data-theme', theme);
+	}, [theme]);
 
 	useEffect(() => {
 		setRefreshTokenFunction(refreshAccessToken);
@@ -189,6 +197,10 @@ const App = () => {
 						<Route
 							path='detailed-dashboard'
 							element={<DetailedDashboard />}
+						/>
+						<Route
+							path='themes'
+							element={<Theme />}
 						/>
 					</Route>
 				</Route>
