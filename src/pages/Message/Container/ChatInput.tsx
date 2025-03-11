@@ -63,12 +63,13 @@ const ChatInput = () => {
  };
 
  return (
-  <div className="w-full min-h-24 h-24 border-t-2 border-base-200 p-2 relative">
+  <div className="w-full min-h-24 h-24 border-t-2 border-base-200 p-2 relative bg-gray-200 rounded-b-lg">
    <form
     ref={formRef}
     className="w-full h-full flex flex-row items-center justify-center gap-2 "
     onSubmit={(e) => handleSubmit(e)}
    >
+    <div className="relative w-full">
     <textarea
      ref={textareaRef}
      placeholder="Type here"
@@ -83,21 +84,27 @@ const ChatInput = () => {
        }
       }
      }}
-     className="textarea textarea-bordered text-lg w-full resize-none min-h-14 max-h-20 scrollbar-hide py-3 leading-relaxed"
+     className="textarea textarea-bordered text-lg w-full resize-none min-h-14 max-h-20 scrollbar-hide py-3 leading-relaxed rounded-3xl"
     />
     <span
-     className="cursor-pointer size-10 hover:bg-base-300 flex items-center justify-center rounded-lg transition-colors ease-linear duration-100"
+     className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer size-10 hover:bg-base-300 flex items-center justify-center rounded-full transition-colors ease-linear duration-100"
      onClick={() => setShowEmoji(!showEmoji)}
     >
      <Smile />
     </span>
+    </div>
     <button
-     ref={submitBtnRef}
-     className="btn btn-ghost"
-     disabled={!message ? true : false}
-    >
-     <Send />
-    </button>
+          ref={submitBtnRef}
+          className="btn btn-ghost disabled:bg-transparent disabled:text-current disabled:opacity-50 h-full min-h-14 max-h-20 flex items-center justify-center p-2"
+          disabled={!message}
+          style={{
+            height: textareaRef.current?.scrollHeight
+              ? `${textareaRef.current.scrollHeight}px`
+              : "auto",
+          }}
+        >
+          <Send />
+        </button>
    </form>
    {showEmoji && (
     <div className="absolute bottom-full right-0 mb-2">

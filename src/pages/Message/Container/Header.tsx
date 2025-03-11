@@ -8,7 +8,7 @@ const Header = () => {
  );
 
  return (
-  <div className="w-full h-20 flex flex-row items-center justify-between p-4 border-b border-base-200">
+  <div className="w-full h-20 flex flex-row items-center justify-between p-4 border-b border-base-200 bg-gray-200 rounded-t-lg">
    <div className="flex flex-row gap-2">
     <div className="avatar">
      <div className="w-14 rounded-full">
