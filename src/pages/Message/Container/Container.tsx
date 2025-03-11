@@ -7,7 +7,8 @@ import Header from "./Header";
 const Container = () => {
  const selectedUser = useMessageStore((state) => state.selectedUser);
  return (
-  <div className="w-3/4 max-[1281px]:w-full border-2 border-base-200 flex flex-col justify-between flex-1 rounded-2xl">
+    
+  <div className="w-3/4 max-[1281px]:w-full border-2 border-base-200 flex flex-col justify-between flex-1 rounded-lg bg-gray-100">
    {selectedUser ? (
     <>
      <Header />
