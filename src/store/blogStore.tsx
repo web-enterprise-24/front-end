@@ -34,7 +34,7 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isGettingPosts: true });
 
 			const res = await getLatestPosts();
-			set({ posts: res });
+			set({ posts: res.blogs });
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err.response?.data?.message);
