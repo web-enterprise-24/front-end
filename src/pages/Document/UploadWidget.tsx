@@ -72,8 +72,8 @@ const UploadWidget = ({ onFileSelect, onClick }: UploadWidgetProps = {}) => {
   <div
    className={`w-full h-60 max-h-60 flex items-center justify-center border-2 border-dashed rounded-2xl transition-colors duration-300 relative ${
     isDragging
-     ? "border-primary bg-primary/10"
-     : "border-primary/30 bg-base-200/50 hover:bg-base-200"
+     ? "border-info bg-primary/10"
+     : "border-info/30 bg-base-200/50 hover:bg-base-200"
    }`}
    onDragEnter={handleDragEnter}
    onDragOver={handleDragOver}
@@ -81,22 +81,22 @@ const UploadWidget = ({ onFileSelect, onClick }: UploadWidgetProps = {}) => {
    onDrop={handleDrop}
   >
    <span
-    className="size-10 absolute flex items-center justify-center top-2 right-2 rounded-full hover:bg-primary cursor-pointer transition-colors ease-linear duration-150"
+    className="size-10 absolute flex items-center justify-center top-2 right-2 rounded-full hover:bg-info cursor-pointer transition-colors ease-linear duration-150"
     onClick={onClick}
    >
     <X className="size-6" />
    </span>
    <div className="flex flex-col gap-3 items-center justify-center p-6">
     <CloudUpload
-     className={`size-16 ${isDragging ? "text-primary" : "text-primary/70"}`}
+     className={`size-16 ${isDragging ? "text-info" : "text-info/70"}`}
     />
     <p className="text-md font-bold text-base-content/80">
      Drop or drag your file here
     </p>
-    <span className="text-xl font-semibold text-primary">or</span>
+    <span className="text-xl font-semibold text-info">or</span>
     <label ref={labelRef} htmlFor="file-upload" className="cursor-pointer">
      <button
-      className="btn btn-primary btn-sm hover:btn-primary-focus"
+      className="btn btn-info btn-sm hover:btn-primary-focus"
       onClick={() => {
        if (labelRef.current) {
         labelRef.current.click();

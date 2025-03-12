@@ -108,7 +108,7 @@ const LoginForm = () => {
     <p className="text-sm font-normal italic mt-2 cursor-pointer select-none">
      Forgot your password?
     </p>
-    <button className="btn btn-primary mt-4">
+    <button className="btn btn-secondary mt-4">
      {isLoggingIn ? <LoaderCircle className="animate-spin" /> : "Log in"}
     </button>
    </form>

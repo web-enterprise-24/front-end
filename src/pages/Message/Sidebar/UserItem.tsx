@@ -19,7 +19,7 @@ const UserItem = ({ data, onClick, isSelected }: PropsType) => {
       >
         <div className="avatar">
           <div className="w-16 rounded-full">
-            <img src={data?.profilePicUrl?.toString()} />
+            <img alt=""src={data?.profilePicUrl?.toString()} />
           </div>
         </div>
         <div className="flex flex-col gap-1">

@@ -123,7 +123,7 @@ const Sidebar = () => {
           </svg>
         </label>
       </div>
-      <div className="overflow-y-auto w-full">
+      
         {isOpen && (
           <div
             ref={refs.setFloating}
@@ -149,7 +149,9 @@ const Sidebar = () => {
               </div>
             )}
           </div>
+          
         )}
+        <div className="overflow-y-auto w-full">
         {isUserLoading
           ? new Array(8)
               .fill(null)
@@ -162,8 +164,9 @@ const Sidebar = () => {
                 isSelected={selectedUser?.id === user.id}
               />
             ))}
+            </div>
       </div>
-    </div>
+    
   );
 };
 
