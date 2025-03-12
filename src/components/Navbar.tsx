@@ -5,8 +5,11 @@ import { useShallow } from 'zustand/shallow';
 import MobileNavbar from './MobileNavbar';
 import { SidebarHomeItems, UserDropdownItems } from '../constants';
 import Dropdown from './Dropdown';
-import { useAuthStore, useGeneralStore } from '../store';
+import { useAuthStore, useGeneralStore, useNotificationStore } from '../store';
 import { transformRole } from '../utils';
+import { useEffect, useRef, useState } from 'react';
+import NotificationBox from './NotificationBox';
+import NotificationItem from './NotificationItem';
 
 const Navbar = () => {
 	const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
@@ -16,9 +19,23 @@ const Navbar = () => {
 			state.setModalFor,
 		])
 	);
+	const [notifications, getLatestNotification] = useNotificationStore(
+		useShallow((state) => [state.notifications, state.getLatestNotification])
+	);
 	const [authUser, logoutUser] = useAuthStore(
 		useShallow((state) => [state.authUser, state.logoutUser])
 	);
+
+	// For notification
+	// Inside your Navbar component
+	const [notificationsOpen, setNotificationsOpen] = useState(false);
+	const bellButtonRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (authUser) {
+			getLatestNotification();
+		}
+	}, [authUser, getLatestNotification]);
 
 	const handleClickLogin = () => {
 		modalElement?.showModal();
@@ -136,24 +153,53 @@ const Navbar = () => {
 
 					{authUser ? (
 						<>
-							<Dropdown
-								items={[]}
-								variant={'notification'}
-								dropdown-open
-							>
+							{/* Notification */}
+							<div className='relative'>
 								<div
-									tabIndex={0}
+									ref={bellButtonRef}
+									onClick={() => setNotificationsOpen(!notificationsOpen)}
 									className='relative w-7 h-7 cursor-pointer'
 								>
-									<span className='animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
-									<span className='w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
+									{notifications &&
+										notifications.some((notification) => !notification.isRead) && (
+											<>
+												<span className='animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
+												<span className='w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
+											</>
+										)}
 									<Bell className='w-full h-full' />
 								</div>
-							</Dropdown>
+								<NotificationBox
+									isOpen={notificationsOpen}
+									setIsOpen={setNotificationsOpen}
+									triggerRef={bellButtonRef}
+								>
+									<div className='w-full min-h-32 h-full overflow-y-auto scrollbar-hide'>
+										{notifications && notifications.length > 0 ? (
+											notifications.map((notification) => (
+												<NotificationItem
+													key={notification.id}
+													data={notification}
+												/>
+											))
+										) : (
+											<div className='flex items-center justify-center'>
+												<p className='text-primary-content/40 font-bold'>
+													There is no notification
+												</p>
+											</div>
+										)}
+									</div>
+								</NotificationBox>
+							</div>
+
+							{/* User info */}
 							<div className='flex flex-col items-end justify-center'>
 								<p className='font-bold'>{authUser?.name}</p>
 								<p className='text-sm'>{transformRole(authUser?.roles[0]?.code)}</p>
 							</div>
+
+							{/* Avatar */}
 							<Dropdown
 								items={UserDropdownItems}
 								variant={'user'}

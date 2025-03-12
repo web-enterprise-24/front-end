@@ -19,6 +19,11 @@ type NotificationType = {
 		fileSize: string;
 		thumbnailUrl: string;
 		status: boolean;
+		student: {
+			name: string;
+			email: string;
+			profilePicUrl: string;
+		};
 	};
 };
 

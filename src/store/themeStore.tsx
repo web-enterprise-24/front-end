@@ -6,7 +6,7 @@ type ThemeStoreType = {
 };
 
 const useThemeStore = create<ThemeStoreType>((set) => ({
-	theme: localStorage.getItem('chat-theme') || 'coffee',
+	theme: localStorage.getItem('chat-theme') || 'emerald',
 	setTheme: (theme) => {
 		localStorage.setItem('chat-theme', theme);
 		set({ theme });

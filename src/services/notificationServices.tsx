@@ -9,3 +9,27 @@ export const getNotifications = async () => {
 		if (isAxiosError(err)) throw err;
 	}
 };
+
+export const markNotificationAsRead = async (id: string) => {
+	try {
+		await axios.patch(`/notification/${id}/read`);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const markNotificationAsReadAll = async () => {
+	try {
+		await axios.patch('/notification/read');
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const deleteNotification = async (id: string) => {
+	try {
+		await axios.delete(`/notification/${id}`);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};

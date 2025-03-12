@@ -5,3 +5,4 @@ export { default as useMessageStore } from './messageStore';
 export { default as useDocumentStore } from './documentStore';
 export { default as useBlogStore } from './blogStore';
 export { default as useThemeStore } from './themeStore';
+export { default as useNotificationStore } from './notificationStore';
