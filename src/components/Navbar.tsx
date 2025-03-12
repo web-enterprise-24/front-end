@@ -139,6 +139,7 @@ const Navbar = () => {
 							<Dropdown
 								items={[]}
 								variant={'notification'}
+								dropdown-open
 							>
 								<div
 									tabIndex={0}

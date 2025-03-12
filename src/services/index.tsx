@@ -7,3 +7,5 @@ export * from './provinceService';
 export * from './documentServices';
 
 export * from './blogServices';
+
+export * from './notificationServices';
