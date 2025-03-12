@@ -41,7 +41,7 @@ const Navbar = () => {
 	itemNoAuth.splice(3, 1);
 
 	return (
-		<div className='max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base-100 shadow-md shadow-base-300'>
+		<div className='max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base-200 shadow-md shadow-base-300'>
 			<MobileNavbar
 				items={
 					authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code)
@@ -174,7 +174,7 @@ const Navbar = () => {
 					) : (
 						<div className='flex flex-row gap-1'>
 							<button
-								className='btn btn-primary rounded-xl'
+								className='btn btn-secondary rounded-xl'
 								onClick={handleClickLogin}
 							>
 								Log in

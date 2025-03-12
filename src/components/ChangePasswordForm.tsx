@@ -57,7 +57,7 @@ const ChangePasswordForm = () => {
      )}
     </div>
    </label>
-   <label className="input input-bordered flex items-center gap-2 relative">
+   <label className="input input-bordered flex items-center gap-2 relative ">
     <PasswordIconDaisyUI />
     <input
      type={showNewPassword ? "text" : "password"}
@@ -91,7 +91,7 @@ const ChangePasswordForm = () => {
      )}
     </div>
    </label>
-   <button className="btn btn-primary">
+   <button className="btn btn-secondary">
     {isChangingPassword ? <LoaderCircle className="animate-spin" /> : "Change"}
    </button>
   </form>

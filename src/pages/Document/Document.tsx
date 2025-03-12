@@ -81,7 +81,7 @@ const Document = () => {
 				<h1 className='font-bold text-xl'>All documents</h1>
 				{authUser?.roles[0]?.code === 'STUDENT' && (
 					<button
-						className='btn btn-primary'
+						className='btn btn-info'
 						onClick={() => setIsOpenUpload(true)}
 					>
 						Upload your file
