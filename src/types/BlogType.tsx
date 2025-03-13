@@ -1,3 +1,5 @@
+import CommentType from './CommentType';
+
 type BlogType = {
 	id: string;
 	title: string;
@@ -21,5 +23,6 @@ type BlogType = {
 		name: string;
 		profilePicUrl: string;
 	};
+	comments: CommentType[];
 };
 export default BlogType;

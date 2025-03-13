@@ -1,12 +1,14 @@
 import { Eye } from 'lucide-react';
 import { BlogType } from '../types';
 import { convertDate } from '../utils';
+import { Link } from 'react-router-dom';
 
 type PropsType = {
 	data: BlogType;
 	isShowActions?: boolean;
 	onClickApprove?: (id: string) => void;
 	onClickReject?: (id: string) => void;
+	onClickBlog?: (id: string) => void;
 };
 
 const BlogItem = ({
@@ -14,9 +16,14 @@ const BlogItem = ({
 	isShowActions = false,
 	onClickApprove,
 	onClickReject,
+	onClickBlog,
 }: PropsType) => {
 	return (
-		<div className='flex flex-col gap-2'>
+		<Link
+			to={`/blog/${data.id}`}
+			className='flex flex-col gap-2'
+			onClick={() => onClickBlog && onClickBlog(data.id)}
+		>
 			<div className='rounded-md overflow-hidden'>
 				<img
 					className='w-full max-h-[280px] object-cover'
@@ -60,7 +67,7 @@ const BlogItem = ({
 					</div>
 				</div>
 			)}
-		</div>
+		</Link>
 	);
 };
 

@@ -7,6 +7,7 @@ type CommentType = {
 		likes: number;
 	};
 	user: {
+		id: string;
 		name: string;
 		email: string;
 		profilePicUrl: string;
