@@ -197,9 +197,9 @@ const Navbar = () => {
 							<div className='flex flex-col items-end justify-center'>
 								<p className='font-bold'>{authUser?.name}</p>
 								<p className='text-sm'>{transformRole(authUser?.roles[0]?.code)}</p>
-							</div>
-
+							</div>							
 							{/* Avatar */}
+							<div className={`dropdown dropdown-end dropdown-bottom`}>	
 							<Dropdown
 								items={UserDropdownItems}
 								variant={'user'}
@@ -217,6 +217,7 @@ const Navbar = () => {
 									</div>
 								</div>
 							</Dropdown>
+						</div>	
 						</>
 					) : (
 						<div className='flex flex-row gap-1'>
