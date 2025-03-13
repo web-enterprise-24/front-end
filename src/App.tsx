@@ -19,6 +19,7 @@ import {
 	WritingBlog,
 	PendingBlog,
 	Theme,
+	DetailedBlog,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound } from './components';
@@ -145,6 +146,10 @@ const App = () => {
 						<Route
 							path='pending'
 							element={authUser ? <PendingBlog /> : <Navigate to={'/'} />}
+						/>
+						<Route
+							path=':blogId'
+							element={<DetailedBlog />}
 						/>
 					</Route>
 				</Route>

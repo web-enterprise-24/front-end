@@ -13,3 +13,4 @@ export { default as Document } from './Document/Document';
 export { default as Blog } from './Blog/Blog';
 export { default as WritingBlog } from './Blog/WritingBlog';
 export { default as PendingBlog } from './Blog/PendingBlog';
+export { default as DetailedBlog } from './Blog/DetailedBlog';
