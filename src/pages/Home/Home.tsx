@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/shallow';
 
 import { useBlogStore } from '../../store';
 import { BlogItem, BlogItemSkeleton } from '../../components';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
 	const [posts, getLatestPosts, isGettingPosts] = useBlogStore(
@@ -33,7 +34,9 @@ const Home = () => {
 			<div className='w-5/6 h-full mx-auto flex flex-col gap-4'>
 				<div className='w-full flex justify-between items-center'>
 					<h2 className='font-bold text-lg'>Latest blogs</h2>
-					<button className='btn btn-ghost'>See more</button>
+					<Link to={'/blog'} className='btn btn-ghost'>
+                        See more
+                    </Link>
 				</div>
 				<div className='w-full grid grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4'>
 					{isGettingPosts
