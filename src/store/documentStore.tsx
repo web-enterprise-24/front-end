@@ -2,37 +2,50 @@ import { create } from 'zustand';
 import { StudentDocumentType, TutorDocumentType } from '../types';
 import { AxiosError } from 'axios';
 import {
+	createFeedback,
+	deleteFeedback,
 	getMyDocuments,
 	getStudentDocuments,
+	updateFeedback,
 	uploadDocument,
 } from '../services';
 import toast from 'react-hot-toast';
 
 type DocumentStoreType = {
-	accessToken: string | null;
 	documents: StudentDocumentType[] | TutorDocumentType[];
+	selectedDocument: StudentDocumentType | TutorDocumentType | null;
 	nextPage: string;
 	previousPage: string;
 	currentPage: number;
 	isGettingDocument: boolean;
 	isUploadingDocument: boolean;
+	isCreatingFeedback: boolean;
+	isDeletingFeedback: boolean;
 
 	upload: (data: FormData) => void;
 	getStudentDocument: (link?: string) => void;
 	getTutorDocument: (link?: string) => void;
 	setCurrentPage: (page: number) => void;
+	setSelectedDocument: (id: string) => void;
+	createFeedback: (data: { message: string }, documentId: string) => void;
+	updateFeedback: (
+		data: { message: string },
+		feedbackId: string,
+		documentId: string
+	) => void;
+	deleteFeedback: (feedbackId: string, documentId: string) => void;
 };
 
-const accessToken = localStorage.getItem('access');
-
 const useDocumentStore = create<DocumentStoreType>((set, get) => ({
-	accessToken: accessToken || null,
 	documents: [],
+	selectedDocument: null,
 	nextPage: '',
 	previousPage: '',
 	currentPage: 1,
 	isGettingDocument: false,
 	isUploadingDocument: false,
+	isCreatingFeedback: false,
+	isDeletingFeedback: false,
 
 	async upload(data) {
 		try {
@@ -92,6 +105,57 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
 	},
 	setCurrentPage(page) {
 		set({ currentPage: get().currentPage + page });
+	},
+	setSelectedDocument(id: string) {
+		const selectedDocument = get().documents.find((doc) => doc.id === id);
+		if (selectedDocument) {
+			set({ selectedDocument });
+		}
+	},
+	async createFeedback(data, documentId) {
+		try {
+			set({ isCreatingFeedback: true });
+			await createFeedback(data, documentId);
+			get().getTutorDocument();
+			toast.success('Feedback created successfully');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to create feedback: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isCreatingFeedback: false });
+		}
+	},
+	async updateFeedback(data, feedbackId, documentId) {
+		try {
+			set({ isCreatingFeedback: true });
+			await updateFeedback(data, feedbackId, documentId);
+			get().getTutorDocument();
+			toast.success('Feedback updated successfully');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to update feedback: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isCreatingFeedback: false });
+		}
+	},
+	async deleteFeedback(feedbackId, documentId) {
+		try {
+			set({ isDeletingFeedback: true });
+			await deleteFeedback(feedbackId, documentId);
+			get().getTutorDocument();
+			toast.success('Feedback deleted successfully');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to delete feedback: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isDeletingFeedback: false });
+		}
 	},
 }));
 

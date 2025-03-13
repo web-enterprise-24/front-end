@@ -13,3 +13,4 @@ export type { default as TutorDocumentType } from './TutorDocumentType';
 export type { default as BlogType } from './BlogType';
 export type { default as BlogSendType } from './BlogSendType';
 export type { default as NotificationType } from './NotificationType';
+export type { default as CommentType } from './CommentType';

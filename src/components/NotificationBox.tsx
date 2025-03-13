@@ -10,7 +10,7 @@ import {
 	useRole,
 } from '@floating-ui/react';
 import { Check } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useNotificationStore } from '../store';
 import { useShallow } from 'zustand/shallow';
 
@@ -31,6 +31,26 @@ const NotificationBox = ({
 		useShallow((state) => [state.notifications, state.markAsReadAll])
 	);
 
+	// State to track screen width
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+	// Update windowWidth when resized
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
+	// Calculate width based on screen size
+	const getFloatingWidth = () => {
+		if (windowWidth <= 480) return '95vw'; // Extra small screens
+		if (windowWidth <= 768) return '350px'; // Small screens
+		return '400px'; // Medium and larger screens
+	};
+
 	// Floating UI
 	const { refs, floatingStyles, context } = useFloating({
 		open: isOpen,
@@ -43,7 +63,7 @@ const NotificationBox = ({
 			size({
 				apply({ elements, availableHeight }) {
 					Object.assign(elements.floating.style, {
-						width: '400px',
+						width: getFloatingWidth(),
 						maxHeight: `${Math.min(400, availableHeight)}px`,
 					});
 				},
@@ -69,7 +89,7 @@ const NotificationBox = ({
 			ref={refs.setFloating}
 			style={floatingStyles}
 			{...getFloatingProps()}
-			className='min-h-24 max-h-[400px] bg-base-100 rounded-lg p-4 z-[50] shadow-2xl overflow-x-hidden overflow-y-hidden scrollbar-hide flex flex-col gap-4'
+			className='min-h-24 max-h-[400px] w-[200px] bg-base-100 rounded-lg p-4 z-[50] shadow-2xl overflow-x-hidden overflow-y-hidden scrollbar-hide flex flex-col gap-4'
 		>
 			{/* header */}
 			<div className='flex justify-between items-center'>
