@@ -49,6 +49,10 @@ const Navbar = () => {
 		}
 	};
 
+	const setCloseNotification = () => {
+		setNotificationsOpen(false);
+	};
+
 	let NavComp = 'div' as React.ElementType;
 	if (authUser) {
 		NavComp = Link;
@@ -180,6 +184,7 @@ const Navbar = () => {
 												<NotificationItem
 													key={notification.id}
 													data={notification}
+													closeNotification={setCloseNotification}
 												/>
 											))
 										) : (

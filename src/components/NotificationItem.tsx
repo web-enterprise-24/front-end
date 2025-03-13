@@ -5,17 +5,23 @@ import { NotificationType } from '../types';
 import { convertDateNotification } from '../utils';
 import { useNotificationStore } from '../store';
 import { useShallow } from 'zustand/shallow';
+import { Link } from 'react-router-dom';
 
 type PropsType = {
 	data: NotificationType;
+	notificationBoxHeaderRef?: React.RefObject<HTMLHeadingElement | null>;
+	closeNotification?: () => void;
 };
 
-const NotificationItem = ({ data }: PropsType) => {
+const NotificationItem = ({ data, closeNotification }: PropsType) => {
 	const [markAsReadOne, deleteOne] = useNotificationStore(
 		useShallow((state) => [state.markAsReadOne, state.deleteOne])
 	);
 
-	const onClick = (title?: string) => {
+	const onClick = (
+		title?: string,
+		ulRef?: React.RefObject<HTMLUListElement | null>
+	) => {
 		if (title === 'Mark as reads') {
 			if (!data.isRead) {
 				markAsReadOne(data.id);
@@ -23,11 +29,28 @@ const NotificationItem = ({ data }: PropsType) => {
 		} else if (title === 'Delete') {
 			deleteOne(data.id);
 		}
+
+		// close the dropdown
+		if (ulRef) {
+			ulRef.current?.blur();
+		}
 	};
+
+	let path = '';
+	if (data.type === 'document_submission' || data.type === 'feedback') {
+		path = '/document';
+	}
 
 	return (
 		<div className='w-full flex flex-row items-center gap-1'>
-			<div className='w-full flex flex-row items-center gap-2 hover:bg-base-200 rounded-lg p-2 cursor-pointer'>
+			<Link
+				to={path}
+				className='w-full flex flex-row items-center gap-2 hover:bg-base-200 rounded-lg p-2 cursor-pointer'
+				onClick={() => {
+					markAsReadOne(data.id);
+					if (closeNotification) closeNotification();
+				}}
+			>
 				<div className='avatar'>
 					<div className='w-14 rounded-full'>
 						<img
@@ -45,7 +68,7 @@ const NotificationItem = ({ data }: PropsType) => {
 						{convertDateNotification(data.createdAt)}
 					</p>
 				</div>
-			</div>
+			</Link>
 
 			{/* actions */}
 			<Dropdown

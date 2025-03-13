@@ -1,6 +1,8 @@
 import { Download, FileText, MessageSquareMore } from 'lucide-react';
 import { StudentDocumentType, TutorDocumentType } from '../../types';
 import { convertDate } from '../../utils';
+import { useDocumentStore, useGeneralStore } from '../../store';
+import { useShallow } from 'zustand/shallow';
 
 type PropsType = {
 	role: 'TUTOR' | 'STUDENT' | '';
@@ -8,6 +10,18 @@ type PropsType = {
 };
 
 const FileItem = ({ data, role }: PropsType) => {
+	const [modalElement, setModalFor, setIsShowingModal] = useGeneralStore(
+		useShallow((state) => [
+			state.modalElement,
+			state.setModalFor,
+			state.setIsShowingModal,
+		])
+	);
+
+	const setSelectedDocument = useDocumentStore(
+		(state) => state.setSelectedDocument
+	);
+
 	let fileType;
 	if (data?.fileType === 'application/pdf') {
 		fileType = 'PDF';
@@ -60,6 +74,14 @@ const FileItem = ({ data, role }: PropsType) => {
 		}
 	};
 
+	const handleClickComment = () => {
+		modalElement?.showModal();
+		setIsShowingModal(true);
+		setModalFor('feedback');
+
+		setSelectedDocument(data.id);
+	};
+
 	return (
 		<div className='w-full h-60 max-h-60 border rounded-2xl overflow-hidden border-primary-content/40 hover:-translate-y-1 transition-transform ease-linear duration-150'>
 			<div className='w-full h-1/2 flex items-center justify-center bg-neutral-content'>
@@ -86,7 +108,10 @@ const FileItem = ({ data, role }: PropsType) => {
 					)}
 				</div>
 				<div className='w-full flex flex-row items-center justify-end gap-10'>
-					<span className='text-primary-content cursor-pointer'>
+					<span
+						className='text-primary-content cursor-pointer'
+						onClick={handleClickComment}
+					>
 						<MessageSquareMore />
 					</span>
 					<span
