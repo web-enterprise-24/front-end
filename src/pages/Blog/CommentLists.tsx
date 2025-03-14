@@ -4,7 +4,7 @@ import Comment from './Comment';
 const CommentLists = () => {
 	const rootComments = useBlogStore((state) => state.rootComments);
 	return (
-		<div className='space-y-4'>
+		<div className='w-full space-y-4'>
 			{/* Sample comment - replace with real comments */}
 			{rootComments.map((comment) => (
 				<Comment

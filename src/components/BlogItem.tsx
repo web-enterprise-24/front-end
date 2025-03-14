@@ -4,6 +4,7 @@ import { convertDate } from '../utils';
 import { Link } from 'react-router-dom';
 
 type PropsType = {
+	page: 'home' | 'pending-blog' | 'blog';
 	data: BlogType;
 	isShowActions?: boolean;
 	onClickApprove?: (id: string) => void;
@@ -12,14 +13,22 @@ type PropsType = {
 };
 
 const BlogItem = ({
+	page,
 	data,
 	isShowActions = false,
 	onClickApprove,
 	onClickReject,
 	onClickBlog,
 }: PropsType) => {
+	let Comp = 'div' as React.ElementType;
+	if (page === 'home' || page === 'blog') {
+		Comp = Link;
+	} else if (page === 'pending-blog') {
+		Comp = 'div';
+	}
+
 	return (
-		<Link
+		<Comp
 			to={`/blog/${data.id}`}
 			className='flex flex-col gap-2'
 			onClick={() => onClickBlog && onClickBlog(data.id)}
@@ -48,9 +57,12 @@ const BlogItem = ({
 			</div>
 			{isShowActions && (
 				<div className='flex gap-2 justify-between items-center'>
-					<button className='btn btn-ghost'>
+					<Link
+						to={`/blog/${data.id}`}
+						className='btn btn-ghost'
+					>
 						<Eye />
-					</button>
+					</Link>
 					<div className='flex gap-2'>
 						<button
 							className='btn btn-secondary'
@@ -67,7 +79,7 @@ const BlogItem = ({
 					</div>
 				</div>
 			)}
-		</Link>
+		</Comp>
 	);
 };
 

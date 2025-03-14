@@ -51,7 +51,7 @@ const Comment = ({ data }: PropsType) => {
 
 	return (
 		<>
-			<div className='flex flex-row gap-4 items-center'>
+			<div className='w-full flex flex-row gap-4'>
 				<ConfirmModal
 					ref={dialogRef}
 					title='Are you sure you want to delete this comment?'
@@ -65,7 +65,7 @@ const Comment = ({ data }: PropsType) => {
 						/>
 					</div>
 				</div>
-				<div>
+				<div className='w-full flex-1 min-w-0'>
 					<div className='flex flex-row gap-2 items-center'>
 						<p className='font-bold text-primary-content'>{data?.user?.name}</p>
 						<span className='text-sm text-primary-content'>
@@ -81,7 +81,9 @@ const Comment = ({ data }: PropsType) => {
 								onSubmit={handleSubmitEdit}
 							/>
 						) : (
-							<p className='text-primary-content'>{data?.message}</p>
+							<p className='text-primary-content break-words whitespace-pre-wrap max-w-full overflow-hidden'>
+								{data?.message}
+							</p>
 						)}
 					</div>
 					{/* Actions */}
