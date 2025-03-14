@@ -34,9 +34,12 @@ const Home = () => {
 			<div className='w-5/6 h-full mx-auto flex flex-col gap-4'>
 				<div className='w-full flex justify-between items-center'>
 					<h2 className='font-bold text-lg'>Latest blogs</h2>
-					<Link to={'/blog'} className='btn btn-ghost'>
-                        See more
-                    </Link>
+					<Link
+						to={'/blog'}
+						className='btn btn-ghost'
+					>
+						See more
+					</Link>
 				</div>
 				<div className='w-full grid grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4'>
 					{isGettingPosts
@@ -46,6 +49,7 @@ const Home = () => {
 						: posts &&
 						  posts.map((post) => (
 								<BlogItem
+									page={'home'}
 									key={post.id}
 									data={post}
 								/>

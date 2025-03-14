@@ -10,12 +10,7 @@ type PropsType = {
 	onSubmit?: (e: React.FormEvent<HTMLFormElement>, message: string) => void;
 };
 
-const CommentForm = ({
-	isEditForm,
-	initialValue,
-	autoFocus,
-	onSubmit,
-}: PropsType) => {
+const CommentForm = ({ initialValue, autoFocus, onSubmit }: PropsType) => {
 	const authUser = useAuthStore((state) => state.authUser);
 	const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
 		useShallow((state) => [
@@ -56,7 +51,7 @@ const CommentForm = ({
 	return (
 		<form
 			onSubmit={(e) => handleSubmit(e)}
-			className={`flex flex-row gap-2 items-center ${isEditForm && 'w-[897px]'}`}
+			className={`flex flex-row gap-2 items-center w-full`}
 		>
 			<textarea
 				autoFocus={autoFocus}

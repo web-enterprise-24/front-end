@@ -34,7 +34,7 @@ const DetailedBlog = () => {
 	};
 
 	return (
-		<div className='w-1/2 min-h-screen mx-auto flex flex-col'>
+		<div className='w-1/2 max-xl:w-5/6 min-h-screen mx-auto flex flex-col'>
 			<div className='flex-grow'>
 				<div className='w-full flex flex-col gap-2'>
 					{/* Blog title */}

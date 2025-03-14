@@ -86,6 +86,7 @@ const Blog = () => {
 							: posts &&
 							  posts.map((post) => (
 									<BlogItem
+										page={'blog'}
 										key={post.id}
 										data={post}
 									/>

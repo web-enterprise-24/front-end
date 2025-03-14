@@ -42,7 +42,7 @@ const PendingBlog = () => {
 			</div>
 			<div
 				className={`w-full ${
-					!isGettingPosts && posts && posts.length > 0 && 'grid'
+					isGettingPosts || (posts && posts.length > 0) ? 'grid' : ''
 				} grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4`}
 			>
 				{isGettingPosts ? (
@@ -50,6 +50,7 @@ const PendingBlog = () => {
 				) : posts && posts.length > 0 ? (
 					posts.map((post) => (
 						<BlogItem
+							page='pending-blog'
 							key={post.id}
 							data={post}
 							isShowActions={true}
