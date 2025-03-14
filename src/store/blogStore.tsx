@@ -3,6 +3,7 @@ import { BlogSendType, BlogType, CommentType } from '../types';
 import { AxiosError } from 'axios';
 import {
 	approveBlog,
+	deleteComment,
 	editComment,
 	getLatestPosts,
 	getPendingPosts,
@@ -207,7 +208,7 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 	async deleteComment(blogId, commentId) {
 		try {
 			set({ isHandlingComment: true });
-			await this.deleteComment(commentId, blogId);
+			await deleteComment(commentId, blogId);
 			toast.success('Comment deleted successfully!');
 			get().getPost(blogId);
 		} catch (err) {

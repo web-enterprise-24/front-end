@@ -93,10 +93,7 @@ const DetailedBlog = () => {
 
 				{/* Comment form */}
 				<div className='w-full mb-6'>
-					<CommentForm
-						onSubmit={handleSubmit}
-						autoFocus
-					/>
+					<CommentForm onSubmit={handleSubmit} />
 				</div>
 
 				{/* Comments list */}
