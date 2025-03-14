@@ -1,22 +1,30 @@
 import { ThumbsUp } from 'lucide-react';
 import CommentForm from './CommentForm';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { CommentType } from '../../types';
 import { convertDateNotification } from '../../utils';
 import { useParams } from 'react-router-dom';
-import { useBlogStore } from '../../store';
+import { useAuthStore, useBlogStore } from '../../store';
 import { useShallow } from 'zustand/shallow';
+import ConfirmModal from '../../components/ConfirmModal';
 // Get replies in this component broooooooooooooooooooooo
 type PropsType = {
 	data: CommentType;
 };
 
 const Comment = ({ data }: PropsType) => {
-	const [updateComment, isHandlingBlog] = useBlogStore(
-		useShallow((state) => [state.updateComment, state.isHandlingBlog])
+	const authUser = useAuthStore((state) => state.authUser);
+	const [updateComment, deleteComment, isHandlingBlog] = useBlogStore(
+		useShallow((state) => [
+			state.updateComment,
+			state.deleteComment,
+			state.isHandlingBlog,
+		])
 	);
 	const [isReply, setIsReply] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
+
+	const dialogRef = useRef<HTMLDialogElement | null>(null);
 
 	const { blogId } = useParams();
 
@@ -33,9 +41,22 @@ const Comment = ({ data }: PropsType) => {
 		}
 	};
 
+	const handleClickDelete = () => {
+		dialogRef.current?.showModal();
+	};
+
+	const handleConfirmDelete = () => {
+		deleteComment(blogId || '', data.id);
+	};
+
 	return (
 		<>
 			<div className='flex flex-row gap-4 items-center'>
+				<ConfirmModal
+					ref={dialogRef}
+					title='Are you sure you want to delete this comment?'
+					events={[handleConfirmDelete]}
+				/>
 				<div className='avatar self-start'>
 					<div className='w-12 rounded-full'>
 						<img
@@ -75,17 +96,25 @@ const Comment = ({ data }: PropsType) => {
 						>
 							Reply
 						</button>
-						<button
-							className='btn btn-ghost'
-							onClick={() => setIsEdit(!isEdit)}
-						>
-							Edit
-						</button>
-						<button className='btn btn-ghost'>Delete</button>
+						{authUser?.id === data?.user.id && (
+							<>
+								<button
+									className='btn btn-ghost'
+									onClick={() => setIsEdit(!isEdit)}
+								>
+									Edit
+								</button>
+								<button
+									className='btn btn-ghost'
+									onClick={handleClickDelete}
+								>
+									Delete
+								</button>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
-
 			{isReply && <CommentForm />}
 		</>
 	);
