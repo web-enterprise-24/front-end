@@ -2,9 +2,11 @@ import { isAxiosError } from 'axios';
 import { axios } from '../utils';
 import { BlogSendType } from '../types';
 
-export const getLatestPosts = async () => {
+export const getLatestPosts = async (link?: string) => {
 	try {
-		const res = await axios.get('blogs/latest?pageNumber=1&pageItemCount=10');
+		const res = await axios.get(
+			link ? link : 'blogs/latest?pageNumber=1&pageItemCount=10'
+		);
 
 		return res.data.data;
 	} catch (err) {

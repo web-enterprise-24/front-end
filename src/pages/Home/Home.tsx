@@ -15,7 +15,7 @@ const Home = () => {
 	);
 
 	useEffect(() => {
-		getLatestPosts();
+		getLatestPosts('', 'home');
 	}, [getLatestPosts]);
 
 	return (

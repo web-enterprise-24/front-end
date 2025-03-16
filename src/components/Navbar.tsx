@@ -1,6 +1,7 @@
 import { House, MessageCircleMore, Bell, Folder, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
+import { motion } from 'framer-motion';
 
 import MobileNavbar from './MobileNavbar';
 import { SidebarHomeItems, UserDropdownItems } from '../constants';
@@ -31,6 +32,22 @@ const Navbar = () => {
 	const [notificationsOpen, setNotificationsOpen] = useState(false);
 	const bellButtonRef = useRef<HTMLDivElement | null>(null);
 
+	const location = useLocation();
+	const [activeTab, setActiveTab] = useState('/');
+
+	useEffect(() => {
+		const path = location.pathname;
+		if (path === '/') {
+			setActiveTab('/');
+		} else if (path.startsWith('/message')) {
+			setActiveTab('/message');
+		} else if (path.startsWith('/document')) {
+			setActiveTab('/document');
+		} else if (path.startsWith('/blog')) {
+			setActiveTab('/blog');
+		}
+	}, [location]);
+
 	useEffect(() => {
 		if (authUser) {
 			getLatestNotification();
@@ -55,7 +72,7 @@ const Navbar = () => {
 
 	let NavComp = 'div' as React.ElementType;
 	if (authUser) {
-		NavComp = Link;
+		NavComp = NavLink;
 	}
 
 	const itemNoAuth = [...SidebarHomeItems];
@@ -72,7 +89,7 @@ const Navbar = () => {
 				page={'home'}
 			/>
 			{/* Large screen nav */}
-			<div className='hidden xl:flex flex-row justify-between container mx-auto px-8 max-[821px]:px-2 w-full h-full '>
+			<div className='hidden xl:flex flex-row items-center justify-between container mx-auto px-8 max-[821px]:px-2 w-full h-full '>
 				<div className='w-36 h-full'>
 					<Link
 						to={'/'}
@@ -85,21 +102,45 @@ const Navbar = () => {
 						/>
 					</Link>
 				</div>
-				<nav className='h-full flex flex-row gap-6 '>
-					<Link
+				<nav className='h-12 flex flex-row gap-6 relative'>
+					{/* Background indicator */}
+					<motion.div
+						className='absolute bg-base-300 rounded-xl h-full z-0'
+						animate={{
+							width: '4rem', // 16 in tailwind
+							x:
+								activeTab === '/'
+									? 0
+									: activeTab === '/message'
+									? 'calc(4rem + 1.5rem)'
+									: activeTab === '/document'
+									? 'calc(8rem + 3rem)'
+									: 'calc(12rem + 4.5rem)',
+						}}
+						transition={{
+							type: 'spring',
+							stiffness: 300,
+							damping: 30,
+						}}
+					/>
+
+					<NavLink
 						to={'/'}
-						className='h-full flex items-center cursor-pointer'
+						className='w-16 h-full flex items-center justify-center cursor-pointer relative z-10'
+						onClick={() => setActiveTab('/')}
 					>
 						<House className='w-8 h-8' />
-					</Link>
+					</NavLink>
+
 					<div
 						className='tooltip tooltip-bottom'
 						data-tip='Chatting'
 					>
 						<NavComp
 							to={'/message'}
-							className='h-full flex items-center cursor-pointer'
+							className='w-16 h-full flex items-center justify-center cursor-pointer relative z-10'
 							onClick={() => {
+								setActiveTab('/message');
 								if (!authUser) {
 									handleClickLogin();
 								}
@@ -108,6 +149,8 @@ const Navbar = () => {
 							<MessageCircleMore className='w-8 h-8' />
 						</NavComp>
 					</div>
+
+					{/* Document link */}
 					{authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code) && (
 						<div
 							className='tooltip tooltip-bottom'
@@ -115,8 +158,9 @@ const Navbar = () => {
 						>
 							<NavComp
 								to={'/document'}
-								className='h-full flex items-center cursor-pointer'
+								className='w-16 h-full flex items-center justify-center cursor-pointer relative z-10'
 								onClick={() => {
+									setActiveTab('/document');
 									if (!authUser) {
 										handleClickLogin();
 									}
@@ -126,16 +170,19 @@ const Navbar = () => {
 							</NavComp>
 						</div>
 					)}
+
+					{/* Blog link */}
 					<div
 						className='tooltip tooltip-bottom'
 						data-tip='Blog'
 					>
-						<Link
+						<NavLink
 							to={'/blog'}
-							className='h-full flex items-center cursor-pointer'
+							className='w-16 h-full flex items-center justify-center cursor-pointer relative z-10'
+							onClick={() => setActiveTab('/blog')}
 						>
 							<BookOpen className='w-8 h-8' />
-						</Link>
+						</NavLink>
 					</div>
 				</nav>
 				<div className='flex flex-row h-full items-center gap-8'>
@@ -202,27 +249,27 @@ const Navbar = () => {
 							<div className='flex flex-col items-end justify-center'>
 								<p className='font-bold'>{authUser?.name}</p>
 								<p className='text-sm'>{transformRole(authUser?.roles[0]?.code)}</p>
-							</div>							
+							</div>
 							{/* Avatar */}
-							<div className={`dropdown dropdown-end dropdown-bottom`}>	
-							<Dropdown
-								items={UserDropdownItems}
-								variant={'user'}
-								onClick={handleClickItem}
-							>
-								<div
-									tabIndex={0}
-									className='avatar cursor-pointer'
+							<div className={`dropdown dropdown-end dropdown-bottom`}>
+								<Dropdown
+									items={UserDropdownItems}
+									variant={'user'}
+									onClick={handleClickItem}
 								>
-									<div className='w-14 rounded-full'>
-										<img
-											src={authUser?.profilePicUrl?.toString()}
-											alt='Avatar'
-										/>
+									<div
+										tabIndex={0}
+										className='avatar cursor-pointer'
+									>
+										<div className='w-14 rounded-full'>
+											<img
+												src={authUser?.profilePicUrl?.toString()}
+												alt='Avatar'
+											/>
+										</div>
 									</div>
-								</div>
-							</Dropdown>
-						</div>	
+								</Dropdown>
+							</div>
 						</>
 					) : (
 						<div className='flex flex-row gap-1'>

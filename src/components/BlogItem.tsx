@@ -33,9 +33,9 @@ const BlogItem = ({
 			className='flex flex-col gap-2'
 			onClick={() => onClickBlog && onClickBlog(data.id)}
 		>
-			<div className='rounded-md overflow-hidden'>
+			<div className='rounded-md overflow-hidden relative pb-[56.25%]'>
 				<img
-					className='w-full max-h-[280px] object-cover'
+					className='absolute inset-0 w-full h-full object-cover'
 					// https://c4.wallpaperflare.com/wallpaper/446/815/587/landscape-wallpaper-preview.jpg
 					src={data?.imgUrl}
 					alt='Blog'
