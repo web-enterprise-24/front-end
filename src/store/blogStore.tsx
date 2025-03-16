@@ -20,15 +20,18 @@ type BlogStoreType = {
 	comments: CommentType[];
 	rootComments: CommentType[];
 	repliesComments: CommentType[];
+	currentPage: number;
+	nextPage: string;
+	previousPage: string;
 	isGettingPosts: boolean;
 	isLoadingPost: boolean;
 	isPostingBlog: boolean;
 	isHandlingBlog: boolean;
 	isHandlingComment: boolean;
 
-	getLatestPosts: () => void;
+	getLatestPosts: (pageLink: string, page?: string) => void;
 	getPendingPosts: () => void;
-	getPost: (id: string) => void;
+	getPost: (id: string, load?: boolean) => void;
 	postBlog: (data: BlogSendType) => void;
 	approveBlog: (id: string) => void;
 	rejectBlog: (id: string) => void;
@@ -40,6 +43,8 @@ type BlogStoreType = {
 		commentId: string
 	) => void;
 	deleteComment: (blogId: string, commentId: string) => void;
+	setCurrentPage: (page: number) => void;
+	reset: () => void;
 };
 
 const commentByParentId = (comments: CommentType[]) => {
@@ -64,18 +69,33 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 	rootComments: [],
 	repliesComments: [],
 	posts: null,
+	currentPage: 1,
+	nextPage: '',
+	previousPage: '',
 	isGettingPosts: false,
 	isLoadingPost: false,
 	isPostingBlog: false,
 	isHandlingBlog: false,
 	isHandlingComment: false,
 
-	async getLatestPosts() {
+	async getLatestPosts(pageLink, page) {
 		try {
 			set({ isGettingPosts: true });
 
-			const res = await getLatestPosts();
-			set({ posts: res.blogs });
+			if (page === 'home') {
+				const link =
+					'https://web-enterprise.medev.me/blogs/latest?pageNumber=1&pageItemCount=6';
+				const res = await getLatestPosts(link);
+				set({ posts: res.blogs });
+				return;
+			}
+
+			const res = await getLatestPosts(pageLink);
+			set({
+				posts: res.blogs,
+				nextPage: res.paginationData.pagination.next || '',
+				previousPage: res.paginationData.pagination.previous || '',
+			});
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err.response?.data?.message);
@@ -150,9 +170,11 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isHandlingBlog: false });
 		}
 	},
-	async getPost(id: string) {
+	async getPost(id: string, load = true) {
 		try {
-			set({ isLoadingPost: true });
+			if (load) {
+				set({ isLoadingPost: true });
+			}
 			const res = await getPost(id);
 			set({ selectedPost: res });
 
@@ -170,17 +192,19 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isLoadingPost: false });
 		}
 	},
+
 	getReplies(parentId: string) {
 		const comments = get().comments;
 		const replies = commentByParentId(comments).get(parentId) || [];
 		set({ repliesComments: replies });
 	},
+
 	async postComment(data, blogId) {
 		try {
 			set({ isHandlingComment: true });
 			await postComment(data, blogId);
 			toast.success('Comment posted successfully!');
-			get().getPost(blogId);
+			get().getPost(blogId, false);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err);
@@ -190,12 +214,13 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isHandlingComment: false });
 		}
 	},
+
 	async updateComment(data, blogId, commentId) {
 		try {
 			set({ isHandlingComment: true });
 			await editComment(data, commentId, blogId);
 			toast.success('Comment updated successfully!');
-			get().getPost(blogId);
+			get().getPost(blogId, false);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err);
@@ -210,7 +235,7 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			set({ isHandlingComment: true });
 			await deleteComment(commentId, blogId);
 			toast.success('Comment deleted successfully!');
-			get().getPost(blogId);
+			get().getPost(blogId, false);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err);
@@ -219,6 +244,26 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 		} finally {
 			set({ isHandlingComment: false });
 		}
+	},
+	setCurrentPage(page) {
+		set({ currentPage: get().currentPage + page });
+	},
+	reset() {
+		set({
+			selectedPost: null,
+			comments: [],
+			rootComments: [],
+			repliesComments: [],
+			posts: null,
+			currentPage: 1,
+			nextPage: '',
+			previousPage: '',
+			isGettingPosts: false,
+			isLoadingPost: false,
+			isPostingBlog: false,
+			isHandlingBlog: false,
+			isHandlingComment: false,
+		});
 	},
 }));
 

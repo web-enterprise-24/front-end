@@ -1,3 +1,5 @@
+import RoleType from './RolesType';
+
 type CommentType = {
 	id: string;
 	message: string;
@@ -11,6 +13,7 @@ type CommentType = {
 		name: string;
 		email: string;
 		profilePicUrl: string;
+		roles: RoleType[];
 	};
 };
 

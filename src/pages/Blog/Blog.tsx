@@ -16,11 +16,25 @@ const Blog = () => {
 		])
 	);
 
-	const [posts, getLatestPosts, isGettingPosts] = useBlogStore(
+	const [
+		posts,
+		getLatestPosts,
+		isGettingPosts,
+		currentPage,
+		setCurrentPage,
+		nextPage,
+		previousPage,
+		reset,
+	] = useBlogStore(
 		useShallow((state) => [
 			state.posts,
 			state.getLatestPosts,
 			state.isGettingPosts,
+			state.currentPage,
+			state.setCurrentPage,
+			state.nextPage,
+			state.previousPage,
+			state.reset,
 		])
 	);
 
@@ -29,9 +43,12 @@ const Blog = () => {
 
 	useEffect(() => {
 		if (isMainBlogPage) {
-			getLatestPosts();
+			getLatestPosts('');
 		}
-	}, [getLatestPosts, isMainBlogPage]);
+		return () => {
+			reset();
+		};
+	}, [getLatestPosts, isMainBlogPage, reset]);
 
 	const handleClickLogin = () => {
 		modalElement?.showModal();
@@ -78,20 +95,54 @@ const Blog = () => {
 							</div>
 						</div>
 					</div>
-					<div className='w-full grid grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4'>
-						{isGettingPosts
-							? new Array(3)
-									.fill(null)
-									.map((_, index) => <BlogItemSkeleton key={index} />)
-							: posts &&
-							  posts.map((post) => (
-									<BlogItem
-										page={'blog'}
-										key={post.id}
-										data={post}
-									/>
-							  ))}
+					<div
+						className={`w-full ${
+							isGettingPosts || (posts && posts.length > 0) ? 'grid' : ''
+						} grid-cols-2 max-md:grid-cols-1 xl:grid-cols-3 gap-4`}
+					>
+						{isGettingPosts ? (
+							new Array(3)
+								.fill(null)
+								.map((_, index) => <BlogItemSkeleton key={index} />)
+						) : posts && posts.length > 0 ? (
+							posts.map((post) => (
+								<BlogItem
+									page={'blog'}
+									key={post.id}
+									data={post}
+								/>
+							))
+						) : (
+							<div className='w-full h-[70vh] flex items-center justify-center'>
+								<p className='font-bold text-primary-content/40'>No blogs now</p>
+							</div>
+						)}
 					</div>
+					{!isGettingPosts && posts && posts.length > 0 && (
+						<div className='join self-center'>
+							<button
+								className='join-item btn'
+								disabled={previousPage ? false : true}
+								onClick={() => {
+									setCurrentPage(-1);
+									getLatestPosts(previousPage);
+								}}
+							>
+								«
+							</button>
+							<button className='join-item btn'>Page {currentPage}</button>
+							<button
+								className='join-item btn'
+								disabled={nextPage ? false : true}
+								onClick={() => {
+									setCurrentPage(1);
+									getLatestPosts(nextPage);
+								}}
+							>
+								»
+							</button>
+						</div>
+					)}
 				</div>
 			)}
 		</div>

@@ -9,7 +9,7 @@ const Theme = () => {
 	);
 
 	return (
-		<div className='w-full h-full'>
+		<div className='w-full min-h-[calc(100vh-64px-4px)]'>
 			<div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2'>
 				{THEMES.map((t) => (
 					<button

@@ -2,7 +2,7 @@ import { ThumbsUp } from 'lucide-react';
 import CommentForm from './CommentForm';
 import { useRef, useState } from 'react';
 import { CommentType } from '../../types';
-import { convertDateNotification } from '../../utils';
+import { convertDateNotification, transformRole } from '../../utils';
 import { useParams } from 'react-router-dom';
 import { useAuthStore, useBlogStore } from '../../store';
 import { useShallow } from 'zustand/shallow';
@@ -68,9 +68,20 @@ const Comment = ({ data }: PropsType) => {
 				<div className='w-full flex-1 min-w-0'>
 					<div className='flex flex-row gap-2 items-center'>
 						<p className='font-bold text-primary-content'>{data?.user?.name}</p>
-						<span className='text-sm text-primary-content'>
-							{convertDateNotification(data?.createdAt)}
-						</span>
+						<p className='text-sm text-primary-content'>
+							<span>{convertDateNotification(data?.createdAt)}</span> •{' '}
+							<span
+								className={`badge ${
+									data?.user.roles[0]?.code === 'STAFF'
+										? 'badge-accent'
+										: data?.user.roles[0]?.code === 'TUTOR'
+										? 'badge-secondary'
+										: 'badge-primary'
+								}`}
+							>
+								{transformRole(data?.user.roles[0]?.code || '')}
+							</span>
+						</p>
 					</div>
 					<div className='w-full'>
 						{isEdit ? (

@@ -1,4 +1,5 @@
 import CommentType from './CommentType';
+import RoleType from './RolesType';
 
 type BlogType = {
 	id: string;
@@ -22,6 +23,7 @@ type BlogType = {
 	author: {
 		name: string;
 		profilePicUrl: string;
+		roles: RoleType[];
 	};
 	comments: CommentType[];
 };

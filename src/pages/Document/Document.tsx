@@ -19,6 +19,7 @@ const Document = () => {
 		nextPage,
 		currentPage,
 		setCurrentPage,
+		reset,
 	] = useDocumentStore(
 		useShallow((state) => [
 			state.upload,
@@ -31,6 +32,7 @@ const Document = () => {
 			state.nextPage,
 			state.currentPage,
 			state.setCurrentPage,
+			state.reset,
 		])
 	);
 	const [isOpenUpload, setIsOpenUpload] = useState(false);
@@ -49,7 +51,11 @@ const Document = () => {
 		} else if (role === 'TUTOR') {
 			getTutorDocument();
 		}
-	}, [authUser, getStudentDocument, getTutorDocument]);
+
+		return () => {
+			reset();
+		};
+	}, [authUser, getStudentDocument, getTutorDocument, reset]);
 
 	const handleUploadFile = (file: File) => {
 		uploadFileRef.current = file;

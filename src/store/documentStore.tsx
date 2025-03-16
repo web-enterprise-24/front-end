@@ -25,7 +25,7 @@ type DocumentStoreType = {
 	upload: (data: FormData) => void;
 	getStudentDocument: (link?: string) => void;
 	getTutorDocument: (link?: string) => void;
-	setCurrentPage: (page: number) => void;
+	setCurrentPage: (page: number, reset?: boolean) => void;
 	setSelectedDocument: (id: string) => void;
 	createFeedback: (data: { message: string }, documentId: string) => void;
 	updateFeedback: (
@@ -34,6 +34,7 @@ type DocumentStoreType = {
 		documentId: string
 	) => void;
 	deleteFeedback: (feedbackId: string, documentId: string) => void;
+	reset: () => void;
 };
 
 const useDocumentStore = create<DocumentStoreType>((set, get) => ({
@@ -105,6 +106,19 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
 	},
 	setCurrentPage(page) {
 		set({ currentPage: get().currentPage + page });
+	},
+	reset() {
+		set({
+			documents: [],
+			selectedDocument: null,
+			nextPage: '',
+			previousPage: '',
+			currentPage: 1,
+			isGettingDocument: false,
+			isUploadingDocument: false,
+			isCreatingFeedback: false,
+			isDeletingFeedback: false,
+		});
 	},
 	setSelectedDocument(id: string) {
 		const selectedDocument = get().documents.find((doc) => doc.id === id);

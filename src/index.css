@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer base {
- body {
-  @apply overflow-x-hidden
+	body {
+		@apply overflow-x-hidden
       /* Add any other default styles using Tailwind classes */;
- }
+	}
 }
