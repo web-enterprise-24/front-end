@@ -55,7 +55,7 @@ const DetailedBlog = () => {
 								{convertDate(selectedPost?.createdAt || new Date().toString())}
 							</p>
 							{/* Tag */}
-							<div className='flex flex-row gap-2'>
+							<div className='flex flex-row gap-2 flex-wrap'>
 								{selectedPost?.tags.map((tag) => (
 									<span
 										key={tag}
