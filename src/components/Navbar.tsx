@@ -82,7 +82,7 @@ const Navbar = () => {
 		<div className='max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base-200 shadow-md shadow-base-300'>
 			<MobileNavbar
 				items={
-					authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code)
+					authUser && ['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code)
 						? SidebarHomeItems
 						: itemNoAuth
 				}
@@ -115,7 +115,13 @@ const Navbar = () => {
 									? 'calc(4rem + 1.5rem)'
 									: activeTab === '/document'
 									? 'calc(8rem + 3rem)'
-									: 'calc(12rem + 4.5rem)',
+									: activeTab === '/blog' &&
+									  authUser &&
+									  ['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code)
+									? 'calc(12rem + 4.5rem)'
+									: activeTab === '/blog'
+									? 'calc(8rem + 3rem)' // Adjusted position when document item is not shown
+									: 0,
 						}}
 						transition={{
 							type: 'spring',
@@ -151,7 +157,7 @@ const Navbar = () => {
 					</div>
 
 					{/* Document link */}
-					{authUser && ['STUDENT', 'TUTOR'].includes(authUser.roles[0].code) && (
+					{authUser && ['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code) && (
 						<div
 							className='tooltip tooltip-bottom'
 							data-tip='Document'

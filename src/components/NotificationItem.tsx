@@ -54,7 +54,7 @@ const NotificationItem = ({ data, closeNotification }: PropsType) => {
 				<div className='avatar'>
 					<div className='w-14 rounded-full'>
 						<img
-							src={data.document.student.profilePicUrl?.toString()}
+							src={data.document.student.profilePicUrl}
 							alt='Avatar'
 						/>
 					</div>
