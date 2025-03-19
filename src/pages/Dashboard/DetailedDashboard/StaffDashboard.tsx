@@ -88,11 +88,19 @@ const StaffDashboard = () => {
 			<div className='flex flex-row items-center gap-4 flex-wrap'>
 				<StatisticItem
 					title='tutors'
-					number={overviewMetrics?.tutors || 0}
+					number={
+						overviewMetrics && 'tutors' in overviewMetrics
+							? overviewMetrics.tutors
+							: 0
+					}
 				/>
 				<StatisticItem
 					title='students'
-					number={overviewMetrics?.students || 0}
+					number={
+						overviewMetrics && 'students' in overviewMetrics
+							? overviewMetrics.students
+							: 0
+					}
 				/>
 				<StatisticItem
 					title='messages'

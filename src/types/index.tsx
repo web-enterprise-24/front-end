@@ -17,3 +17,6 @@ export type { default as CommentType } from './CommentType';
 export type { default as StaffOverviewMetricType } from './StaffOverviewMetricType';
 export type { default as StaffTutorActivityType } from './StaffTutorActivityType';
 export type { default as StaffTutorPerformanceType } from './StaffTutorPerformanceType';
+export type { default as TutorOverviewMetricsType } from './TutorOverviewMetricsType';
+export type { default as StaffTuteesInformationType } from './StaffTuteesInformationType';
+export type { default as TutorRecentlyUploadedDocumentType } from './TutorRecentlyUploadedDocumentType';
