@@ -27,6 +27,7 @@ const useNotificationStore = create<NotificationStoreType>((set, get) => ({
 			const res = await getNotifications();
 
 			set({ notifications: res.notifications });
+			console.log(get().notifications);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.error(err);
