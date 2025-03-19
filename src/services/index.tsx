@@ -9,3 +9,5 @@ export * from './documentServices';
 export * from './blogServices';
 
 export * from './notificationServices';
+
+export * from './dashboardServices';

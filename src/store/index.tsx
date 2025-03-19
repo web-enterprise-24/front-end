@@ -6,3 +6,4 @@ export { default as useDocumentStore } from './documentStore';
 export { default as useBlogStore } from './blogStore';
 export { default as useThemeStore } from './themeStore';
 export { default as useNotificationStore } from './notificationStore';
+export { default as useDashboardStore } from './dashboardStore';

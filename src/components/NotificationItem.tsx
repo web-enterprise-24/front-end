@@ -23,7 +23,7 @@ const NotificationItem = ({ data, closeNotification }: PropsType) => {
 		ulRef?: React.RefObject<HTMLUListElement | null>
 	) => {
 		if (title === 'Mark as reads') {
-			if (!data.isRead) {
+			if (data.status === 'unread') {
 				markAsReadOne(data.id);
 			}
 		} else if (title === 'Delete') {
@@ -54,18 +54,22 @@ const NotificationItem = ({ data, closeNotification }: PropsType) => {
 				<div className='avatar'>
 					<div className='w-14 rounded-full'>
 						<img
-							src={data.document.student.profilePicUrl}
+							src={data?.userInfo?.userAvatar}
 							alt='Avatar'
 						/>
 					</div>
 				</div>
 				<div className='flex flex-col gap-1'>
-					<p className={`${!data.isRead && 'font-bold'} max-w-[240px] line-clamp-2`}>
-						<span className='font-black'>{data.document.student.name}</span>{' '}
+					<p
+						className={`${
+							data.status === 'unread' && 'font-bold'
+						} max-w-[240px] line-clamp-2`}
+					>
+						<span className='font-black'>{data.userInfo?.userName}</span>{' '}
 						{data.message.slice(data.message.indexOf('has'), data.message.length)}
 					</p>
 					<p className='text-sm text-primary-content/60'>
-						{convertDateNotification(data.createdAt)}
+						{convertDateNotification(data.timestamp)}
 					</p>
 				</div>
 			</Link>
