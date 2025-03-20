@@ -99,7 +99,7 @@ const NotificationBox = ({
 						className='btn btn-ghost font-bold'
 						onClick={() => {
 							{
-								if (notifications && notifications.some((n) => !n.isRead)) {
+								if (notifications && notifications.some((n) => n.status === 'unread')) {
 									markAsReadAll();
 								}
 							}
