@@ -20,6 +20,7 @@ import {
 	PendingBlog,
 	Theme,
 	DetailedBlog,
+	Meeting,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound } from './components';
@@ -152,6 +153,10 @@ const App = () => {
 							element={<DetailedBlog />}
 						/>
 					</Route>
+					<Route
+						path='/meeting-schedule'
+						element={<Meeting />}
+					/>
 				</Route>
 				<Route element={<LayoutSidebar />}>
 					<Route

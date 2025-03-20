@@ -1,4 +1,11 @@
-import { House, MessageCircleMore, Bell, Folder, BookOpen } from 'lucide-react';
+import {
+	House,
+	MessageCircleMore,
+	Bell,
+	Folder,
+	BookOpen,
+	CalendarCheck,
+} from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 import { motion } from 'framer-motion';
@@ -43,6 +50,8 @@ const Navbar = () => {
 			setActiveTab('/message');
 		} else if (path.startsWith('/document')) {
 			setActiveTab('/document');
+		} else if (path.startsWith('/meeting-schedule')) {
+			setActiveTab('/meeting-schedule');
 		} else if (path.startsWith('/blog')) {
 			setActiveTab('/blog');
 		}
@@ -108,20 +117,53 @@ const Navbar = () => {
 						className='absolute bg-base-300 rounded-xl h-full z-0'
 						animate={{
 							width: '4rem', // 16 in tailwind
-							x:
-								activeTab === '/'
-									? 0
-									: activeTab === '/message'
-									? 'calc(4rem + 1.5rem)'
-									: activeTab === '/document'
-									? 'calc(8rem + 3rem)'
-									: activeTab === '/blog' &&
-									  authUser &&
-									  ['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code)
+							x: (() => {
+								// Base positions
+								const homePos = 0;
+								const messagePos = 'calc(4rem + 1.5rem)';
+
+								// Calculate positions based on what's visible
+								const hasDocumentItem =
+									authUser && ['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code);
+								const hasMeetingItem = ['STUDENT', 'TUTOR'].includes(
+									authUser?.roles[0]?.code || ''
+								);
+
+								// Document position is 3rd item when visible
+								const documentPos = 'calc(8rem + 3rem)';
+
+								// Meeting position depends on whether document is visible
+								const meetingPos = hasDocumentItem
 									? 'calc(12rem + 4.5rem)'
-									: activeTab === '/blog'
-									? 'calc(8rem + 3rem)' // Adjusted position when document item is not shown
-									: 0,
+									: 'calc(8rem + 3rem)';
+
+								// Blog position depends on which items are visible
+								const blogPos = (() => {
+									if (hasDocumentItem && hasMeetingItem) {
+										return 'calc(16rem + 6rem)'; // All items visible
+									} else if (hasDocumentItem || hasMeetingItem) {
+										return 'calc(12rem + 4.5rem)'; // One of document or meeting visible
+									} else {
+										return 'calc(8rem + 3rem)'; // Neither document nor meeting visible
+									}
+								})();
+
+								// Return the appropriate position based on active tab
+								switch (activeTab) {
+									case '/':
+										return homePos;
+									case '/message':
+										return messagePos;
+									case '/document':
+										return documentPos;
+									case '/meeting-schedule':
+										return meetingPos;
+									case '/blog':
+										return blogPos;
+									default:
+										return 0;
+								}
+							})(),
 						}}
 						transition={{
 							type: 'spring',
@@ -174,6 +216,22 @@ const Navbar = () => {
 							>
 								<Folder className='w-8 h-8' />
 							</NavComp>
+						</div>
+					)}
+
+					{/* Meetings schedule */}
+					{['STUDENT', 'TUTOR'].includes(authUser?.roles[0]?.code || '') && (
+						<div
+							className='tooltip tooltip-bottom'
+							data-tip='Meeting Schedule'
+						>
+							<NavLink
+								to={'/meeting-schedule'}
+								className='w-16 h-full flex items-center justify-center cursor-pointer relative z-10'
+								onClick={() => setActiveTab('/meeting-schedule')}
+							>
+								<CalendarCheck className='w-8 h-8' />
+							</NavLink>
 						</div>
 					)}
 

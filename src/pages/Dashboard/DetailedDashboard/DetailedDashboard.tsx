@@ -1,6 +1,7 @@
 import { useAuthStore } from '../../../store';
 
 import StaffDashboard from './StaffDashboard';
+import StudentDashboard from './StudentDashboard';
 import TutorDashboard from './TutorDashboard';
 
 const DetailedDashboard = () => {
@@ -12,6 +13,7 @@ const DetailedDashboard = () => {
 				<h1 className='text-xl font-bold'>Main Dashboard</h1>
 				{authUser?.roles[0].code === 'STAFF' && <StaffDashboard />}
 				{authUser?.roles[0].code === 'TUTOR' && <TutorDashboard />}
+				{authUser?.roles[0].code === 'STUDENT' && <StudentDashboard />}
 			</div>
 			<div className='h-8'></div>
 		</div>

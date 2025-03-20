@@ -74,7 +74,9 @@ const MobileNavbar = ({ items }: PropsType) => {
 							className='relative w-7 h-7 cursor-pointer'
 						>
 							{notifications &&
-								notifications.some((notification) => !notification.isRead) && (
+								notifications.some(
+									(notification) => notification.status === 'unread'
+								) && (
 									<>
 										<span className='animate-ping w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
 										<span className='w-3 h-3 absolute top-0 right-0 bg-info rounded-full flex-inline' />
