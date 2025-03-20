@@ -5,3 +5,4 @@ export { default as transformProvince } from './transformProvince';
 export { default as formatMessageTime } from './formatMessageTime';
 export { default as UploadImage } from './uploadImage';
 export { default as convertDateNotification } from './convertDateNotification';
+export { default as convertTime } from './convertTime';

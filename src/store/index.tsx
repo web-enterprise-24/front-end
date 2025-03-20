@@ -7,3 +7,4 @@ export { default as useBlogStore } from './blogStore';
 export { default as useThemeStore } from './themeStore';
 export { default as useNotificationStore } from './notificationStore';
 export { default as useDashboardStore } from './dashboardStore';
+export { default as useMeetingStore } from './meetingStore';

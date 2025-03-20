@@ -20,3 +20,6 @@ export type { default as StaffTutorPerformanceType } from './StaffTutorPerforman
 export type { default as TutorOverviewMetricsType } from './TutorOverviewMetricsType';
 export type { default as StaffTuteesInformationType } from './StaffTuteesInformationType';
 export type { default as TutorRecentlyUploadedDocumentType } from './TutorRecentlyUploadedDocumentType';
+export type { default as MeetingType } from './MeetingType';
+export type { default as TutorMeetingType } from './TutorMeetingType';
+export type { default as RequestMeetingType } from './RequestMeetingType';

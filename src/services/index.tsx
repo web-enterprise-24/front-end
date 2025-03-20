@@ -11,3 +11,5 @@ export * from './blogServices';
 export * from './notificationServices';
 
 export * from './dashboardServices';
+
+export * from './meetingServices';
