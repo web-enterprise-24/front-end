@@ -34,6 +34,7 @@ const StaffDashboard = () => {
 		tutorActivity,
 		getTutorPerformance,
 		tutorPerformance,
+		reset,
 	] = useDashboardStore(
 		useShallow((state) => [
 			state.getOverviewMetrics,
@@ -42,6 +43,7 @@ const StaffDashboard = () => {
 			state.tutorActivity,
 			state.getTutorPerformance,
 			state.tutorPerformance,
+			state.reset,
 		])
 	);
 
@@ -49,7 +51,11 @@ const StaffDashboard = () => {
 		getOverviewMetrics();
 		getTutorActivity();
 		getTutorPerformance();
-	}, [getOverviewMetrics, getTutorActivity, getTutorPerformance]);
+
+		return () => {
+			reset();
+		};
+	}, [getOverviewMetrics, getTutorActivity, getTutorPerformance, reset]);
 
 	// Options
 	const options = {

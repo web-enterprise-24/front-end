@@ -112,6 +112,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			await declineMeeting(meetingId);
 			get().getMeetings();
 			toast.success('Meeting declined successfully!');
+			console.log('Decline meeting');
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err);

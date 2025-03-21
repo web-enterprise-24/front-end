@@ -88,8 +88,8 @@ const Calendar = () => {
 			];
 		});
 		setSchedule(result);
-		console.log('Schedule for calendar:', result);
-		console.log('Raw meetings data:', meetings);
+		// console.log('Schedule for calendar:', result);
+		// console.log('Raw meetings data:', meetings);
 	}, [meetings]);
 
 	const handleDateSelect = (selectInfo: DateSelectArg) => {
@@ -122,10 +122,10 @@ const Calendar = () => {
 		}
 
 		// For demonstration, show date/time details
-		console.log('Selected time range (UTC):', {
-			start: selectInfo.startStr,
-			end: selectInfo.endStr,
-		});
+		// console.log('Selected time range (UTC):', {
+		// 	start: selectInfo.startStr,
+		// 	end: selectInfo.endStr,
+		// });
 		// console.log('Available for booking!');
 	};
 

@@ -85,3 +85,51 @@ export const getFeedbackAnalysis = async (timeRange: string) => {
 		if (isAxiosError(err)) throw err;
 	}
 };
+
+// Tutee
+export const getTutorProfile = async () => {
+	try {
+		const res = await axios.get('/student/tutorProfile');
+		return res.data.data;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getOverviewMetricsTutee = async () => {
+	try {
+		const res = await axios.get('/student/studentOverviewMetrics');
+		return res.data.data;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getStudentUpcomingMeetings = async () => {
+	try {
+		const res = await axios.get('/student/upcomingMeetings');
+		return res.data.data.meetings;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getStudentRecentlyUploadedDocuments = async () => {
+	try {
+		const res = await axios.get('/student/recentDocuments');
+		return res.data.data.documents;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getStudentActivity = async (timeRange: string) => {
+	try {
+		const res = await axios.get(
+			`/student/studentActivity/?timeRange=${timeRange}`
+		);
+		return res.data.data;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};

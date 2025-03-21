@@ -26,3 +26,7 @@ export type { default as RequestMeetingType } from './RequestMeetingType';
 export type { default as TutorUpcomingMeetingType } from './TutorUpcomingMeetingType';
 export type { default as TutorTuteeActivityType } from './TutorTuteeActivityType';
 export type { default as TutorFeedbackAnalysisType } from './TutorFeedbackAnalysisType';
+export type { default as StudentTutorProfileType } from './StudentTutorProfileType';
+export type { default as StudentOverviewMetricsType } from './StudentOverviewMetricsType';
+export type { default as StudentRecentUploadedDocumentType } from './StudentRecentUploadedDocumentType';
+export type { default as StudentActivityType } from './StudentActivityType';

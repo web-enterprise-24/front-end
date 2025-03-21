@@ -95,17 +95,19 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 					<p className='font-bold'>
 						Meeting: {data.studentId.slice(-8)} & {data.tutorId.slice(-8)}
 					</p>
-					<div className='flex flex-row gap-2 items-center'>
-						<div className='avatar'>
-							<div className='w-10 rounded-full'>
-								<img
-									src={data?.student?.profilePicUrl}
-									alt='Avatar'
-								/>
+					{authUser?.roles[0]?.code === 'TUTOR' && (
+						<div className='flex flex-row gap-2 items-center'>
+							<div className='avatar'>
+								<div className='w-10 rounded-full'>
+									<img
+										src={data?.student?.profilePicUrl}
+										alt='Avatar'
+									/>
+								</div>
 							</div>
+							<p>{data?.student?.name}</p>
 						</div>
-						<p>{data?.student?.name}</p>
-					</div>
+					)}
 					<p className='text-primary-content/40'>
 						<span>{convertDate(data?.start)}</span> at{' '}
 						<span>{convertTime(data?.start)}</span>
