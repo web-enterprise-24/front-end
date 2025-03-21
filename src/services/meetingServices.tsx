@@ -37,3 +37,19 @@ export const acceptMeeting = async (meetingId: string) => {
 		if (isAxiosError(err)) throw err;
 	}
 };
+
+export const declineMeeting = async (meetingId: string) => {
+	try {
+		await axios.delete(`/meeting/cancel`, { data: { meetingId } });
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const storeRecord = async (fileUrl: string, meetingId: string) => {
+	try {
+		await axios.post(`/meeting/record`, { meetingId, fileUrl });
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};

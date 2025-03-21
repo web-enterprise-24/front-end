@@ -45,8 +45,8 @@ const StudentDashboard = () => {
 							mariarodriguez@gmail.com
 						</p>
 						<div className='flex flex-row items-center gap-2'>
-							<button className='btn btn-secondary'>Message</button>
-							<button className='btn btn-outline btn-secondary'>
+							<button className='btn btn-secondary btn-sm'>Message</button>
+							<button className='btn btn-outline btn-secondary btn-sm'>
 								Schedule Meeting
 							</button>
 						</div>

@@ -56,3 +56,32 @@ export const getRecentlyUploadedDocuments = async () => {
 		if (isAxiosError(err)) throw err;
 	}
 };
+
+export const getUpcomingMeetings = async () => {
+	try {
+		const res = await axios.get('/tutor/upcomingMeetings');
+		return res.data.data.meetings;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getTuteeActivity = async (timeRange: string) => {
+	try {
+		const res = await axios.get(`/tutor/tuteesActivity/?timeRange=${timeRange}`);
+		return res.data.data.activity;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getFeedbackAnalysis = async (timeRange: string) => {
+	try {
+		const res = await axios.get(
+			`/tutor/documentFeedbackAnalytics/?timeRange=${timeRange}`
+		);
+		return res.data.data.analytics;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};

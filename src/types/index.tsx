@@ -23,3 +23,6 @@ export type { default as TutorRecentlyUploadedDocumentType } from './TutorRecent
 export type { default as MeetingType } from './MeetingType';
 export type { default as TutorMeetingType } from './TutorMeetingType';
 export type { default as RequestMeetingType } from './RequestMeetingType';
+export type { default as TutorUpcomingMeetingType } from './TutorUpcomingMeetingType';
+export type { default as TutorTuteeActivityType } from './TutorTuteeActivityType';
+export type { default as TutorFeedbackAnalysisType } from './TutorFeedbackAnalysisType';

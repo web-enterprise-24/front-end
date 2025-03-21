@@ -4,16 +4,22 @@ import {
 	StaffTuteesInformationType,
 	StaffTutorActivityType,
 	StaffTutorPerformanceType,
+	TutorFeedbackAnalysisType,
 	TutorOverviewMetricsType,
 	TutorRecentlyUploadedDocumentType,
+	TutorTuteeActivityType,
+	TutorUpcomingMeetingType,
 } from '../types';
 import {
+	getFeedbackAnalysis,
 	getOverviewMetrics,
 	getRecentlyUploadedDocuments,
+	getTuteeActivity,
 	getTuteesInformation,
 	getTutorActivity,
 	getTutorOverviewMetrics,
 	getTutorPerformance,
+	getUpcomingMeetings,
 } from '../services';
 import { AxiosError } from 'axios';
 import useAuthStore from './authStore';
@@ -27,6 +33,9 @@ type DashboardStoreType = {
 	// tutor
 	tuteesInformation: StaffTuteesInformationType[] | null;
 	recentlyUploadedDocuments: TutorRecentlyUploadedDocumentType[] | null;
+	upcomingMeetings: TutorUpcomingMeetingType[] | null;
+	tuteesActivity: TutorTuteeActivityType | null;
+	feedbackAnalysis: TutorFeedbackAnalysisType | null;
 	currentPage: number;
 	previousPage: string;
 	nextPage: string;
@@ -38,7 +47,9 @@ type DashboardStoreType = {
 	// tutor
 	isGettingTuteesInformation: boolean;
 	isGettingRecentlyUploadedDocuments: boolean;
-
+	isGettingUpcomingMeetings: boolean;
+	isGettingTuteesActivity: boolean;
+	isGettingFeedbackAnalysis: boolean;
 	// general
 	getOverviewMetrics: () => void;
 	// staff
@@ -47,6 +58,9 @@ type DashboardStoreType = {
 	// tutor
 	getTuteesInformation: (link: string) => void;
 	getRecentlyUploadedDocuments: () => void;
+	getUpcomingMeetings: () => void;
+	getTuteesActivity: (timeRange: string) => void;
+	getFeedbackAnalysis: (timeRange: string) => void;
 	setCurrentPage: (page: number) => void;
 };
 
@@ -59,6 +73,9 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	// tutor
 	tuteesInformation: null,
 	recentlyUploadedDocuments: null,
+	upcomingMeetings: null,
+	tuteesActivity: null,
+	feedbackAnalysis: null,
 	currentPage: 1,
 	previousPage: '',
 	nextPage: '',
@@ -70,6 +87,9 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	// tutor
 	isGettingTuteesInformation: false,
 	isGettingRecentlyUploadedDocuments: false,
+	isGettingUpcomingMeetings: false,
+	isGettingTuteesActivity: false,
+	isGettingFeedbackAnalysis: false,
 
 	// general
 	getOverviewMetrics: async () => {
@@ -162,6 +182,86 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			}
 		} finally {
 			set({ isGettingRecentlyUploadedDocuments: false });
+		}
+	},
+	async getUpcomingMeetings() {
+		set({ isGettingUpcomingMeetings: true });
+		try {
+			const res = await getUpcomingMeetings();
+			set({ upcomingMeetings: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingUpcomingMeetings: false });
+		}
+	},
+	async getTuteesActivity(timeRange) {
+		set({ isGettingTuteesActivity: true });
+		try {
+			const res = await getTuteeActivity(timeRange);
+
+			// Handle the response
+			const result: TutorTuteeActivityType = {
+				meetings: [],
+				messages: [],
+				documents: [],
+			};
+			type TutorActivityItem = {
+				meetings: TutorTuteeActivityType['meetings'][0];
+				messages: TutorTuteeActivityType['messages'][0];
+				documents: TutorTuteeActivityType['documents'][0];
+			};
+
+			res.forEach((item: TutorActivityItem) => {
+				result.meetings = [...result.meetings, item.meetings];
+				result.messages = [...result.messages, item.messages];
+				result.documents = [...result.documents, item.documents];
+			});
+
+			set({ tuteesActivity: result });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingTuteesActivity: false });
+		}
+	},
+	async getFeedbackAnalysis(timeRange) {
+		set({ isGettingFeedbackAnalysis: true });
+		try {
+			const res = await getFeedbackAnalysis(timeRange);
+
+			// Handle the response
+			const result: TutorFeedbackAnalysisType = {
+				documentsReceived: [],
+				feedbackProvided: [],
+			};
+			type TutorFeedbackAnalysisItem = {
+				documentsReceived: TutorFeedbackAnalysisType['documentsReceived'][0];
+				feedbackProvided: TutorFeedbackAnalysisType['feedbackProvided'][0];
+			};
+
+			res.forEach((item: TutorFeedbackAnalysisItem) => {
+				result.documentsReceived = [
+					...result.documentsReceived,
+					item.documentsReceived,
+				];
+				result.feedbackProvided = [
+					...result.feedbackProvided,
+					item.feedbackProvided,
+				];
+			});
+
+			set({ feedbackAnalysis: result });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingFeedbackAnalysis: false });
 		}
 	},
 	setCurrentPage: (page: number) => {
