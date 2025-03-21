@@ -9,6 +9,16 @@ type MeetingType = {
 	createdAt: string;
 	updatedAt: string;
 	accepted: boolean;
+	tutor: {
+		id: string;
+		name: string;
+		profilePicUrl: string;
+	};
+	student: {
+		id: string;
+		name: string;
+		profilePicUrl: string;
+	};
 };
 
 export default MeetingType;

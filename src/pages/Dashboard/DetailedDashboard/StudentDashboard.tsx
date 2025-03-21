@@ -3,7 +3,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 // import RecentlyUploadedDocumentItem from '../../components/RecentlyUploadedDocumentItem';
 import StatisticItem from '../../components/StatisticItem';
-import UpcomingMeeting from '../../components/UpcomingMeeting';
+// import UpcomingMeeting from '../../components/UpcomingMeeting';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -72,11 +72,11 @@ const StudentDashboard = () => {
 			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
 				<h2 className='font-bold'>Upcoming meetings</h2>
 				<div className=' w-full flex flex-col gap-1'>
-					<UpcomingMeeting />
+					{/* <UpcomingMeeting />
 					<hr />
 					<UpcomingMeeting />
 					<hr />
-					<UpcomingMeeting />
+					<UpcomingMeeting /> */}
 				</div>
 			</div>
 			{/* Recently document and activity */}

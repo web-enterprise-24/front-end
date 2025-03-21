@@ -95,6 +95,17 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 					<p className='font-bold'>
 						Meeting: {data.studentId.slice(-8)} & {data.tutorId.slice(-8)}
 					</p>
+					<div className='flex flex-row gap-2 items-center'>
+						<div className='avatar'>
+							<div className='w-10 rounded-full'>
+								<img
+									src={data?.student?.profilePicUrl}
+									alt='Avatar'
+								/>
+							</div>
+						</div>
+						<p>{data?.student?.name}</p>
+					</div>
 					<p className='text-primary-content/40'>
 						<span>{convertDate(data?.start)}</span> at{' '}
 						<span>{convertTime(data?.start)}</span>
@@ -114,19 +125,11 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 						</span>
 					)}
 
-				{/* {data?.accepted && (
-					<span className='bg-secondary/10 text-secondary text-sm rounded-full flex flex-row items-center gap-2 p-2'>
-						<CalendarCheck2 /> Upcoming
-					</span>
-				)} */}
 				{!data?.accepted && (
 					<span className='bg-warning/10 text-accent text-sm rounded-full flex flex-row items-center gap-2 p-2'>
 						<CircleAlert /> Awaiting Response
 					</span>
 				)}
-				{/* <span className='bg-error/10 text-error text-sm rounded-full flex flex-row items-center gap-2 p-2'>
-				<X /> Declined
-			</span> */}
 				{data?.fileUrl && (
 					<span className='bg-base-200 text-primary-content text-sm rounded-full flex flex-row items-center gap-2 p-2'>
 						<X /> Completed
