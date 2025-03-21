@@ -9,6 +9,7 @@ import { useShallow } from 'zustand/shallow';
 import { convertDate, convertTime } from '../../utils';
 import { Overlay } from '../../components';
 import { TutorMeetingType } from '../../types';
+import toast from 'react-hot-toast';
 
 // const events = [
 // 	{
@@ -66,15 +67,15 @@ const Calendar = () => {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	useEffect(() => {
-		getTutorMeetings();
+		if (authUser?.roles[0]?.code === 'STUDENT') {
+			getTutorMeetings();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [getTutorMeetings]);
 
 	useEffect(() => {
 		let result: TutorMeetingType[] = [];
-		let tutorMeetingLists = [...(meetings || [])];
-		tutorMeetingLists = tutorMeetingLists.filter(
-			(meeting) => meeting.accepted === true
-		);
+		const tutorMeetingLists = [...(meetings || [])];
 		tutorMeetingLists.forEach((meeting) => {
 			result = [
 				...result,
@@ -105,22 +106,9 @@ const Calendar = () => {
 			const calendarApi = selectInfo.view.calendar;
 			calendarApi.unselect();
 
-			console.log('Cannot select dates in the past');
-			alert('Cannot select dates in the past');
+			toast.error('Cannot select dates in the past');
 			return;
 		}
-
-		// Check if the selected range overlaps with any existing events
-		// if (isRangeBooked(startDate, endDate)) {
-		// 	// Clear any previous selection
-		// 	const calendarApi = selectInfo.view.calendar;
-		// 	calendarApi.unselect();
-
-		// 	// Show error message
-		// 	console.log('This time range contains booked slots');
-		// 	alert('This time range contains booked slots');
-		// 	return;
-		// }
 
 		// Store the selected range
 		setSelectedRange({
@@ -138,53 +126,17 @@ const Calendar = () => {
 			start: selectInfo.startStr,
 			end: selectInfo.endStr,
 		});
-		console.log('Available for booking!');
+		// console.log('Available for booking!');
 	};
-
-	// const isRangeBooked = useCallback((start: Date, end: Date) => {
-	// 	const startISO = start.toISOString();
-	// 	const endISO = end.toISOString();
-
-	// 	return events.some((event) => {
-	// 		// Get start and end times of the event
-	// 		const eventStart = new Date(event.start).toISOString();
-
-	// 		// If the event doesn't have an end time, assume it's a 1-hour event
-	// 		let eventEnd;
-	// 		if (event.end) {
-	// 			eventEnd = new Date(event.end).toISOString();
-	// 		} else {
-	// 			// Create end time by adding 1 hour to start time
-	// 			const endDate = new Date(event.start);
-	// 			endDate.setHours(endDate.getHours() + 1);
-	// 			eventEnd = endDate.toISOString();
-	// 		}
-
-	// 		// Check for overlap between the selected range and the event
-	// 		// Two ranges overlap if one range's start is before the other's end and
-	// 		// one range's end is after the other's start
-	// 		if (event.start.includes('T')) {
-	// 			// For events with specific times
-	// 			return startISO < eventEnd && endISO > eventStart;
-	// 		} else {
-	// 			// For all-day events, check if any day in the range matches
-	// 			const eventStartDate = eventStart.split('T')[0];
-	// 			const startDate = startISO.split('T')[0];
-	// 			const endDate = endISO.split('T')[0];
-
-	// 			return startDate <= eventStartDate && endDate > eventStartDate;
-	// 		}
-	// 	});
-	// }, []);
 
 	const handleConfirm = () => {
 		createMeeting(selectedRange);
 	};
 
-	console.log(
-		'Data passed to FullCalendar:',
-		authUser?.roles[0]?.code === 'STUDENT' ? tutorMeetings || [] : schedule
-	);
+	// console.log(
+	// 	'Data passed to FullCalendar:',
+	// 	authUser?.roles[0]?.code === 'STUDENT' ? tutorMeetings || [] : schedule
+	// );
 	return (
 		<div className='w-3/5'>
 			{isCreatingMeeting && <Overlay isOpenLoader />}

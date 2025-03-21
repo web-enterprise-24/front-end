@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Line, Bar } from 'react-chartjs-2';
 import {
@@ -17,6 +17,7 @@ import { useDashboardStore } from '../../../store';
 import StatisticItem from '../../components/StatisticItem';
 import UpcomingMeeting from '../../components/UpcomingMeeting';
 import RecentlyUploadedDocumentItem from '../../components/RecentlyUploadedDocumentItem';
+import { convertTimeShortMonth } from '../../../utils';
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -30,6 +31,16 @@ ChartJS.register(
 	Legend
 );
 
+const transformUpcomingMeetingData = (date: string) => {
+	const returnedDate = convertTimeShortMonth(date).split(',');
+	const obj = { month: '', day: '', hour: '' };
+	obj.month = returnedDate[0].split(' ')[0].toUpperCase();
+	obj.day = returnedDate[0].split(' ')[1];
+	obj.hour = returnedDate[2];
+
+	return obj;
+};
+
 const TutorDashboard = () => {
 	const [
 		getOverviewMetrics,
@@ -42,6 +53,12 @@ const TutorDashboard = () => {
 		nextPage,
 		getRecentlyUploadedDocuments,
 		recentlyUploadedDocuments,
+		getUpcomingMeetings,
+		upcomingMeetings,
+		getTuteesActivity,
+		tuteesActivity,
+		getFeedbackAnalysis,
+		feedbackAnalysis,
 	] = useDashboardStore(
 		useShallow((state) => [
 			state.getOverviewMetrics,
@@ -54,14 +71,37 @@ const TutorDashboard = () => {
 			state.nextPage,
 			state.getRecentlyUploadedDocuments,
 			state.recentlyUploadedDocuments,
+			state.getUpcomingMeetings,
+			state.upcomingMeetings,
+			state.getTuteesActivity,
+			state.tuteesActivity,
+			state.getFeedbackAnalysis,
+			state.feedbackAnalysis,
 		])
 	);
+
+	const [timeRangeTuteesActivity, setTimeRangeTuteesActivity] =
+		useState('lastWeek');
+	const [timeRangeDocumentFeedback, setTimeRangeDocumentFeedback] =
+		useState('thisWeek');
 
 	useEffect(() => {
 		getOverviewMetrics();
 		getTuteesInformation('');
 		getRecentlyUploadedDocuments();
-	}, [getOverviewMetrics, getRecentlyUploadedDocuments, getTuteesInformation]);
+		getUpcomingMeetings();
+		getTuteesActivity(timeRangeTuteesActivity);
+		getFeedbackAnalysis(timeRangeDocumentFeedback);
+	}, [
+		getFeedbackAnalysis,
+		getOverviewMetrics,
+		getRecentlyUploadedDocuments,
+		getTuteesActivity,
+		getTuteesInformation,
+		getUpcomingMeetings,
+		timeRangeDocumentFeedback,
+		timeRangeTuteesActivity,
+	]);
 
 	// Options
 	const options = {
@@ -74,56 +114,72 @@ const TutorDashboard = () => {
 		},
 	};
 
-	const labels = [
+	const labelWeek = [
 		'Monday',
 		'Tuesday',
 		'Wednesday',
 		'Thursday',
 		'Friday',
 		'Saturday',
+		'Sunday',
 	];
+
+	const labelMonth = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
 
 	// line data
 	const data = {
-		labels,
+		labels: timeRangeTuteesActivity === 'lastWeek' ? labelWeek : labelMonth,
 		datasets: [
 			{
 				label: 'Messages',
-				data: [0, 20, 80, 30, 70, 50],
+				data: tuteesActivity ? tuteesActivity.messages : [],
 				borderColor: 'rgb(255, 99, 132)',
 				backgroundColor: 'rgba(255, 99, 132, 0.5)',
 			},
 			{
 				label: 'Documents',
-				data: [0, 50, 60, 10, 40, 70],
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 0.5)',
+				data: tuteesActivity ? tuteesActivity.documents : [],
+				borderColor: 'rgb(75, 192, 192)',
+				backgroundColor: 'rgba(75, 192, 192, 0.5)',
 			},
 			{
 				label: 'Meetings',
-				data: [0, 10, 20, 30, 40, 50],
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 0.5)',
+				data: tuteesActivity ? tuteesActivity.meetings : [],
+				borderColor: 'rgb(153, 102, 255)',
+				backgroundColor: 'rgba(153, 102, 255, 0.5)',
 			},
 		],
 	};
 
 	const barData = {
-		labels,
+		labels: timeRangeDocumentFeedback === 'thisWeek' ? labelWeek : labelMonth,
 		datasets: [
 			{
 				label: 'Documents Received',
-				data: [12, 19, 8, 15, 10, 3, 0],
+				data: feedbackAnalysis ? feedbackAnalysis.documentsReceived : [],
 				backgroundColor: 'rgba(255, 99, 132, 0.5)',
 			},
 			{
 				label: 'Feedback Provided',
-				data: [15, 10, 12, 8, 7, 3, 1],
+				data: feedbackAnalysis ? feedbackAnalysis.feedbackProvided : [],
 				backgroundColor: 'rgba(53, 162, 235, 0.5)',
 			},
 		],
 	};
 
+	const handleChangeTimeRange = (
+		e: React.ChangeEvent<HTMLSelectElement>,
+		forChart: string
+	) => {
+		if (forChart === 'tuteesActivity') {
+			setTimeRangeTuteesActivity(e.target.value);
+			getTuteesActivity(e.target.value);
+			return;
+		}
+
+		setTimeRangeDocumentFeedback(e.target.value);
+		getFeedbackAnalysis(e.target.value);
+	};
 	return (
 		<div className='w-full h-full'>
 			<div className='flex flex-row items-center gap-4 flex-wrap'>
@@ -197,7 +253,7 @@ const TutorDashboard = () => {
 										</td>
 										<td className='truncate max-w-[200px]'>{tutee.email}</td>
 										<td>
-											<button className='btn btn-outline'>Message</button>
+											<button className='btn btn-outline btn-sm'>Message</button>
 										</td>
 									</tr>
 								))}
@@ -233,19 +289,34 @@ const TutorDashboard = () => {
 			{/* upcoming meetings and recently uploaded documents */}
 			<div className='w-full flex flex-row gap-4 mt-2'>
 				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
-					<h2 className='font-bold'>Upcoming Meetings</h2>
+					<div className='w-full flex flex-row items-center justify-between'>
+						<h2 className='font-bold'>Upcoming Meetings</h2>
+						<button className='btn btn-secondary btn-sm'>View All</button>
+					</div>
 					<div className='mt-2 w-full flex flex-col gap-1'>
-						<UpcomingMeeting />
+						{upcomingMeetings && upcomingMeetings.length > 0 && (
+							<UpcomingMeeting
+								data={transformUpcomingMeetingData(upcomingMeetings[0].startAt)}
+							/>
+						)}
 						<hr />
-						<UpcomingMeeting />
+						{upcomingMeetings && upcomingMeetings.length > 1 && (
+							<UpcomingMeeting
+								data={transformUpcomingMeetingData(upcomingMeetings[1].startAt)}
+							/>
+						)}
 						<hr />
-						<UpcomingMeeting />
+						{upcomingMeetings && upcomingMeetings.length > 2 && (
+							<UpcomingMeeting
+								data={transformUpcomingMeetingData(upcomingMeetings[2].startAt)}
+							/>
+						)}
 					</div>
 				</div>
 				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Recently Uploaded Documents</h2>
-						<button className='btn btn-secondary'>View All</button>
+						<button className='btn btn-secondary btn-sm'>View All</button>
 					</div>
 					<div className='mt-2 w-full flex flex-col gap-1'>
 						<RecentlyUploadedDocumentItem
@@ -267,9 +338,17 @@ const TutorDashboard = () => {
 				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Student Activity</h2>
-						<select className='select select-bordered select-xs w-xs max-w-xs'>
-							<option selected>Last week</option>
-							<option>Last month</option>
+						<select
+							className='select select-bordered select-xs w-xs max-w-xs'
+							onChange={(e) => handleChangeTimeRange(e, 'tuteesActivity')}
+						>
+							<option
+								selected
+								value={'lastWeek'}
+							>
+								Last week
+							</option>
+							<option value={'lastMonth'}>Last month</option>
 						</select>
 					</div>
 					<div className='w-full mt-4'>
@@ -282,9 +361,17 @@ const TutorDashboard = () => {
 				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Document Feedback Analytics</h2>
-						<select className='select select-bordered select-xs w-xs max-w-xs'>
-							<option selected>Last week</option>
-							<option>Last month</option>
+						<select
+							className='select select-bordered select-xs w-xs max-w-xs'
+							onChange={(e) => handleChangeTimeRange(e, 'documentFeedback')}
+						>
+							<option
+								selected
+								value={'thisWeek'}
+							>
+								Last week
+							</option>
+							<option value={'thisMonth'}>Last month</option>
 						</select>
 					</div>
 					<div className='w-full mt-4'>
