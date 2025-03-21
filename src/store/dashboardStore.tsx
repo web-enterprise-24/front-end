@@ -4,6 +4,10 @@ import {
 	StaffTuteesInformationType,
 	StaffTutorActivityType,
 	StaffTutorPerformanceType,
+	StudentActivityType,
+	StudentOverviewMetricsType,
+	StudentRecentUploadedDocumentType,
+	StudentTutorProfileType,
 	TutorFeedbackAnalysisType,
 	TutorOverviewMetricsType,
 	TutorRecentlyUploadedDocumentType,
@@ -13,12 +17,17 @@ import {
 import {
 	getFeedbackAnalysis,
 	getOverviewMetrics,
+	getOverviewMetricsTutee,
 	getRecentlyUploadedDocuments,
+	getStudentActivity,
+	getStudentRecentlyUploadedDocuments,
+	getStudentUpcomingMeetings,
 	getTuteeActivity,
 	getTuteesInformation,
 	getTutorActivity,
 	getTutorOverviewMetrics,
 	getTutorPerformance,
+	getTutorProfile,
 	getUpcomingMeetings,
 } from '../services';
 import { AxiosError } from 'axios';
@@ -39,6 +48,12 @@ type DashboardStoreType = {
 	currentPage: number;
 	previousPage: string;
 	nextPage: string;
+	// student
+	tutorProfile: StudentTutorProfileType | null;
+	studentOverviewMetrics: StudentOverviewMetricsType | null;
+	studentUpcomingMeetings: TutorUpcomingMeetingType[] | null;
+	studentRecentlyUploadedDocuments: StudentRecentUploadedDocumentType[] | null;
+	studentActivity: StudentActivityType | null;
 	// general
 	isGettingOverviewMetrics: boolean;
 	// staff
@@ -50,8 +65,15 @@ type DashboardStoreType = {
 	isGettingUpcomingMeetings: boolean;
 	isGettingTuteesActivity: boolean;
 	isGettingFeedbackAnalysis: boolean;
+	isGettingStudentActivity: boolean;
+	// Student
+	isGettingTutorProfile: boolean;
+	isGettingStudentOverviewMetrics: boolean;
+	isGettingStudentUpcomingMeetings: boolean;
+	isGettingStudentRecentlyUploadedDocuments: boolean;
 	// general
 	getOverviewMetrics: () => void;
+	reset: () => void;
 	// staff
 	getTutorActivity: () => void;
 	getTutorPerformance: () => void;
@@ -62,6 +84,12 @@ type DashboardStoreType = {
 	getTuteesActivity: (timeRange: string) => void;
 	getFeedbackAnalysis: (timeRange: string) => void;
 	setCurrentPage: (page: number) => void;
+	// student
+	getTutorProfile: () => void;
+	getStudentOverviewMetrics: () => void;
+	getStudentUpcomingMeetings: () => void;
+	getStudentRecentlyUploadedDocuments: () => void;
+	getStudentActivity: (timeRange: string) => void;
 };
 
 const useDashboardStore = create<DashboardStoreType>((set, get) => ({
@@ -79,6 +107,12 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	currentPage: 1,
 	previousPage: '',
 	nextPage: '',
+	// student
+	tutorProfile: null,
+	studentOverviewMetrics: null,
+	studentUpcomingMeetings: null,
+	studentRecentlyUploadedDocuments: null,
+	studentActivity: null,
 	// general
 	isGettingOverviewMetrics: false,
 	// staff
@@ -90,6 +124,12 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	isGettingUpcomingMeetings: false,
 	isGettingTuteesActivity: false,
 	isGettingFeedbackAnalysis: false,
+	// student
+	isGettingTutorProfile: false,
+	isGettingStudentOverviewMetrics: false,
+	isGettingStudentUpcomingMeetings: false,
+	isGettingStudentRecentlyUploadedDocuments: false,
+	isGettingStudentActivity: false,
 
 	// general
 	getOverviewMetrics: async () => {
@@ -266,6 +306,114 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	},
 	setCurrentPage: (page: number) => {
 		set({ currentPage: get().currentPage + page });
+	},
+	// student
+	getTutorProfile: async () => {
+		set({ isGettingTutorProfile: true });
+		try {
+			const res = await getTutorProfile();
+			set({ tutorProfile: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingTutorProfile: false });
+		}
+	},
+	async getStudentOverviewMetrics() {
+		set({ isGettingStudentOverviewMetrics: true });
+		try {
+			const res = await getOverviewMetricsTutee();
+			set({ studentOverviewMetrics: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingStudentOverviewMetrics: false });
+		}
+	},
+	async getStudentUpcomingMeetings() {
+		set({ isGettingStudentUpcomingMeetings: true });
+		try {
+			const res = await getStudentUpcomingMeetings();
+			set({ studentUpcomingMeetings: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingStudentUpcomingMeetings: false });
+		}
+	},
+	async getStudentRecentlyUploadedDocuments() {
+		set({ isGettingStudentRecentlyUploadedDocuments: true });
+		try {
+			const res = await getStudentRecentlyUploadedDocuments();
+			set({ studentRecentlyUploadedDocuments: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingStudentRecentlyUploadedDocuments: false });
+		}
+	},
+	getStudentActivity: async (timeRange) => {
+		set({ isGettingStudentActivity: true });
+		try {
+			const res = await getStudentActivity(timeRange);
+			set({ studentActivity: res.rawCounts });
+			console.log(get().studentActivity);
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingStudentActivity: false });
+		}
+	},
+	reset() {
+		set({
+			// general
+			overviewMetrics: null,
+			// staff
+			tutorActivity: null,
+			tutorPerformance: null,
+			// tutor
+			tuteesInformation: null,
+			recentlyUploadedDocuments: null,
+			upcomingMeetings: null,
+			tuteesActivity: null,
+			feedbackAnalysis: null,
+			currentPage: 1,
+			previousPage: '',
+			nextPage: '',
+			// student
+			tutorProfile: null,
+			studentOverviewMetrics: null,
+			studentUpcomingMeetings: null,
+			studentRecentlyUploadedDocuments: null,
+			studentActivity: null,
+			// general
+			isGettingOverviewMetrics: false,
+			// staff
+			isGettingTutorActivity: false,
+			isGettingTutorPerformance: false,
+			// tutor
+			isGettingTuteesInformation: false,
+			isGettingRecentlyUploadedDocuments: false,
+			isGettingUpcomingMeetings: false,
+			isGettingTuteesActivity: false,
+			isGettingFeedbackAnalysis: false,
+			// student
+			isGettingTutorProfile: false,
+			isGettingStudentOverviewMetrics: false,
+			isGettingStudentUpcomingMeetings: false,
+			isGettingStudentRecentlyUploadedDocuments: false,
+			isGettingStudentActivity: false,
+		});
 	},
 }));
 

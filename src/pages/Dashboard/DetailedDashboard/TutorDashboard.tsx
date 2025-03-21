@@ -59,6 +59,7 @@ const TutorDashboard = () => {
 		tuteesActivity,
 		getFeedbackAnalysis,
 		feedbackAnalysis,
+		reset,
 	] = useDashboardStore(
 		useShallow((state) => [
 			state.getOverviewMetrics,
@@ -77,6 +78,7 @@ const TutorDashboard = () => {
 			state.tuteesActivity,
 			state.getFeedbackAnalysis,
 			state.feedbackAnalysis,
+			state.reset,
 		])
 	);
 
@@ -92,6 +94,10 @@ const TutorDashboard = () => {
 		getUpcomingMeetings();
 		getTuteesActivity(timeRangeTuteesActivity);
 		getFeedbackAnalysis(timeRangeDocumentFeedback);
+
+		return () => {
+			reset();
+		};
 	}, [
 		getFeedbackAnalysis,
 		getOverviewMetrics,
@@ -99,6 +105,7 @@ const TutorDashboard = () => {
 		getTuteesActivity,
 		getTuteesInformation,
 		getUpcomingMeetings,
+		reset,
 		timeRangeDocumentFeedback,
 		timeRangeTuteesActivity,
 	]);
@@ -299,13 +306,13 @@ const TutorDashboard = () => {
 								data={transformUpcomingMeetingData(upcomingMeetings[0].startAt)}
 							/>
 						)}
-						<hr />
+
 						{upcomingMeetings && upcomingMeetings.length > 1 && (
 							<UpcomingMeeting
 								data={transformUpcomingMeetingData(upcomingMeetings[1].startAt)}
 							/>
 						)}
-						<hr />
+
 						{upcomingMeetings && upcomingMeetings.length > 2 && (
 							<UpcomingMeeting
 								data={transformUpcomingMeetingData(upcomingMeetings[2].startAt)}
