@@ -99,6 +99,7 @@ const StaffDashboard = () => {
 							? overviewMetrics.tutors
 							: 0
 					}
+					color='text-accent border-accent'
 				/>
 				<StatisticItem
 					title='students'
@@ -107,10 +108,12 @@ const StaffDashboard = () => {
 							? overviewMetrics.students
 							: 0
 					}
+					color='text-warning border-warning'
 				/>
 				<StatisticItem
 					title='messages'
 					number={overviewMetrics?.messages || 0}
+					color='text-info border-info'
 				/>
 			</div>
 			{/* Tutor activity */}
