@@ -55,10 +55,12 @@ const Calendar = () => {
 		])
 	);
 
-	const [selectedRange, setSelectedRange] = useState<{
+	const [requestData, setRequestData] = useState<{
+		title: string;
 		start: string;
 		end: string;
 	}>({
+		title: '',
 		start: new Date().toISOString(),
 		end: new Date().toISOString(),
 	});
@@ -74,22 +76,23 @@ const Calendar = () => {
 	}, [getTutorMeetings]);
 
 	useEffect(() => {
-		let result: TutorMeetingType[] = [];
-		const tutorMeetingLists = [...(meetings || [])];
-		tutorMeetingLists.forEach((meeting) => {
-			result = [
-				...result,
-				{
-					id: meeting.id,
-					title: '',
-					start: meeting.start,
-					end: meeting.end,
-				},
-			];
-		});
-		setSchedule(result);
-		// console.log('Schedule for calendar:', result);
-		// console.log('Raw meetings data:', meetings);
+		if (authUser?.roles[0]?.code === 'TUTOR') {
+			let result: TutorMeetingType[] = [];
+			const tutorMeetingLists = [...(meetings || [])];
+			tutorMeetingLists.forEach((meeting) => {
+				result = [
+					...result,
+					{
+						id: meeting.id,
+						title: meeting.title || 'No title',
+						start: meeting.start,
+						end: meeting.end,
+					},
+				];
+			});
+			setSchedule(result);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [meetings]);
 
 	const handleDateSelect = (selectInfo: DateSelectArg) => {
@@ -99,7 +102,6 @@ const Calendar = () => {
 
 		// Create today's date at the beginning of the day in local timezone
 		const today = new Date();
-		today.setHours(0, 0, 0, 0);
 
 		// If the start date is in the past, don't proceed
 		if (startDate < today) {
@@ -111,7 +113,8 @@ const Calendar = () => {
 		}
 
 		// Store the selected range
-		setSelectedRange({
+		setRequestData({
+			...requestData,
 			start: selectInfo.startStr,
 			end: selectInfo.endStr,
 		});
@@ -120,25 +123,21 @@ const Calendar = () => {
 		if (dialogRef.current) {
 			dialogRef.current.showModal();
 		}
-
-		// For demonstration, show date/time details
-		// console.log('Selected time range (UTC):', {
-		// 	start: selectInfo.startStr,
-		// 	end: selectInfo.endStr,
-		// });
-		// console.log('Available for booking!');
 	};
 
 	const handleConfirm = () => {
-		createMeeting(selectedRange);
-	};
+		createMeeting(requestData);
 
-	// console.log(
-	// 	'Data passed to FullCalendar:',
-	// 	authUser?.roles[0]?.code === 'STUDENT' ? tutorMeetings || [] : schedule
-	// );
+		setTimeout(() => {
+			setRequestData({
+				title: '',
+				start: new Date().toISOString(),
+				end: new Date().toISOString(),
+			});
+		}, 100);
+	};
 	return (
-		<div className='w-3/5'>
+		<div className='w-full lg:w-3/5 h-[600px] lg:h-full'>
 			{isCreatingMeeting && <Overlay isOpenLoader />}
 			{/* confirm modal */}
 			<dialog
@@ -147,16 +146,36 @@ const Calendar = () => {
 			>
 				<div className='modal-box'>
 					<h3 className='font-bold text-lg text-center'>Request Meeting</h3>
-					<p className='py-4'>
-						<span className='font-bold'>Start date:</span>{' '}
-						{convertDate(selectedRange?.start || '')}{' '}
-						{convertTime(selectedRange?.start || '')}
-					</p>
-					<p>
-						<span className='font-bold'>End date:</span>{' '}
-						{convertDate(selectedRange?.end || '')}{' '}
-						{convertTime(selectedRange?.end || '')}
-					</p>
+					<div className='w-full flex flex-col gap-4'>
+						<label className='form-control w-full'>
+							<div className='label'>
+								<span className='font-bold text-primary-content/80'>Meeting title</span>
+							</div>
+							<input
+								type='text'
+								value={requestData.title}
+								placeholder='Enter meeting title'
+								className='input input-bordered w-full'
+								onChange={(e) =>
+									setRequestData({ ...requestData, title: e.target.value })
+								}
+							/>
+						</label>
+						<div className='w-full bg-base-200 text-start py-2 px-4 rounded-md'>
+							<p className='text-primary-content/70'>
+								<span className='font-bold text-primary-content/80'>Start date:</span>{' '}
+								{convertDate(requestData?.start || '')}{' '}
+								{convertTime(requestData?.start || '')}
+							</p>
+						</div>
+						<div className='w-full bg-base-200 text-start py-2 px-4 rounded-md'>
+							<p className='text-primary-content/70'>
+								<span className='font-bold text-primary-content/80'>End date:</span>{' '}
+								{convertDate(requestData?.end || '')}{' '}
+								{convertTime(requestData?.end || '')}
+							</p>
+						</div>
+					</div>
 					<div className='modal-action'>
 						<form method='dialog'>
 							{/* if there is a button in form, it will close the modal */}
@@ -164,10 +183,22 @@ const Calendar = () => {
 								<button
 									className='btn btn-secondary'
 									onClick={handleConfirm}
+									disabled={!requestData.title}
 								>
 									Confirm
 								</button>
-								<button className='btn'>Cancel</button>
+								<button
+									className='btn'
+									onClick={() =>
+										setRequestData({
+											title: '',
+											start: new Date().toISOString(),
+											end: new Date().toISOString(),
+										})
+									}
+								>
+									Cancel
+								</button>
 							</div>
 						</form>
 					</div>
@@ -183,6 +214,7 @@ const Calendar = () => {
 					center: 'title',
 					end: '',
 				}}
+				height='100%'
 				selectable={authUser?.roles[0]?.code === 'STUDENT' ? true : false}
 				select={handleDateSelect}
 				selectMirror={true}

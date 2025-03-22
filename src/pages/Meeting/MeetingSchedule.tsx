@@ -53,7 +53,7 @@ const MeetingSchedule = () => {
 	};
 
 	return (
-		<div className='w-2/5 pt-16 '>
+		<div className='w-full lg:w-2/5 flex flex-col h-[600px] lg:h-full'>
 			{(isAcceptingMeeting || isDeclineMeeting) && <Overlay isOpenLoader />}
 			<ConfirmModal
 				ref={dialogRef}
@@ -62,9 +62,9 @@ const MeetingSchedule = () => {
 				} this meeting?`}
 				events={[handleConfirm]}
 			/>
-			<h1 className='font-bold text-xl'>Meeting Schedule</h1>
-			<div className='w-full mt-4 flex flex-col gap-4 max-h-[590px] overflow-y-auto'>
-				{meetings &&
+			<h1 className='font-bold text-xl mb-4'>Meeting Schedule</h1>
+			<div className='w-full flex-1 flex flex-col gap-4 overflow-y-auto'>
+				{meetings ? (
 					meetings.map((meeting) => (
 						<MeetingItem
 							key={meeting.id}
@@ -72,7 +72,12 @@ const MeetingSchedule = () => {
 							onClickAccept={handleClickAccept}
 							onClickDecline={handleClickDecline}
 						/>
-					))}
+					))
+				) : (
+					<div className='flex items-center justify-center h-full'>
+						<p className='text-gray-500'>No meetings available</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

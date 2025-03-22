@@ -8,6 +8,7 @@ import UserInfo from './UserInfo';
 import EditUserForm from './EditUserForm';
 import { LoaderCircle } from 'lucide-react';
 import Feedback from './Feedback';
+import RecordLists from './RecordLists';
 
 type PropsType = {
 	children?: null;
@@ -101,6 +102,7 @@ const Modal = forwardRef(
 							<Feedback />
 						</>
 					)}
+					{modalFor === 'show-record' && <RecordLists />}
 					{['user-info', 'edit-user', 'edit-profile'].includes(modalFor || '') && (
 						<>
 							{modalFor === 'user-info' && <UserInfo />}
@@ -140,7 +142,7 @@ const Modal = forwardRef(
 						</>
 					)}
 				</div>
-				{['login', 'feedback'].includes(modalFor || '') && (
+				{['login', 'feedback', 'show-record'].includes(modalFor || '') && (
 					<form
 						method='dialog'
 						className='modal-backdrop'

@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+	html {
+		@apply text-primary-content;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		text-rendering: optimizeLegibility;
+	}
+
 	body {
-		@apply overflow-x-hidden
-      /* Add any other default styles using Tailwind classes */;
+		@apply overflow-x-hidden;
 	}
 }

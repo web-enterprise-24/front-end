@@ -30,3 +30,4 @@ export type { default as StudentTutorProfileType } from './StudentTutorProfileTy
 export type { default as StudentOverviewMetricsType } from './StudentOverviewMetricsType';
 export type { default as StudentRecentUploadedDocumentType } from './StudentRecentUploadedDocumentType';
 export type { default as StudentActivityType } from './StudentActivityType';
+export type { default as RecordType } from './RecordType';

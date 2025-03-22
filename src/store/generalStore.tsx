@@ -13,6 +13,7 @@ type GeneralType = {
 		| 'edit-user'
 		| 'edit-profile'
 		| 'feedback'
+		| 'show-record'
 		| null;
 	isShowingModal: boolean;
 	isClosingModal: boolean;
@@ -28,6 +29,7 @@ type GeneralType = {
 			| 'edit-user'
 			| 'edit-profile'
 			| 'feedback'
+			| 'show-record'
 			| null
 	) => void;
 	setShowConfirm: (show: boolean) => void;
