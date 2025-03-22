@@ -197,6 +197,7 @@ const TutorDashboard = () => {
 							? overviewMetrics.totalTutees
 							: 0
 					}
+					color='text-warning border-warning'
 				/>
 				<StatisticItem
 					title='messages'
@@ -205,6 +206,7 @@ const TutorDashboard = () => {
 							? overviewMetrics.messages
 							: 0
 					}
+					color='text-info border-info'
 				/>
 				<StatisticItem
 					title='upcoming meetings'
@@ -214,6 +216,7 @@ const TutorDashboard = () => {
 						// 	: 0
 						0
 					}
+					color='text-error border-error'
 				/>
 				<StatisticItem
 					title='documents needing feedback'
@@ -222,6 +225,7 @@ const TutorDashboard = () => {
 							? overviewMetrics.documentsNeedingFeedback
 							: 0
 					}
+					color='text-secondary border-secondary'
 				/>
 			</div>
 			{/* Tutees information */}

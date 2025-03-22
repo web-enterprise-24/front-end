@@ -137,14 +137,17 @@ const StudentDashboard = () => {
 				<StatisticItem
 					title={'Messages'}
 					number={studentOverviewMetrics?.messages || 0}
+					color='text-info border-info'
 				/>
 				<StatisticItem
 					title={'Completed meeting'}
 					number={studentOverviewMetrics?.meetings || 0}
+					color='text-error border-error'
 				/>
 				<StatisticItem
 					title={'Documents'}
 					number={studentOverviewMetrics?.documents || 0}
+					color='text-secondary border-secondary'
 				/>
 			</div>
 			{/* Upcoming meeting */}
