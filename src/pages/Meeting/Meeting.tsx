@@ -11,8 +11,8 @@ const Meeting = () => {
 	}, [getMeetings]);
 
 	return (
-		<div className='w-3/4 mx-auto min-h-full py-6'>
-			<div className='w-full h-full flex flex-row gap-6'>
+		<div className='w-full md:w-11/12 lg:w-5/6 xl:w-3/4 mx-auto min-h-full py-6 px-4'>
+			<div className='w-full flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-120px)]'>
 				<Calendar />
 				<MeetingSchedule />
 			</div>

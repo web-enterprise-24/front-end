@@ -1,7 +1,7 @@
-import { CircleAlert, Mic, X } from 'lucide-react';
+import { CircleAlert, FileMusic, Mic, X } from 'lucide-react';
 import { MeetingType } from '../../types';
 import { convertDate, convertTime, uploadRecord } from '../../utils';
-import { useAuthStore, useMeetingStore } from '../../store';
+import { useAuthStore, useGeneralStore, useMeetingStore } from '../../store';
 import { useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Overlay } from '../../components';
@@ -13,8 +13,19 @@ type PropsType = {
 };
 
 const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
-	const [storeRecord, isStoringRecord] = useMeetingStore(
-		useShallow((state) => [state.storeRecord, state.isStoringRecord])
+	const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
+		useShallow((state) => [
+			state.modalElement,
+			state.setIsShowingModal,
+			state.setModalFor,
+		])
+	);
+	const [storeRecord, isStoringRecord, setSelectedMeeting] = useMeetingStore(
+		useShallow((state) => [
+			state.storeRecord,
+			state.isStoringRecord,
+			state.setSelectedMeeting,
+		])
 	);
 	const authUser = useAuthStore((state) => state.authUser);
 	const [isRecording, setIsRecording] = useState(false);
@@ -87,13 +98,21 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 		}
 	};
 
+	const handleClickShowRecords = () => {
+		setSelectedMeeting(data);
+
+		modalElement?.showModal();
+		setIsShowingModal(true);
+		setModalFor('show-record');
+	};
+
 	return (
 		<div className='w-full flex flex-col gap-2 rounded-lg border border-primary-content/10 p-2'>
 			{isStoringRecord && <Overlay isOpenLoader />}
 			<div className='w-full p-2 flex flex-row items-center justify-between '>
-				<div className='flex flex-col gap-2'>
-					<p className='font-bold'>
-						Meeting: {data.studentId.slice(-8)} & {data.tutorId.slice(-8)}
+				<div className='flex flex-col gap-2 max-w-[70%]'>
+					<p className='font-bold line-clamp-2 break-words'>
+						Meeting: {data?.title || 'No title'}
 					</p>
 					{authUser?.roles[0]?.code === 'TUTOR' && (
 						<div className='flex flex-row gap-2 items-center'>
@@ -113,10 +132,9 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 						<span>{convertTime(data?.start)}</span>
 					</p>
 				</div>
-				{/* For record */}
-				{authUser?.roles[0]?.code === 'TUTOR' &&
-					data?.accepted &&
-					!data?.fileUrl && (
+				<div>
+					{/* For record */}
+					{authUser?.roles[0]?.code === 'TUTOR' && data?.accepted && (
 						<span
 							className={`min-w-40 flex flex-row items-center gap-2 p-2 rounded-full bg-base-200 text-primary-content text-sm cursor-pointer ${
 								isRecording && 'bg-error !text-base-100 animate-pulse'
@@ -127,34 +145,46 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 						</span>
 					)}
 
-				{!data?.accepted && (
-					<span className='bg-warning/10 text-accent text-sm rounded-full flex flex-row items-center gap-2 p-2'>
-						<CircleAlert /> Awaiting Response
-					</span>
-				)}
-				{data?.fileUrl && (
-					<span className='bg-base-200 text-primary-content text-sm rounded-full flex flex-row items-center gap-2 p-2'>
-						<X /> Completed
-					</span>
-				)}
+					{!data?.accepted && (
+						<span className='min-w-40 bg-warning/10 text-accent text-sm rounded-full flex flex-row items-center justify-center gap-2 p-2'>
+							<CircleAlert /> Awaiting
+						</span>
+					)}
+					{authUser?.roles[0]?.code === 'STUDENT' && data?.records.length > 0 && (
+						<span className='min-w-40 bg-base-200 text-primary-content text-sm rounded-full flex flex-row items-center gap-2 p-2'>
+							<X /> Completed
+						</span>
+					)}
+				</div>
 			</div>
 			{/* action */}
-			{!data?.accepted && authUser?.roles[0]?.code === 'TUTOR' && (
-				<div className='w-full p-4 flex flex-row gap-4 items-center justify-end border-t border-primary-content/10'>
-					<button
-						className='btn btn-secondary btn-sm'
-						onClick={() => onClickAccept(data.id)}
-					>
-						Accept
-					</button>
-					<button
-						className='btn btn-sm'
-						onClick={() => onClickDecline(data.id)}
-					>
-						Decline
-					</button>
+			{
+				<div className='w-full pt-2 flex flex-row gap-4 items-center justify-end border-t border-primary-content/10'>
+					{!data?.accepted && authUser?.roles[0]?.code === 'TUTOR' ? (
+						<>
+							<button
+								className='btn btn-secondary btn-sm'
+								onClick={() => onClickAccept(data.id)}
+							>
+								Accept
+							</button>
+							<button
+								className='btn btn-sm'
+								onClick={() => onClickDecline(data.id)}
+							>
+								Decline
+							</button>
+						</>
+					) : (
+						<button
+							className='btn btn-ghost'
+							onClick={handleClickShowRecords}
+						>
+							<FileMusic />
+						</button>
+					)}
 				</div>
-			)}
+			}
 		</div>
 	);
 };

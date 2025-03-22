@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
 type MeetingStoreType = {
+	selectedMeeting: MeetingType | null;
 	meetings: MeetingType[] | null;
 	tutorMeetings: TutorMeetingType[] | null;
 	isGettingMeetings: boolean;
@@ -26,9 +27,11 @@ type MeetingStoreType = {
 	acceptMeeting: (meetingId: string) => void;
 	declineMeeting: (meetingId: string) => void;
 	storeRecord: (fileUrl: string, meetingId: string) => void;
+	setSelectedMeeting: (meeting: MeetingType) => void;
 };
 
 const useMeetingStore = create<MeetingStoreType>((set, get) => ({
+	selectedMeeting: null,
 	meetings: null,
 	tutorMeetings: null,
 	isGettingMeetings: false,
@@ -50,6 +53,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			set({ isGettingMeetings: false });
 		}
 	},
+
 	async getTutorMeetings() {
 		try {
 			const res = await getTutorMeetings();
@@ -62,7 +66,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 					...result,
 					{
 						id: meeting.id,
-						title: '',
+						title: meeting.title || 'No title',
 						start: meeting.start,
 						end: meeting.end,
 					},
@@ -76,11 +80,13 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			}
 		}
 	},
+
 	async createMeeting(data) {
 		try {
 			set({ isCreatingMeeting: true });
 			await createMeeting(data);
 			get().getMeetings();
+			get().getTutorMeetings();
 			toast.success('Meeting requested successfully!');
 		} catch (err) {
 			if (err instanceof AxiosError) {
@@ -91,6 +97,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			set({ isCreatingMeeting: false });
 		}
 	},
+
 	async acceptMeeting(meetingId) {
 		try {
 			set({ isAcceptingMeeting: true });
@@ -106,6 +113,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			set({ isAcceptingMeeting: false });
 		}
 	},
+
 	async declineMeeting(meetingId) {
 		try {
 			set({ isDeclineMeeting: true });
@@ -122,6 +130,7 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 			set({ isDeclineMeeting: false });
 		}
 	},
+
 	async storeRecord(fileUrl, meetingId) {
 		try {
 			set({ isStoringRecord: true });
@@ -136,6 +145,9 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 		} finally {
 			set({ isStoringRecord: false });
 		}
+	},
+	setSelectedMeeting(meeting) {
+		set({ selectedMeeting: meeting });
 	},
 }));
 

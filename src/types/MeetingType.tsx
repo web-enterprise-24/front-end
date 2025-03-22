@@ -1,3 +1,5 @@
+import RecordType from './RecordType';
+
 type MeetingType = {
 	id: string;
 	studentId: string;
@@ -5,6 +7,7 @@ type MeetingType = {
 	start: string;
 	end: string;
 	status: boolean;
+	title: string;
 	fileUrl: string;
 	createdAt: string;
 	updatedAt: string;
@@ -19,6 +22,7 @@ type MeetingType = {
 		name: string;
 		profilePicUrl: string;
 	};
+	records: RecordType[];
 };
 
 export default MeetingType;
