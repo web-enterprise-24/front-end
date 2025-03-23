@@ -8,7 +8,7 @@ const DetailedDashboard = () => {
 	const authUser = useAuthStore((state) => state.authUser);
 
 	return (
-		<div className='w-full h-full p-8 bg-base-100'>
+		<div className='w-full h-full p-8 max-sm:p-2 bg-base-100'>
 			<div className='flex flex-col gap-8'>
 				<h1 className='text-xl font-bold'>Main Dashboard</h1>
 				{authUser?.roles[0].code === 'STAFF' && <StaffDashboard />}

@@ -33,7 +33,7 @@ const SidebarFixed = ({ items }: Props) => {
 		}
 		setSideBarItemActive(location.pathname.slice(11));
 	}, [location.pathname, page]);
-	console.log(sidebarItemActive);
+
 	return (
 		<div className='flex'>
 			<div

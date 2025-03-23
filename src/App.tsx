@@ -155,7 +155,15 @@ const App = () => {
 					</Route>
 					<Route
 						path='/meeting-schedule'
-						element={authUser ? <Meeting /> : <Navigate to={'/'} />}
+						element={
+							authUser ? (
+								<ProtectedRoute allowedRoles={['STUDENT', 'TUTOR']}>
+									<Meeting />
+								</ProtectedRoute>
+							) : (
+								<Navigate to={'/'} />
+							)
+						}
 					/>
 				</Route>
 				<Route element={<LayoutSidebar />}>

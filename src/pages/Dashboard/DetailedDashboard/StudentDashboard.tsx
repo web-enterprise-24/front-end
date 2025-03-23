@@ -6,7 +6,7 @@ import StatisticItem from '../../components/StatisticItem';
 import UpcomingMeeting from '../../components/UpcomingMeeting';
 import { useDashboardStore } from '../../../store';
 import { useShallow } from 'zustand/shallow';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { convertTimeShortMonth } from '../../../utils';
 
@@ -62,6 +62,7 @@ const StudentDashboard = () => {
 		return () => {
 			reset();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		getStudentActivity,
 		getStudentOverviewMetrics,
@@ -69,9 +70,8 @@ const StudentDashboard = () => {
 		getStudentUpcomingMeetings,
 		getTutorProfile,
 		reset,
-		timeRange,
 	]);
-	console.log(studentActivity);
+
 	const data = {
 		labels: ['Messages', 'Meetings', 'Documents'],
 		datasets: [
@@ -133,7 +133,7 @@ const StudentDashboard = () => {
 				</div>
 			</div>
 			{/* Student metrics */}
-			<div className='flex flex-row items-center gap-4 flex-wrap mt-2'>
+			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap mt-2 max-[769px]:flex-col max-[769px]:gap-2'>
 				<StatisticItem
 					title={'Messages'}
 					number={studentOverviewMetrics?.messages || 0}
@@ -151,52 +151,79 @@ const StudentDashboard = () => {
 			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
 				<h2 className='font-bold'>Upcoming meetings</h2>
 				<div className=' w-full flex flex-col gap-1'>
-					{studentUpcomingMeetings && studentUpcomingMeetings.length > 0 && (
-						<UpcomingMeeting
-							data={transformUpcomingMeetingData(studentUpcomingMeetings[0].startAt)}
-						/>
-					)}
-
-					{studentUpcomingMeetings && studentUpcomingMeetings.length > 1 && (
-						<UpcomingMeeting
-							data={transformUpcomingMeetingData(studentUpcomingMeetings[1].startAt)}
-						/>
-					)}
-
-					{studentUpcomingMeetings && studentUpcomingMeetings.length > 2 && (
-						<UpcomingMeeting
-							data={transformUpcomingMeetingData(studentUpcomingMeetings[2].startAt)}
-						/>
+					{studentUpcomingMeetings && studentUpcomingMeetings.length > 0 ? (
+						studentUpcomingMeetings.map((meeting, index) => {
+							if (index === 1 || index === 2) {
+								return (
+									<>
+										<hr />
+										<UpcomingMeeting
+											key={index}
+											data={transformUpcomingMeetingData(meeting.startAt)}
+										/>
+									</>
+								);
+							}
+							<UpcomingMeeting
+								key={index}
+								data={transformUpcomingMeetingData(meeting.startAt)}
+							/>;
+						})
+					) : (
+						<p className='font-bold text-primary-content/40 text-center'>
+							No upcoming meetings
+						</p>
 					)}
 				</div>
 			</div>
 			{/* Recently document and activity */}
-			<div className='w-full flex flex-row gap-4 mt-2'>
-				<div className='p-4 w-2/3 border border-primary-content/10 rounded-2xl shadow-sm'>
-					<h2 className='font-bold'>Recent Documents</h2>
+			<div className='w-full flex flex-row min-[820px]:gap-4 mt-2 max-[769px]:flex-col max-[769px]:gap-2'>
+				<div className='p-4 w-2/3 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
+					<div className='w-full flex flex-row items-center justify-between'>
+						<h2 className='font-bold'>Recent Documents</h2>
+						<Link
+							to={'/document'}
+							className='btn btn-secondary btn-sm'
+						>
+							View all
+						</Link>
+					</div>
 					<div className='mt-2 w-full flex flex-col gap-1'>
 						{studentRecentlyUploadedDocuments &&
-							studentRecentlyUploadedDocuments.map((doc, index) => (
-								<RecentlyUploadedDocumentItem
-									key={index}
-									data={doc}
-								/>
-							))}
+						studentRecentlyUploadedDocuments.length > 0 ? (
+							studentRecentlyUploadedDocuments.map((doc, index) => {
+								if (index === 1 || index === 2 || index === 3) {
+									return (
+										<Fragment key={index}>
+											<hr />
+											<RecentlyUploadedDocumentItem data={doc} />
+										</Fragment>
+									);
+								}
+
+								return (
+									<RecentlyUploadedDocumentItem
+										key={index}
+										data={doc}
+									/>
+								);
+							})
+						) : (
+							<p className='font-bold text-primary-content/40 text-center'>
+								No recent documents
+							</p>
+						)}
 					</div>
 				</div>
-				<div className='p-4 w-1/3 border border-primary-content/10 rounded-2xl shadow-sm'>
+				<div className='p-4 w-1/3 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Activity</h2>
 						<select
 							className='select select-bordered select-xs w-xs max-w-xs'
+							defaultValue={timeRange}
 							onChange={(e) => handleChangeTimeRange(e)}
 						>
-							<option
-								selected
-								value={'lastWeek'}
-							>
-								Last week
-							</option>
+							<option value={'lastWeek'}>Last week</option>
 							<option value={'lastMonth'}>Last month</option>
 						</select>
 					</div>

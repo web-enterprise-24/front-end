@@ -130,7 +130,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err.response?.data?.message);
-				console.log(err);
+				// console.log(err);
 			}
 			set({ authUser: null });
 		} finally {

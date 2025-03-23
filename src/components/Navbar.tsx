@@ -85,7 +85,7 @@ const Navbar = () => {
 	}
 
 	const itemNoAuth = [...SidebarHomeItems];
-	itemNoAuth.splice(3, 1);
+	itemNoAuth.splice(3, 2);
 
 	return (
 		<div className='max-xl:flex items-center justify-around max-md:px-2 w-full h-20 bg-base-200 shadow-md shadow-base-300'>

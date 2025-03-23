@@ -30,7 +30,7 @@ const RecentlyUploadedDocumentItem = ({ data }: PropsType) => {
 				</div>
 			)}
 			<div className='flex flex-col gap-1'>
-				<p className='font-bold'>
+				<p className='font-bold line-clamp-2 max-w-[200px] break-words'>
 					{'title' in data! ? data.title : data?.fileName}
 				</p>
 				<p className='text-primary-content/40 text-sm'>
