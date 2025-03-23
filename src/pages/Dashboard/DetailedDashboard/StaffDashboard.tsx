@@ -91,7 +91,7 @@ const StaffDashboard = () => {
 	return (
 		<div className='w-full h-full'>
 			{/* Items */}
-			<div className='flex flex-row items-center gap-4 flex-wrap'>
+			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap max-[769px]:flex-col max-[769px]:gap-2'>
 				<StatisticItem
 					title='tutors'
 					number={

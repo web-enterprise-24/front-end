@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Line, Bar } from 'react-chartjs-2';
 import {
@@ -18,6 +18,7 @@ import StatisticItem from '../../components/StatisticItem';
 import UpcomingMeeting from '../../components/UpcomingMeeting';
 import RecentlyUploadedDocumentItem from '../../components/RecentlyUploadedDocumentItem';
 import { convertTimeShortMonth } from '../../../utils';
+import { Link } from 'react-router-dom';
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -98,6 +99,7 @@ const TutorDashboard = () => {
 		return () => {
 			reset();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
 		getFeedbackAnalysis,
 		getOverviewMetrics,
@@ -106,8 +108,6 @@ const TutorDashboard = () => {
 		getTuteesInformation,
 		getUpcomingMeetings,
 		reset,
-		timeRangeDocumentFeedback,
-		timeRangeTuteesActivity,
 	]);
 
 	// Options
@@ -189,7 +189,7 @@ const TutorDashboard = () => {
 	};
 	return (
 		<div className='w-full h-full'>
-			<div className='flex flex-row items-center gap-4 flex-wrap'>
+			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap max-[769px]:flex-col max-[769px]:justify-center max-[769px]:gap-2'>
 				<StatisticItem
 					title='total tutees'
 					number={
@@ -211,10 +211,9 @@ const TutorDashboard = () => {
 				<StatisticItem
 					title='upcoming meetings'
 					number={
-						// overviewMetrics && 'upcomingMeetings' in overviewMetrics
-						// 	? overviewMetrics.upcomingMeetings
-						// 	: 0
-						0
+						overviewMetrics && 'meetings' in overviewMetrics
+							? overviewMetrics.meetings
+							: 0
 					}
 					color='text-error border-error'
 				/>
@@ -264,7 +263,12 @@ const TutorDashboard = () => {
 										</td>
 										<td className='truncate max-w-[200px]'>{tutee.email}</td>
 										<td>
-											<button className='btn btn-outline btn-sm'>Message</button>
+											<Link
+												to={'/message'}
+												className='btn btn-outline btn-sm'
+											>
+												Message
+											</Link>
 										</td>
 									</tr>
 								))}
@@ -298,67 +302,92 @@ const TutorDashboard = () => {
 				</div>
 			</div>
 			{/* upcoming meetings and recently uploaded documents */}
-			<div className='w-full flex flex-row gap-4 mt-2'>
-				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
+			<div className='w-full flex flex-row min-[820px]:gap-4 mt-2 max-[769px]:flex-col max-[769px]:gap-2'>
+				<div className='p-4 w-1/2 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Upcoming Meetings</h2>
-						<button className='btn btn-secondary btn-sm'>View All</button>
+						<Link
+							to={'/meeting-schedule'}
+							className='btn btn-secondary btn-sm'
+						>
+							View All
+						</Link>
 					</div>
 					<div className='mt-2 w-full flex flex-col gap-1'>
-						{upcomingMeetings && upcomingMeetings.length > 0 && (
-							<UpcomingMeeting
-								data={transformUpcomingMeetingData(upcomingMeetings[0].startAt)}
-							/>
-						)}
-
-						{upcomingMeetings && upcomingMeetings.length > 1 && (
-							<UpcomingMeeting
-								data={transformUpcomingMeetingData(upcomingMeetings[1].startAt)}
-							/>
-						)}
-
-						{upcomingMeetings && upcomingMeetings.length > 2 && (
-							<UpcomingMeeting
-								data={transformUpcomingMeetingData(upcomingMeetings[2].startAt)}
-							/>
+						{upcomingMeetings && upcomingMeetings.length > 0 ? (
+							upcomingMeetings.map((meeting, index) => {
+								if (index === 1 || index === 2) {
+									return (
+										<Fragment key={index}>
+											<hr />
+											<UpcomingMeeting
+												data={transformUpcomingMeetingData(meeting.startAt)}
+											/>
+										</Fragment>
+									);
+								}
+								return (
+									<UpcomingMeeting
+										data={transformUpcomingMeetingData(meeting.startAt)}
+										key={index}
+									/>
+								);
+							})
+						) : (
+							<p className='font-bold text-primary-content/40 text-center'>
+								No upcoming meetings
+							</p>
 						)}
 					</div>
 				</div>
-				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
+				<div className='p-4 w-1/2 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Recently Uploaded Documents</h2>
-						<button className='btn btn-secondary btn-sm'>View All</button>
+						<Link
+							to={'/document'}
+							className='btn btn-secondary btn-sm'
+						>
+							View All
+						</Link>
 					</div>
 					<div className='mt-2 w-full flex flex-col gap-1'>
-						<RecentlyUploadedDocumentItem
-							data={recentlyUploadedDocuments && recentlyUploadedDocuments[0]}
-						/>
-						<hr />
-						<RecentlyUploadedDocumentItem
-							data={recentlyUploadedDocuments && recentlyUploadedDocuments[1]}
-						/>
-						<hr />
-						<RecentlyUploadedDocumentItem
-							data={recentlyUploadedDocuments && recentlyUploadedDocuments[2]}
-						/>
+						{recentlyUploadedDocuments && recentlyUploadedDocuments.length > 0 ? (
+							recentlyUploadedDocuments.map((document, index) => {
+								if (index === 1 || index === 2) {
+									return (
+										<Fragment key={index}>
+											<hr />
+											<RecentlyUploadedDocumentItem data={document} />
+										</Fragment>
+									);
+								}
+
+								return (
+									<RecentlyUploadedDocumentItem
+										data={document}
+										key={index}
+									/>
+								);
+							})
+						) : (
+							<p className='font-bold text-primary-content/40 text-center'>
+								No recent documents
+							</p>
+						)}
 					</div>
 				</div>
 			</div>
 			{/* Student activity and document feedback analytics */}
-			<div className='w-full flex flex-row gap-4 mt-2'>
-				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
+			<div className='w-full flex flex-row gap-4 mt-2 max-[769px]:flex-col max-[769px]:gap-2'>
+				<div className='p-4 w-1/2 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Student Activity</h2>
 						<select
 							className='select select-bordered select-xs w-xs max-w-xs'
+							defaultValue={'lastWeek'}
 							onChange={(e) => handleChangeTimeRange(e, 'tuteesActivity')}
 						>
-							<option
-								selected
-								value={'lastWeek'}
-							>
-								Last week
-							</option>
+							<option value={'lastWeek'}>Last week</option>
 							<option value={'lastMonth'}>Last month</option>
 						</select>
 					</div>
@@ -369,19 +398,15 @@ const TutorDashboard = () => {
 						/>
 					</div>
 				</div>
-				<div className='p-4 w-1/2 border border-primary-content/10 rounded-2xl shadow-sm'>
+				<div className='p-4 w-1/2 max-[769px]:w-full border border-primary-content/10 rounded-2xl shadow-sm'>
 					<div className='w-full flex flex-row items-center justify-between'>
 						<h2 className='font-bold'>Document Feedback Analytics</h2>
 						<select
 							className='select select-bordered select-xs w-xs max-w-xs'
+							defaultValue={'thisWeek'}
 							onChange={(e) => handleChangeTimeRange(e, 'documentFeedback')}
 						>
-							<option
-								selected
-								value={'thisWeek'}
-							>
-								Last week
-							</option>
+							<option value={'thisWeek'}>Last week</option>
 							<option value={'thisMonth'}>Last month</option>
 						</select>
 					</div>

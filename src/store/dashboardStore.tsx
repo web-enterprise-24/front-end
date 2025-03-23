@@ -215,7 +215,6 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 		try {
 			const res = await getRecentlyUploadedDocuments();
 			set({ recentlyUploadedDocuments: res });
-			console.log(get().recentlyUploadedDocuments);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.error(err);

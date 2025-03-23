@@ -7,6 +7,7 @@ import {
 	MessageCircleMore,
 	Folder,
 	BookOpen,
+	CalendarCheck,
 } from 'lucide-react';
 
 const items: SidebarType[] = [
@@ -36,12 +37,18 @@ const items: SidebarType[] = [
 	},
 	{
 		id: 5,
+		title: 'Meeting schedule',
+		icon: CalendarCheck,
+		to: '/meeting-schedule',
+	},
+	{
+		id: 6,
 		title: 'Blog',
 		icon: BookOpen,
 		to: '/blog',
 	},
 	{
-		id: 6,
+		id: 7,
 		title: 'Log out',
 		to: '',
 		icon: LogOut,
