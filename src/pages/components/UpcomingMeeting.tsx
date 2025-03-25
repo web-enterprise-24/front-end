@@ -1,5 +1,6 @@
 type PropsType = {
 	data: {
+		title?: string;
 		month: string;
 		day: string;
 		hour: string;
@@ -15,6 +16,7 @@ const UpcomingMeeting = ({ data }: PropsType) => {
 					<p className='text-primary-content font-bold text-lg'>{data?.day}</p>
 				</div>
 				<div className='flex flex-col gap-1'>
+					<p className='font-bold'>{data?.title}</p>
 					<p className='font-bold'>{data?.hour}</p>
 					<p className='text-primary-content/40 text-sm'>Virtual</p>
 				</div>

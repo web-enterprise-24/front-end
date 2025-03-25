@@ -1,5 +1,11 @@
 import { create } from 'zustand';
-import { UserType, UserSendType, AllocateSendType } from '../types';
+import {
+	UserType,
+	UserSendType,
+	AllocateSendType,
+	StudentDashboardType,
+	TutorDashboardType,
+} from '../types';
 // import toast from "react-hot-toast";
 import { AxiosError } from 'axios';
 
@@ -9,11 +15,14 @@ import {
 	createNewUser,
 	deallocation,
 	editProfile,
+	getDashboard,
 	getUsers,
 } from '../services';
 import toast from 'react-hot-toast';
 
 type ManagementStoreType = {
+	dashboard: StudentDashboardType | null;
+	tutorDashboard: TutorDashboardType | null;
 	totalPage: number | null;
 	totalPageTutor: number | null;
 	totalPageStudent: number | null;
@@ -35,6 +44,7 @@ type ManagementStoreType = {
 	isGettingStudentLists: boolean;
 	isEditing: boolean;
 	isAllocating: boolean;
+	isGettingDashboard: boolean;
 	createUser: (data: UserSendType) => Promise<void>;
 	getUserLists: (role: string, isAllocation?: boolean) => void;
 	setSelectedUser: (user: UserType | null) => void;
@@ -52,12 +62,12 @@ type ManagementStoreType = {
 	allocateStudent: (data: AllocateSendType) => void;
 	deallocateStudent: (studentId: string) => void;
 	setAllocation: (allocate: 'allocated' | 'unallocated' | '') => void;
+	getDashboard: (id: string, label: string) => void;
 };
 
-// Get token
-// const accessToken = localStorage.getItem("access");
-
 const useManagementStore = create<ManagementStoreType>((set, get) => ({
+	dashboard: null,
+	tutorDashboard: null,
 	totalPage: null,
 	totalPageTutor: null,
 	totalPageStudent: null,
@@ -79,6 +89,7 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
 	isGettingStudentLists: false,
 	isEditing: false,
 	isAllocating: false,
+	isGettingDashboard: false,
 
 	async createUser(data: UserSendType) {
 		try {
@@ -210,14 +221,20 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
 		set({ searchResult: result });
 	},
 	reset() {
-		set({ currentPage: 1 });
-		set({ currentPageTutor: 1 });
-		set({ currentPageStudent: 1 });
-		set({ isDisplayInactive: false });
-		set({ sortBy: 'desc' });
-		set({ searchResult: '' });
-		set({ tutorLists: [] });
-		set({ studentLists: [] });
+		set({
+			totalPage: null,
+			totalPageTutor: null,
+			totalPageStudent: null,
+			currentPage: 1,
+			currentPageTutor: 1,
+			currentPageStudent: 1,
+			sortBy: 'desc',
+			searchResult: '',
+			tutorLists: [],
+			studentLists: [],
+			dashboard: null,
+			tutorDashboard: null,
+		});
 	},
 	setTutorLists() {
 		set({ tutorLists: [] });
@@ -264,6 +281,23 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
 	},
 	setAllocation(allocate) {
 		set({ allocation: allocate });
+	},
+	async getDashboard(id, label) {
+		try {
+			set({ isGettingDashboard: true });
+			const res = await getDashboard(id, label);
+			if (label === 'STUDENT') {
+				set({ dashboard: res });
+			} else if (label === 'TUTOR') {
+				set({ tutorDashboard: res });
+			}
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+			}
+		} finally {
+			set({ isGettingDashboard: false });
+		}
 	},
 }));
 

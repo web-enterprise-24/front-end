@@ -125,32 +125,32 @@ const Table = ({ role }: PropsType) => {
 						<tr></tr>
 					</tbody>
 				</table>
+				{userLists && userLists.length > 0 && (
+					<div className='join mr-6 mt-6 flex items-center justify-end'>
+						<button
+							className='join-item btn'
+							disabled={currentPage === 1 ? true : false}
+							onClick={() => {
+								setCurrentPage(-1);
+								getUserLists(role);
+							}}
+						>
+							«
+						</button>
+						<button className='join-item btn'>Page {currentPage}</button>
+						<button
+							className='join-item btn'
+							disabled={currentPage === totalPage ? true : false}
+							onClick={() => {
+								setCurrentPage(1);
+								getUserLists(role);
+							}}
+						>
+							»
+						</button>
+					</div>
+				)}
 			</div>
-			{userLists && userLists.length > 0 && (
-				<div className='join self-end mr-6'>
-					<button
-						className='join-item btn'
-						disabled={currentPage === 1 ? true : false}
-						onClick={() => {
-							setCurrentPage(-1);
-							getUserLists(role);
-						}}
-					>
-						«
-					</button>
-					<button className='join-item btn'>Page {currentPage}</button>
-					<button
-						className='join-item btn'
-						disabled={currentPage === totalPage ? true : false}
-						onClick={() => {
-							setCurrentPage(1);
-							getUserLists(role);
-						}}
-					>
-						»
-					</button>
-				</div>
-			)}
 		</div>
 	);
 };

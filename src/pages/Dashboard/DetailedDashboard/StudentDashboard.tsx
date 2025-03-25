@@ -101,7 +101,7 @@ const StudentDashboard = () => {
 		setTimeRange(e.target.value);
 		getStudentActivity(e.target.value);
 	};
-
+	// console.log(studentUpcomingMeetings);
 	return (
 		<div className='w-full h-full'>
 			{/* Tutor info */}
@@ -133,7 +133,7 @@ const StudentDashboard = () => {
 				</div>
 			</div>
 			{/* Student metrics */}
-			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap mt-2 max-[769px]:flex-col max-[769px]:gap-2'>
+			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap mt-2 max-[769px]:flex-col max-[769px]:gap-2 gap-2'>
 				<StatisticItem
 					title={'Messages'}
 					number={studentOverviewMetrics?.messages || 0}
@@ -158,19 +158,26 @@ const StudentDashboard = () => {
 						studentUpcomingMeetings.map((meeting, index) => {
 							if (index === 1 || index === 2) {
 								return (
-									<>
+									<Fragment key={index}>
 										<hr />
 										<UpcomingMeeting
-											key={index}
-											data={transformUpcomingMeetingData(meeting.startAt)}
+											data={{
+												...transformUpcomingMeetingData(meeting.startAt),
+												title: meeting.title || 'No title',
+											}}
 										/>
-									</>
+									</Fragment>
 								);
 							}
-							<UpcomingMeeting
-								key={index}
-								data={transformUpcomingMeetingData(meeting.startAt)}
-							/>;
+							return (
+								<UpcomingMeeting
+									key={index}
+									data={{
+										...transformUpcomingMeetingData(meeting.startAt),
+										title: meeting.title || 'No title',
+									}}
+								/>
+							);
 						})
 					) : (
 						<p className='font-bold text-primary-content/40 text-center'>

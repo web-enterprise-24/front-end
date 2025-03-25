@@ -31,3 +31,5 @@ export type { default as StudentOverviewMetricsType } from './StudentOverviewMet
 export type { default as StudentRecentUploadedDocumentType } from './StudentRecentUploadedDocumentType';
 export type { default as StudentActivityType } from './StudentActivityType';
 export type { default as RecordType } from './RecordType';
+export type { default as StudentDashboardType } from './StudentDashboardType';
+export type { default as TutorDashboardType } from './TutorDashboardType';

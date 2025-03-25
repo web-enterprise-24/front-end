@@ -21,6 +21,8 @@ import {
 	Theme,
 	DetailedBlog,
 	Meeting,
+	StudentDashboard,
+	TutorDashboard,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound } from './components';
@@ -190,11 +192,21 @@ const App = () => {
 						<Route
 							path='student-management'
 							element={<StudentManagement />}
-						/>
+						>
+							<Route
+								path='dashboard/:studentId'
+								element={<StudentDashboard />}
+							/>
+						</Route>
 						<Route
 							path='tutor-management'
 							element={<TutorManagement />}
-						/>
+						>
+							<Route
+								path='dashboard/:tutorId'
+								element={<TutorDashboard />}
+							/>
+						</Route>
 						<Route
 							path='allocation-management'
 							element={<AllocationManagement />}

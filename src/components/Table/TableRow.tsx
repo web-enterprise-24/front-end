@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/shallow';
 import { UserType } from '../../types';
 import { convertDate } from '../../utils';
 import { EllipsisVertical, UserRoundCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 type PropsType = {
 	data: UserType;
@@ -25,6 +26,8 @@ const TableRow = ({ data, role, changeStatus, deallocate }: PropsType) => {
 		);
 	const setSelectedUser = useManagementStore((state) => state.setSelectedUser);
 
+	const navigate = useNavigate();
+
 	const handleClickAction = (title?: string) => {
 		if (title === 'Edit') {
 			modalElement?.showModal();
@@ -36,6 +39,8 @@ const TableRow = ({ data, role, changeStatus, deallocate }: PropsType) => {
 			changeStatus(data?.id, false);
 		} else if (title === 'Deallocate') {
 			deallocate(data.id);
+		} else if (title === 'Dashboard') {
+			navigate(`dashboard/${data.id}`);
 		}
 	};
 
