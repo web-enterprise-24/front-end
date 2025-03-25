@@ -364,7 +364,6 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 		try {
 			const res = await getStudentActivity(timeRange);
 			set({ studentActivity: res.rawCounts });
-			console.log(get().studentActivity);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.error(err);

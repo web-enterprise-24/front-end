@@ -321,14 +321,20 @@ const TutorDashboard = () => {
 										<Fragment key={index}>
 											<hr />
 											<UpcomingMeeting
-												data={transformUpcomingMeetingData(meeting.startAt)}
+												data={{
+													...transformUpcomingMeetingData(meeting.startAt),
+													title: meeting.title || 'No title',
+												}}
 											/>
 										</Fragment>
 									);
 								}
 								return (
 									<UpcomingMeeting
-										data={transformUpcomingMeetingData(meeting.startAt)}
+										data={{
+											...transformUpcomingMeetingData(meeting.startAt),
+											title: meeting.title || 'No title',
+										}}
 										key={index}
 									/>
 								);
