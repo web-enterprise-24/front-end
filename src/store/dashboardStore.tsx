@@ -45,9 +45,6 @@ type DashboardStoreType = {
 	upcomingMeetings: TutorUpcomingMeetingType[] | null;
 	tuteesActivity: TutorTuteeActivityType | null;
 	feedbackAnalysis: TutorFeedbackAnalysisType | null;
-	currentPage: number;
-	previousPage: string;
-	nextPage: string;
 	// student
 	tutorProfile: StudentTutorProfileType | null;
 	studentOverviewMetrics: StudentOverviewMetricsType | null;
@@ -78,12 +75,11 @@ type DashboardStoreType = {
 	getTutorActivity: () => void;
 	getTutorPerformance: () => void;
 	// tutor
-	getTuteesInformation: (link: string) => void;
+	getTuteesInformation: () => void;
 	getRecentlyUploadedDocuments: () => void;
 	getUpcomingMeetings: () => void;
 	getTuteesActivity: (timeRange: string) => void;
 	getFeedbackAnalysis: (timeRange: string) => void;
-	setCurrentPage: (page: number) => void;
 	// student
 	getTutorProfile: () => void;
 	getStudentOverviewMetrics: () => void;
@@ -193,15 +189,14 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 		}
 	},
 	// tutor
-	getTuteesInformation: async (link = '') => {
+	async getTuteesInformation() {
 		set({ isGettingTuteesInformation: true });
 		try {
-			const res = await getTuteesInformation(link);
+			const res = await getTuteesInformation();
 			set({
 				tuteesInformation: res.tutees,
-				previousPage: res.pagination.previousPage || '',
-				nextPage: res.pagination.nextPage || '',
 			});
+			console.log(get().tuteesInformation);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.error(err);
@@ -303,9 +298,6 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingFeedbackAnalysis: false });
 		}
 	},
-	setCurrentPage: (page: number) => {
-		set({ currentPage: get().currentPage + page });
-	},
 	// student
 	getTutorProfile: async () => {
 		set({ isGettingTutorProfile: true });
@@ -385,9 +377,6 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			upcomingMeetings: null,
 			tuteesActivity: null,
 			feedbackAnalysis: null,
-			currentPage: 1,
-			previousPage: '',
-			nextPage: '',
 			// student
 			tutorProfile: null,
 			studentOverviewMetrics: null,
