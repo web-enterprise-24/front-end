@@ -29,6 +29,33 @@ export const getTutorPerformance = async () => {
 	}
 };
 
+export const getActiveUsers = async () => {
+	try {
+		const res = await axios.get('/admin/getActiveUsers');
+		return res.data.data.activeUsers;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getAccessedPages = async () => {
+	try {
+		const res = await axios.get('/admin/getAccessedPages');
+		return res.data.data.accessedPages;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getUsedBrowser = async () => {
+	try {
+		const res = await axios.get('/admin/getUsedBrowsers');
+		return res.data.data.usedBrowsers;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
 // Tutor
 export const getTutorOverviewMetrics = async () => {
 	try {

@@ -1,9 +1,12 @@
 import { create } from 'zustand';
 import {
+	StaffAccessedPageType,
+	StaffActiveUserType,
 	StaffOverviewMetricType,
 	StaffTuteesInformationType,
 	StaffTutorActivityType,
 	StaffTutorPerformanceType,
+	StaffUsedBrowserType,
 	StudentActivityType,
 	StudentOverviewMetricsType,
 	StudentRecentUploadedDocumentType,
@@ -15,6 +18,8 @@ import {
 	TutorUpcomingMeetingType,
 } from '../types';
 import {
+	getAccessedPages,
+	getActiveUsers,
 	getFeedbackAnalysis,
 	getOverviewMetrics,
 	getOverviewMetricsTutee,
@@ -29,6 +34,7 @@ import {
 	getTutorPerformance,
 	getTutorProfile,
 	getUpcomingMeetings,
+	getUsedBrowser,
 } from '../services';
 import { AxiosError } from 'axios';
 import useAuthStore from './authStore';
@@ -39,6 +45,9 @@ type DashboardStoreType = {
 	// staff
 	tutorActivity: StaffTutorActivityType | null;
 	tutorPerformance: StaffTutorPerformanceType[] | null;
+	activeUsers: StaffActiveUserType[] | null;
+	accessedPages: StaffAccessedPageType[] | null;
+	usedBrowsers: StaffUsedBrowserType[] | null;
 	// tutor
 	tuteesInformation: StaffTuteesInformationType[] | null;
 	recentlyUploadedDocuments: TutorRecentlyUploadedDocumentType[] | null;
@@ -74,6 +83,9 @@ type DashboardStoreType = {
 	// staff
 	getTutorActivity: () => void;
 	getTutorPerformance: () => void;
+	getActiveUsers: () => void;
+	getAccessedPages: () => void;
+	getUsedBrowser: () => void;
 	// tutor
 	getTuteesInformation: () => void;
 	getRecentlyUploadedDocuments: () => void;
@@ -94,6 +106,9 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 	// staff
 	tutorActivity: null,
 	tutorPerformance: null,
+	activeUsers: null,
+	accessedPages: null,
+	usedBrowsers: null,
 	// tutor
 	tuteesInformation: null,
 	recentlyUploadedDocuments: null,
@@ -188,6 +203,40 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingTutorPerformance: false });
 		}
 	},
+
+	async getActiveUsers() {
+		try {
+			const res = await getActiveUsers();
+			set({ activeUsers: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
+	async getAccessedPages() {
+		try {
+			const res = await getAccessedPages();
+			set({ accessedPages: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
+	async getUsedBrowser() {
+		try {
+			const res = await getUsedBrowser();
+			set({ usedBrowsers: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
 	// tutor
 	async getTuteesInformation() {
 		set({ isGettingTuteesInformation: true });
@@ -205,6 +254,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingTuteesInformation: false });
 		}
 	},
+
 	getRecentlyUploadedDocuments: async () => {
 		set({ isGettingRecentlyUploadedDocuments: true });
 		try {
@@ -218,6 +268,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingRecentlyUploadedDocuments: false });
 		}
 	},
+
 	async getUpcomingMeetings() {
 		set({ isGettingUpcomingMeetings: true });
 		try {
@@ -231,6 +282,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingUpcomingMeetings: false });
 		}
 	},
+
 	async getTuteesActivity(timeRange) {
 		set({ isGettingTuteesActivity: true });
 		try {
@@ -263,6 +315,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingTuteesActivity: false });
 		}
 	},
+
 	async getFeedbackAnalysis(timeRange) {
 		set({ isGettingFeedbackAnalysis: true });
 		try {
@@ -298,6 +351,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingFeedbackAnalysis: false });
 		}
 	},
+
 	// student
 	getTutorProfile: async () => {
 		set({ isGettingTutorProfile: true });
@@ -312,6 +366,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingTutorProfile: false });
 		}
 	},
+
 	async getStudentOverviewMetrics() {
 		set({ isGettingStudentOverviewMetrics: true });
 		try {
@@ -325,6 +380,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingStudentOverviewMetrics: false });
 		}
 	},
+
 	async getStudentUpcomingMeetings() {
 		set({ isGettingStudentUpcomingMeetings: true });
 		try {
@@ -338,6 +394,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingStudentUpcomingMeetings: false });
 		}
 	},
+
 	async getStudentRecentlyUploadedDocuments() {
 		set({ isGettingStudentRecentlyUploadedDocuments: true });
 		try {
@@ -351,6 +408,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingStudentRecentlyUploadedDocuments: false });
 		}
 	},
+
 	getStudentActivity: async (timeRange) => {
 		set({ isGettingStudentActivity: true });
 		try {
@@ -364,6 +422,7 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({ isGettingStudentActivity: false });
 		}
 	},
+
 	reset() {
 		set({
 			// general
