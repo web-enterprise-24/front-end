@@ -11,7 +11,7 @@ const Footer = () => {
           />
         </div>
         <p className="mt-4 text-sm">
-          © 2025 University eTutoring System. All rights reserved.
+          © {new Date().getFullYear()} University eTutoring System. All rights reserved.
         </p>
       </aside>
 
