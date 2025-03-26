@@ -33,3 +33,6 @@ export type { default as StudentActivityType } from './StudentActivityType';
 export type { default as RecordType } from './RecordType';
 export type { default as StudentDashboardType } from './StudentDashboardType';
 export type { default as TutorDashboardType } from './TutorDashboardType';
+export type { default as StaffActiveUserType } from './StaffActiveUserType';
+export type { default as StaffAccessedPageType } from './StaffAccessedPageType';
+export type { default as StaffUsedBrowserType } from './StaffUsedBrowserType';
