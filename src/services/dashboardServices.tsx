@@ -39,9 +39,9 @@ export const getTutorOverviewMetrics = async () => {
 	}
 };
 
-export const getTuteesInformation = async (link: string) => {
+export const getTuteesInformation = async () => {
 	try {
-		const res = await axios.get(link ? link : '/tutor/tuteesInformation');
+		const res = await axios.get('/tutor/tuteesInformation');
 		return res.data.data;
 	} catch (err) {
 		if (isAxiosError(err)) throw err;

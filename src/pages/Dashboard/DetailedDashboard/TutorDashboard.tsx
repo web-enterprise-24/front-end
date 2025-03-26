@@ -48,10 +48,6 @@ const TutorDashboard = () => {
 		overviewMetrics,
 		getTuteesInformation,
 		tuteesInformation,
-		currentPage,
-		setCurrentPage,
-		previousPage,
-		nextPage,
 		getRecentlyUploadedDocuments,
 		recentlyUploadedDocuments,
 		getUpcomingMeetings,
@@ -67,10 +63,6 @@ const TutorDashboard = () => {
 			state.overviewMetrics,
 			state.getTuteesInformation,
 			state.tuteesInformation,
-			state.currentPage,
-			state.setCurrentPage,
-			state.previousPage,
-			state.nextPage,
 			state.getRecentlyUploadedDocuments,
 			state.recentlyUploadedDocuments,
 			state.getUpcomingMeetings,
@@ -90,7 +82,7 @@ const TutorDashboard = () => {
 
 	useEffect(() => {
 		getOverviewMetrics();
-		getTuteesInformation('');
+		getTuteesInformation();
 		getRecentlyUploadedDocuments();
 		getUpcomingMeetings();
 		getTuteesActivity(timeRangeTuteesActivity);
@@ -187,6 +179,9 @@ const TutorDashboard = () => {
 		setTimeRangeDocumentFeedback(e.target.value);
 		getFeedbackAnalysis(e.target.value);
 	};
+
+	// console.log(tuteesInformation);
+
 	return (
 		<div className='w-full h-full'>
 			<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap max-[769px]:flex-col max-[769px]:justify-center max-[769px]:gap-2'>
@@ -230,7 +225,7 @@ const TutorDashboard = () => {
 			{/* Tutees information */}
 			<div className='w-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
 				<h2 className='font-bold'>Tutees Information</h2>
-				<div className='overflow-x-auto mt-4'>
+				<div className='overflow-auto mt-4 max-h-[400px]'>
 					<table className='table table-zebra'>
 						{/* head */}
 						<thead className='bg-neutral text-base-100'>
@@ -274,31 +269,6 @@ const TutorDashboard = () => {
 								))}
 						</tbody>
 					</table>
-					<div className='w-full flex justify-center items-center border-t border-primary-content/10 pt-4 mt-auto'>
-						<div className='join'>
-							<button
-								className='join-item btn'
-								disabled={previousPage ? false : true}
-								onClick={() => {
-									setCurrentPage(-1);
-									getTuteesInformation(previousPage);
-								}}
-							>
-								«
-							</button>
-							<button className='join-item btn'>Page {currentPage}</button>
-							<button
-								className='join-item btn'
-								disabled={nextPage ? false : true}
-								onClick={() => {
-									setCurrentPage(1);
-									getTuteesInformation(nextPage);
-								}}
-							>
-								»
-							</button>
-						</div>
-					</div>
 				</div>
 			</div>
 			{/* upcoming meetings and recently uploaded documents */}
