@@ -112,7 +112,7 @@ const Modal = forwardRef(
 							<div className='modal-action'>
 								{['edit-user', 'edit-profile'].includes(modalFor || '') && (
 									<button
-										className='btn btn-primary'
+										className='btn btn-secondary'
 										onClick={() => {
 											setShowConfirm(true);
 										}}
