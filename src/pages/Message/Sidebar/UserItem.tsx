@@ -1,4 +1,5 @@
 import { UserType } from '../../../types';
+import { transformRole } from '../../../utils';
 
 type PropsType = {
 	data: UserType;
@@ -25,7 +26,20 @@ const UserItem = ({ data, onClick, isSelected }: PropsType) => {
 				</div>
 			</div>
 			<div className='flex flex-col gap-1'>
-				<p className='text-primary-content font-bold'>{data?.name}</p>
+				<div className='flex flex-row gap-2 items-center'>
+					<p className='text-primary-content font-bold'>{data?.name}</p>
+					<div
+						className={`badge ${
+							data?.roles[0]?.code === 'STAFF'
+								? 'badge-accent'
+								: data?.roles[0]?.code === 'TUTOR'
+								? 'badge-secondary'
+								: 'badge-primary'
+						} badge-sm`}
+					>
+						{transformRole(data?.roles[0]?.code)}
+					</div>
+				</div>
 				<p className='text-primary-content/50 font-bold truncate max-w-[190px] max-xl:max-w-[250px]'>
 					{data?.email}
 				</p>

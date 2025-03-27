@@ -22,6 +22,7 @@ export const getTutorMeetings = async () => {
 
 export const createMeeting = async (data: RequestMeetingType) => {
 	try {
+		console.log(data);
 		const res = await axios.post('/meeting', data);
 		return res.data.data;
 	} catch (err) {
