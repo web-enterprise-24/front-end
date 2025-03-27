@@ -202,7 +202,7 @@ const AllocationManagement = () => {
     </div>
     <div className="w-full text-center">
      <button
-      className="btn btn-primary"
+      className="btn btn-secondary"
       onClick={() =>
        dialogConfirmRef.current && dialogConfirmRef.current.showModal()
       }

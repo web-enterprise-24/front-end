@@ -282,7 +282,7 @@ const AddUserForm = ({ role }: PropsType) => {
     className="file-input file-input-bordered w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-200"
     onChange={(e) => handleChangeInput(e, "file")}
    />
-   <button className="btn btn-primary">
+   <button className="btn btn-secondary">
     {isCreatingUser ? <LoaderCircle className="animate-spin" /> : "Create"}
    </button>
   </form>
