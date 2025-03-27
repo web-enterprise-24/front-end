@@ -3,7 +3,7 @@ import {
 	StaffAccessedPageType,
 	StaffActiveUserType,
 	StaffOverviewMetricType,
-	StaffTuteesInformationType,
+	TutorTuteesInformationType,
 	StaffTutorActivityType,
 	StaffTutorPerformanceType,
 	StaffUsedBrowserType,
@@ -49,7 +49,7 @@ type DashboardStoreType = {
 	accessedPages: StaffAccessedPageType[] | null;
 	usedBrowsers: StaffUsedBrowserType[] | null;
 	// tutor
-	tuteesInformation: StaffTuteesInformationType[] | null;
+	tuteesInformation: TutorTuteesInformationType[] | null;
 	recentlyUploadedDocuments: TutorRecentlyUploadedDocumentType[] | null;
 	upcomingMeetings: TutorUpcomingMeetingType[] | null;
 	tuteesActivity: TutorTuteeActivityType | null;
@@ -100,7 +100,7 @@ type DashboardStoreType = {
 	getStudentActivity: (timeRange: string) => void;
 };
 
-const useDashboardStore = create<DashboardStoreType>((set, get) => ({
+const useDashboardStore = create<DashboardStoreType>((set) => ({
 	// general
 	overviewMetrics: null,
 	// staff
@@ -245,7 +245,6 @@ const useDashboardStore = create<DashboardStoreType>((set, get) => ({
 			set({
 				tuteesInformation: res.tutees,
 			});
-			console.log(get().tuteesInformation);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.error(err);

@@ -21,7 +21,7 @@ const Comment = ({ data }: PropsType) => {
 			state.isHandlingBlog,
 		])
 	);
-	const [isReply, setIsReply] = useState(false);
+	// const [isReply, setIsReply] = useState(false);
 	const [isEdit, setIsEdit] = useState(false);
 
 	const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -103,12 +103,12 @@ const Comment = ({ data }: PropsType) => {
 							<ThumbsUp className='size-5' />
 							{data?._count?.likes}
 						</span>
-						<button
+						{/* <button
 							className='btn btn-ghost'
 							onClick={() => setIsReply(!isReply)}
 						>
 							Reply
-						</button>
+						</button> */}
 						{authUser?.id === data?.user.id && (
 							<>
 								<button
@@ -128,7 +128,7 @@ const Comment = ({ data }: PropsType) => {
 					</div>
 				</div>
 			</div>
-			{isReply && <CommentForm />}
+			{/* {isReply && <CommentForm />} */}
 		</>
 	);
 };

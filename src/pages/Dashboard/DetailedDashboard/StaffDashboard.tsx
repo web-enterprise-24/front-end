@@ -294,7 +294,7 @@ const StaffDashboard = () => {
 					<div className='w-full h-64 md:h-80'>
 						<Bar
 							data={horizontalBarData(
-								'Used Browsers',
+								'Accessed Pages',
 								accessedPagesLabels || [],
 								accessedPagesData || []
 							)}
@@ -303,7 +303,7 @@ const StaffDashboard = () => {
 					</div>
 				</div>
 				<div className='w-1/3 max-[769px]:w-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
-					<h2 className='font-bold'>Accessed Pages</h2>
+					<h2 className='font-bold'>Used Browsers</h2>
 					<div className='w-full h-64 md:h-80'>
 						<PolarArea
 							data={polarAreaChart}

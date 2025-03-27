@@ -1,4 +1,4 @@
-import StaffTuteesInformationType from './StaffTuteesInformationType';
+import TutorTuteesInformationType from './TutorTuteesInformationType';
 import TutorOverviewMetricsType from './TutorOverviewMetricsType';
 import TutorRecentlyUploadedDocumentType from './TutorRecentlyUploadedDocumentType';
 import TutorUpcomingMeetingType from './TutorUpcomingMeetingType';
@@ -6,7 +6,7 @@ import TutorUpcomingMeetingType from './TutorUpcomingMeetingType';
 type TutorDashboardType = {
 	metrics: TutorOverviewMetricsType;
 	tutees: {
-		tutees: StaffTuteesInformationType[];
+		tutees: TutorTuteesInformationType[];
 	};
 	upcomingMeetings: TutorUpcomingMeetingType[];
 	recentDocuments: TutorRecentlyUploadedDocumentType[];

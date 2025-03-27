@@ -18,7 +18,7 @@ export type { default as StaffOverviewMetricType } from './StaffOverviewMetricTy
 export type { default as StaffTutorActivityType } from './StaffTutorActivityType';
 export type { default as StaffTutorPerformanceType } from './StaffTutorPerformanceType';
 export type { default as TutorOverviewMetricsType } from './TutorOverviewMetricsType';
-export type { default as StaffTuteesInformationType } from './StaffTuteesInformationType';
+export type { default as TutorTuteesInformationType } from './TutorTuteesInformationType';
 export type { default as TutorRecentlyUploadedDocumentType } from './TutorRecentlyUploadedDocumentType';
 export type { default as MeetingType } from './MeetingType';
 export type { default as TutorMeetingType } from './TutorMeetingType';

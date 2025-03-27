@@ -4,12 +4,17 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { DateSelectArg } from '@fullcalendar/core';
 import { useEffect, useRef, useState } from 'react';
-import { useAuthStore, useMeetingStore } from '../../store';
+import type { GroupBase, SelectInstance } from 'react-select';
+import toast from 'react-hot-toast';
+import Select from 'react-select';
+
+import { useAuthStore, useDashboardStore, useMeetingStore } from '../../store';
 import { useShallow } from 'zustand/shallow';
 import { convertDate, convertTime } from '../../utils';
 import { Overlay } from '../../components';
-import { TutorMeetingType } from '../../types';
-import toast from 'react-hot-toast';
+import { TutorMeetingType, TutorTuteesInformationType } from '../../types';
+import SelectCustomOption from './SelectCustomOption';
+import SelectCustomSingleValue from './SelectCustomSingleValue';
 
 // const events = [
 // 	{
@@ -37,6 +42,12 @@ import toast from 'react-hot-toast';
 // 	},
 // ];
 
+type CustomOptionType = {
+	value: string;
+	label: string;
+	tutee: TutorTuteesInformationType;
+};
+
 const Calendar = () => {
 	const authUser = useAuthStore((state) => state.authUser);
 	const [
@@ -55,6 +66,10 @@ const Calendar = () => {
 		])
 	);
 
+	const [tuteesInformation, getTuteesInformation] = useDashboardStore(
+		useShallow((state) => [state.tuteesInformation, state.getTuteesInformation])
+	);
+
 	const [requestData, setRequestData] = useState<{
 		title: string;
 		start: string;
@@ -64,9 +79,21 @@ const Calendar = () => {
 		start: new Date().toISOString(),
 		end: new Date().toISOString(),
 	});
-	const [schedule, setSchedule] = useState<TutorMeetingType[]>([]);
 
+	const [tutorRequestData, setTutorRequestData] = useState({
+		title: '',
+		studentId: 'Choose one',
+		start: new Date().toISOString(),
+		end: new Date().toISOString(),
+	});
+
+	const [schedule, setSchedule] = useState<TutorMeetingType[]>([]);
 	const dialogRef = useRef<HTMLDialogElement>(null);
+	const selectRef = useRef<SelectInstance<
+		CustomOptionType,
+		false,
+		GroupBase<CustomOptionType>
+	> | null>(null);
 
 	useEffect(() => {
 		if (authUser?.roles[0]?.code === 'STUDENT') {
@@ -95,6 +122,13 @@ const Calendar = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [meetings]);
 
+	useEffect(() => {
+		if (authUser?.roles[0]?.code === 'TUTOR') {
+			getTuteesInformation();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [getTuteesInformation]);
+
 	const handleDateSelect = (selectInfo: DateSelectArg) => {
 		// Create Date objects for the selected range
 		const startDate = new Date(selectInfo.startStr);
@@ -113,11 +147,19 @@ const Calendar = () => {
 		}
 
 		// Store the selected range
-		setRequestData({
-			...requestData,
-			start: selectInfo.startStr,
-			end: selectInfo.endStr,
-		});
+		if (authUser?.roles[0]?.code === 'TUTOR') {
+			setTutorRequestData({
+				...tutorRequestData,
+				start: selectInfo.startStr,
+				end: selectInfo.endStr,
+			});
+		} else if (authUser?.roles[0]?.code === 'STUDENT') {
+			setRequestData({
+				...requestData,
+				start: selectInfo.startStr,
+				end: selectInfo.endStr,
+			});
+		}
 
 		// Open the confirmation dialog
 		if (dialogRef.current) {
@@ -126,6 +168,25 @@ const Calendar = () => {
 	};
 
 	const handleConfirm = () => {
+		if (authUser?.roles[0]?.code === 'TUTOR') {
+			createMeeting(tutorRequestData);
+
+			setTimeout(() => {
+				setTutorRequestData({
+					title: '',
+					studentId: '',
+					start: new Date().toISOString(),
+					end: new Date().toISOString(),
+				});
+
+				if (selectRef.current) {
+					selectRef.current.clearValue();
+				}
+			}, 100);
+
+			return;
+		}
+
 		createMeeting(requestData);
 
 		setTimeout(() => {
@@ -136,6 +197,28 @@ const Calendar = () => {
 			});
 		}, 100);
 	};
+
+	// Select
+	const options = tuteesInformation?.map((tutee) => ({
+		value: tutee.id,
+		label: tutee.name,
+		tutee,
+	}));
+
+	const handleChangeSelect = (selectedOption: { value: string } | null) => {
+		if (selectedOption) {
+			console.log(selectedOption.value);
+			setTutorRequestData({
+				...tutorRequestData,
+				studentId: selectedOption.value,
+			});
+		}
+	};
+
+	// useEffect(() => {
+	// 	console.log(tutorRequestData);
+	// }, [tutorRequestData]);
+
 	return (
 		<div className='w-full lg:w-3/5 h-[600px] lg:h-full'>
 			{isCreatingMeeting && <Overlay isOpenLoader />}
@@ -153,14 +236,45 @@ const Calendar = () => {
 							</div>
 							<input
 								type='text'
-								value={requestData.title}
+								value={
+									authUser?.roles[0]?.code === 'TUTOR'
+										? tutorRequestData.title
+										: requestData.title
+								}
 								placeholder='Enter meeting title'
 								className='input input-bordered w-full'
-								onChange={(e) =>
-									setRequestData({ ...requestData, title: e.target.value })
-								}
+								onChange={(e) => {
+									setRequestData({ ...requestData, title: e.target.value });
+
+									if (authUser?.roles[0]?.code === 'TUTOR') {
+										setTutorRequestData({ ...tutorRequestData, title: e.target.value });
+									}
+								}}
 							/>
 						</label>
+						{/* Select tutee for tutor */}
+						{authUser?.roles[0]?.code === 'TUTOR' && (
+							<label className='form-control w-full'>
+								<div className='label'>
+									<span className='font-bold text-primary-content/80'>
+										Choose one tutee
+									</span>
+								</div>
+								<Select<{
+									value: string;
+									label: string;
+									tutee: TutorTuteesInformationType;
+								}>
+									ref={selectRef}
+									options={options}
+									onChange={handleChangeSelect}
+									components={{
+										Option: SelectCustomOption,
+										SingleValue: SelectCustomSingleValue,
+									}}
+								/>
+							</label>
+						)}
 						<div className='w-full bg-base-200 text-start py-2 px-4 rounded-md'>
 							<p className='text-primary-content/70'>
 								<span className='font-bold text-primary-content/80'>Start date:</span>{' '}
@@ -183,19 +297,37 @@ const Calendar = () => {
 								<button
 									className='btn btn-secondary'
 									onClick={handleConfirm}
-									disabled={!requestData.title}
+									disabled={
+										(authUser?.roles[0]?.code === 'STUDENT' && !requestData.title) ||
+										(authUser?.roles[0]?.code === 'TUTOR' && !tutorRequestData.title) ||
+										!tutorRequestData.studentId
+									}
 								>
 									Confirm
 								</button>
 								<button
 									className='btn'
-									onClick={() =>
+									onClick={() => {
+										if (authUser?.roles[0]?.code === 'TUTOR') {
+											setTutorRequestData({
+												title: '',
+												studentId: '',
+												start: new Date().toISOString(),
+												end: new Date().toISOString(),
+											});
+
+											if (selectRef.current) {
+												selectRef.current.clearValue();
+											}
+
+											return;
+										}
 										setRequestData({
 											title: '',
 											start: new Date().toISOString(),
 											end: new Date().toISOString(),
-										})
-									}
+										});
+									}}
 								>
 									Cancel
 								</button>
@@ -215,7 +347,7 @@ const Calendar = () => {
 					end: '',
 				}}
 				height='100%'
-				selectable={authUser?.roles[0]?.code === 'STUDENT' ? true : false}
+				selectable={true}
 				select={handleDateSelect}
 				selectMirror={true}
 				selectOverlap={false}
