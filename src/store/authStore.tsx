@@ -26,6 +26,7 @@ type AuthStoreType = {
 	isChangingPassword: boolean;
 	isChangingProfile: boolean;
 	authUser: UserType | null;
+	lastLogin: string | null;
 	socket: Socket | null;
 	loginUser: (data: UserLoginType) => void;
 	logoutUser: () => void;
@@ -70,6 +71,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 	accessToken: accessToken || null,
 	refreshToken: savedrefreshToken || null,
 	authUser: null,
+	lastLogin: null,
 	socket: null,
 	isCheckingAuth: true,
 	isSigningUp: false,
@@ -124,7 +126,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 	async checkAuth() {
 		try {
 			const res = await getCurrentUser();
-			set({ authUser: res });
+			set({ authUser: res, lastLogin: res.lastLoginMessage });
 
 			get().connectSocket();
 		} catch (err) {
