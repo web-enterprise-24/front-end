@@ -19,7 +19,7 @@ const items: SidebarType[] = [
 	},
 	{
 		id: 2,
-		title: 'Dashboard',
+		title: 'Setting',
 		icon: LayoutDashboard,
 		to: '/dashboard',
 	},
