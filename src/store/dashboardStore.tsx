@@ -429,6 +429,9 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 			// staff
 			tutorActivity: null,
 			tutorPerformance: null,
+			activeUsers: null,
+			accessedPages: null,
+			usedBrowsers: null,
 			// tutor
 			tuteesInformation: null,
 			recentlyUploadedDocuments: null,
