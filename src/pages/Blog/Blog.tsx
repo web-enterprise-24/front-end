@@ -118,31 +118,34 @@ const Blog = () => {
 							</div>
 						)}
 					</div>
-					{!isGettingPosts && posts && posts.length > 0 && (
-						<div className='join self-center'>
-							<button
-								className='join-item btn'
-								disabled={previousPage ? false : true}
-								onClick={() => {
-									setCurrentPage(-1);
-									getLatestPosts(previousPage);
-								}}
-							>
-								«
-							</button>
-							<button className='join-item btn'>Page {currentPage}</button>
-							<button
-								className='join-item btn'
-								disabled={nextPage ? false : true}
-								onClick={() => {
-									setCurrentPage(1);
-									getLatestPosts(nextPage);
-								}}
-							>
-								»
-							</button>
-						</div>
-					)}
+					{!isGettingPosts &&
+						posts &&
+						posts.length > 0 &&
+						(previousPage || nextPage) && (
+							<div className='join self-center'>
+								<button
+									className='join-item btn'
+									disabled={previousPage ? false : true}
+									onClick={() => {
+										setCurrentPage(-1);
+										getLatestPosts(previousPage);
+									}}
+								>
+									«
+								</button>
+								<button className='join-item btn'>Page {currentPage}</button>
+								<button
+									className='join-item btn'
+									disabled={nextPage ? false : true}
+									onClick={() => {
+										setCurrentPage(1);
+										getLatestPosts(nextPage);
+									}}
+								>
+									»
+								</button>
+							</div>
+						)}
 				</div>
 			)}
 		</div>

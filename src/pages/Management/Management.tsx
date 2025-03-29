@@ -13,7 +13,7 @@ const Management = () => {
 				items={SidebarManagementItems}
 				page={'management'}
 			/>
-			<div className='flex flex-row justify-between h-[calc(100vh-64px-4px)] max-[1025px]:h-screen bg-base-300'>
+			<div className='flex flex-row justify-between h-[calc(100vh-80px-4px)] max-[1025px]:h-screen bg-base-300'>
 				{isManagementPage ? (
 					<>
 						<SidebarFixed items={SidebarManagementItems} />
