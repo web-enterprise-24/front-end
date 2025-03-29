@@ -36,3 +36,4 @@ export type { default as TutorDashboardType } from './TutorDashboardType';
 export type { default as StaffActiveUserType } from './StaffActiveUserType';
 export type { default as StaffAccessedPageType } from './StaffAccessedPageType';
 export type { default as StaffUsedBrowserType } from './StaffUsedBrowserType';
+export type { default as StaffUserLoginStatsType } from './StaffUserLoginStatsType';

@@ -56,6 +56,15 @@ export const getUsedBrowser = async () => {
 	}
 };
 
+export const getUserLoginStats = async () => {
+	try {
+		const res = await axios.get('/admin/userLoginStats');
+		return res.data.data.userStats;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
 // Tutor
 export const getTutorOverviewMetrics = async () => {
 	try {

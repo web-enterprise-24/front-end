@@ -16,6 +16,7 @@ import {
 	TutorRecentlyUploadedDocumentType,
 	TutorTuteeActivityType,
 	TutorUpcomingMeetingType,
+	StaffUserLoginStatsType,
 } from '../types';
 import {
 	getAccessedPages,
@@ -35,6 +36,7 @@ import {
 	getTutorProfile,
 	getUpcomingMeetings,
 	getUsedBrowser,
+	getUserLoginStats,
 } from '../services';
 import { AxiosError } from 'axios';
 import useAuthStore from './authStore';
@@ -45,6 +47,7 @@ type DashboardStoreType = {
 	// staff
 	tutorActivity: StaffTutorActivityType | null;
 	tutorPerformance: StaffTutorPerformanceType[] | null;
+	userLoginStats: StaffUserLoginStatsType[] | null;
 	activeUsers: StaffActiveUserType[] | null;
 	accessedPages: StaffAccessedPageType[] | null;
 	usedBrowsers: StaffUsedBrowserType[] | null;
@@ -83,6 +86,7 @@ type DashboardStoreType = {
 	// staff
 	getTutorActivity: () => void;
 	getTutorPerformance: () => void;
+	getUserLoginStats: () => void;
 	getActiveUsers: () => void;
 	getAccessedPages: () => void;
 	getUsedBrowser: () => void;
@@ -106,6 +110,7 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 	// staff
 	tutorActivity: null,
 	tutorPerformance: null,
+	userLoginStats: null,
 	activeUsers: null,
 	accessedPages: null,
 	usedBrowsers: null,
@@ -201,6 +206,17 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 			}
 		} finally {
 			set({ isGettingTutorPerformance: false });
+		}
+	},
+
+	async getUserLoginStats() {
+		try {
+			const res = await getUserLoginStats();
+			set({ userLoginStats: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
 		}
 	},
 
@@ -429,6 +445,7 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 			// staff
 			tutorActivity: null,
 			tutorPerformance: null,
+			userLoginStats: null,
 			activeUsers: null,
 			accessedPages: null,
 			usedBrowsers: null,
