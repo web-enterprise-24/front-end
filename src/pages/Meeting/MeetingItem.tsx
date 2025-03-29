@@ -1,4 +1,4 @@
-import { CircleAlert, FileMusic, Mic, X } from 'lucide-react';
+import { CircleAlert, FileMusic, Mic, Trash, X } from 'lucide-react';
 import { MeetingType } from '../../types';
 import { convertDate, convertTime, uploadRecord } from '../../utils';
 import { useAuthStore, useGeneralStore, useMeetingStore } from '../../store';
@@ -176,12 +176,20 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 							</button>
 						</>
 					) : (
-						<button
-							className='btn btn-ghost'
-							onClick={handleClickShowRecords}
-						>
-							<FileMusic />
-						</button>
+						<>
+							<button
+								className='btn btn-ghost btn-sm'
+								onClick={handleClickShowRecords}
+							>
+								<FileMusic />
+							</button>
+
+							{authUser?.roles[0]?.code === 'TUTOR' && (
+								<button className='btn btn-error btn-sm'>
+									<Trash />
+								</button>
+							)}
+						</>
 					)}
 				</div>
 			}

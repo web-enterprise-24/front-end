@@ -1,12 +1,15 @@
-import { Download } from 'lucide-react';
+import { Download, Trash } from 'lucide-react';
 import { RecordType } from '../types';
 import { convertDate, convertTime } from '../utils';
+import { useAuthStore } from '../store';
 
 type PropsType = {
 	data: RecordType;
 };
 
 const RecordItem = ({ data }: PropsType) => {
+	const authUser = useAuthStore((state) => state.authUser);
+
 	const handleDownload = (fileUrl: string) => {
 		const downloadLink = document.createElement('a');
 		downloadLink.href = fileUrl;
@@ -24,9 +27,16 @@ const RecordItem = ({ data }: PropsType) => {
 					<span>{convertTime(data.createdAt)}</span>
 				</p>
 			</div>
-			<button className='btn btn-secondary btn-sm self-end'>
-				<Download onClick={() => handleDownload(data.fileUrl)} />
-			</button>
+			<div className='self-end flex flex-row gap-2'>
+				<button className='btn btn-secondary btn-sm '>
+					<Download onClick={() => handleDownload(data.fileUrl)} />
+				</button>
+				{authUser?.roles[0]?.code === 'TUTOR' && (
+					<button className='btn btn-error btn-sm'>
+						<Trash />
+					</button>
+				)}
+			</div>
 		</div>
 	);
 };

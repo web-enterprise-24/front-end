@@ -37,6 +37,8 @@ const StaffDashboard = () => {
 		tutorActivity,
 		getTutorPerformance,
 		tutorPerformance,
+		getUserLoginStats,
+		userLoginStats,
 		getActiveUsers,
 		activeUsers,
 		getAccessedPages,
@@ -52,6 +54,8 @@ const StaffDashboard = () => {
 			state.tutorActivity,
 			state.getTutorPerformance,
 			state.tutorPerformance,
+			state.getUserLoginStats,
+			state.userLoginStats,
 			state.getActiveUsers,
 			state.activeUsers,
 			state.getAccessedPages,
@@ -66,6 +70,7 @@ const StaffDashboard = () => {
 		getOverviewMetrics();
 		getTutorActivity();
 		getTutorPerformance();
+		getUserLoginStats();
 		getActiveUsers();
 		getAccessedPages();
 		getUsedBrowser();
@@ -80,6 +85,7 @@ const StaffDashboard = () => {
 		getTutorActivity,
 		getTutorPerformance,
 		getUsedBrowser,
+		getUserLoginStats,
 		reset,
 	]);
 
@@ -143,7 +149,7 @@ const StaffDashboard = () => {
 	});
 	const activeUserData = activeUsers?.map((user) => user?.user?.loginCount);
 
-	const accessedPagesLabels = accessedPages?.map((page) => page.pageUrl);
+	const accessedPagesLabels = accessedPages?.map((page) => page.pageName);
 	const accessedPagesData = accessedPages?.map((page) => page.visitCount);
 
 	//Polar Area Chart data
@@ -268,6 +274,34 @@ const StaffDashboard = () => {
 										<td>{tutor.name}</td>
 										<td>{tutor.students}</td>
 										<td>{tutor.meetings}</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{/* User login stats */}
+			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
+				<h2 className='font-bold'>User Login Stats</h2>
+				<div className='overflow-x-auto mt-4 max-h-[300px]'>
+					<table className='table table-zebra'>
+						{/* head */}
+						<thead className='bg-neutral text-base-100'>
+							<tr>
+								<th></th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Last login</th>
+							</tr>
+						</thead>
+						<tbody>
+							{userLoginStats &&
+								userLoginStats.map((user, index) => (
+									<tr key={index}>
+										<th>{index + 1}</th>
+										<td>{user.name}</td>
+										<td>{user.email}</td>
+										<td>{user.lastLogin || 'None'}</td>
 									</tr>
 								))}
 						</tbody>

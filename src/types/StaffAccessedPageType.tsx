@@ -1,5 +1,5 @@
 type StaffAccessedPageType = {
-	pageUrl: string;
+	pageName: string;
 	visitCount: number;
 };
 
