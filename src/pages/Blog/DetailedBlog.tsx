@@ -5,7 +5,9 @@ import CommentForm from './CommentForm';
 import CommentLists from './CommentLists';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { Loader } from 'lucide-react';
+import { EllipsisVertical, Loader } from 'lucide-react';
+import Dropdown from '../../components/Dropdown';
+import { DetailedBlogDropdownItems } from '../../constants';
 
 const DetailedBlog = () => {
 	const [selectedPost, getPost, postComment, isHandlingComment, isLoadingPost] =
@@ -34,6 +36,16 @@ const DetailedBlog = () => {
 		e.preventDefault();
 		if (isHandlingComment) return;
 		postComment({ message }, blogId || '');
+	};
+
+	const handleClickAction = (title?: string) => {
+		if (title === 'Edit') {
+			// Handle edit action
+			console.log('Edit action clicked');
+		} else if (title === 'Delete') {
+			// Handle delete action
+			console.log('Delete action clicked');
+		}
 	};
 
 	return (
@@ -66,26 +78,37 @@ const DetailedBlog = () => {
 								))}
 							</div>
 							{/* Author */}
-							<div className='flex flex-row gap-2 items-center'>
-								<div className='avatar'>
-									<div className='w-12 rounded-full'>
-										<img
-											src={selectedPost?.author?.profilePicUrl}
-											alt='Avatar'
-										/>
+							<div className='flex flex-row items-center justify-between'>
+								<div className='flex flex-row gap-2 items-center'>
+									<div className='avatar'>
+										<div className='w-12 rounded-full'>
+											<img
+												src={selectedPost?.author?.profilePicUrl}
+												alt='Avatar'
+											/>
+										</div>
+									</div>
+									<div className='flex flex-col gap-0'>
+										<p className='font-bold text-primary-content'>
+											{selectedPost?.author?.name}
+										</p>
+										<p className='font-bold text-primary-content/40 text-sm'>
+											<span>Author</span> •{' '}
+											<span>
+												{transformRole(selectedPost?.author?.roles[0]?.code || '')}
+											</span>
+										</p>
 									</div>
 								</div>
-								<div className='flex flex-col gap-0'>
-									<p className='font-bold text-primary-content'>
-										{selectedPost?.author?.name}
-									</p>
-									<p className='font-bold text-primary-content/40 text-sm'>
-										<span>Author</span> •{' '}
-										<span>
-											{transformRole(selectedPost?.author?.roles[0]?.code || '')}
-										</span>
-									</p>
-								</div>
+								<Dropdown
+									items={DetailedBlogDropdownItems}
+									variant='user'
+									onClick={handleClickAction}
+								>
+									<button className='btn btn-ghost btn-xs'>
+										<EllipsisVertical />
+									</button>
+								</Dropdown>
 							</div>
 						</div>
 						{/* Blog content */}

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 type Props = {
 	children: ReactNode;
 	items: DropdownItemsType[];
-	variant: 'user' | 'management-action' | 'notification';
+	variant?: 'user' | 'management-action' | 'notification';
 	isHidden?: boolean;
 	onClick?: (
 		title?: string,
@@ -23,9 +23,9 @@ const Dropdown = ({
 }: Props) => {
 	const ulRef = useRef<HTMLUListElement | null>(null);
 
-	if (['user', 'management-action', 'notification'].includes(variant)) {
+	if (['user', 'management-action', 'notification'].includes(variant || '')) {
 		if (variant === 'management-action' && isHidden) {
-			items = items.slice(0, 2);
+			items = items.slice(0, 3);
 		}
 
 		let dropdown = '';
