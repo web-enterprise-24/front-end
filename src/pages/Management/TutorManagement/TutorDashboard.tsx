@@ -12,14 +12,14 @@ import {
 } from 'chart.js';
 
 import StatisticItem from '../../components/StatisticItem';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
 import { useManagementStore } from '../../../store';
 import { useShallow } from 'zustand/shallow';
 import UpcomingMeeting from '../../components/UpcomingMeeting';
 import { convertTimeShortMonth } from '../../../utils';
 import RecentlyUploadedDocumentItem from '../../components/RecentlyUploadedDocumentItem';
-import { Loader } from 'lucide-react';
+import { ArrowLeftToLine, Loader } from 'lucide-react';
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -147,6 +147,13 @@ const TutorDashboard = () => {
 				</div>
 			) : (
 				<div className='w-2/3 max-[769px]:w-full max-[769px]:p-2 h-full mx-auto mt-6'>
+					<Link
+						to={'/management/tutor-management'}
+						className='btn btn-secondary btn-sm mb-4'
+					>
+						<ArrowLeftToLine />
+						Back
+					</Link>
 					<h1 className='font-black text-xl'>Tutor dashboard</h1>
 					<div className='w-full mt-4'>
 						{/* Metrics */}
