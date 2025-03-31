@@ -1,28 +1,32 @@
+import { Link } from 'react-router-dom';
+
 const PageNotFound = () => {
- return (
-  <div className="fixed inset-0 bg-base-100 flex items-center justify-center">
-   <div className="bg-indigo-900 overflow-hidden h-screen w-screen">
-    {" "}
-    <img
-     src="https://external-preview.redd.it/4MddL-315mp40uH18BgGL2-5b6NIPHcDMBSWuN11ynM.jpg?width=960&crop=smart&auto=webp&s=b98d54a43b3dac555df398588a2c791e0f3076d9"
-     className="absolute h-full w-full object-cover"
-    />
-    <div className="inset-0 bg-black opacity-25 absolute"></div>{" "}
-    <div className="container mx-auto px-6 md:px-12 relative z-10 flex items-center py-32 xl:py-40">
-     {" "}
-     <div className="w-full font-mono flex flex-col items-center relative z-10">
-      {" "}
-      <h1 className="font-extrabold text-5xl text-center text-white leading-tight mt-4">
-       You are all alone here{" "}
-      </h1>{" "}
-      <p className="font-extrabold text-8xl my-44 text-white animate-bounce">
-       404{" "}
-      </p>{" "}
-     </div>{" "}
-    </div>
-   </div>
-  </div>
- );
+	return (
+		<div className='fixed inset-0 bg-base-100 flex items-center justify-center'>
+			<section className='bg-white'>
+				<div className='py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6'>
+					<div className='mx-auto max-w-screen-sm text-center'>
+						<h1 className='mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-primary-600'>
+							404
+						</h1>
+						<p className='mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl'>
+							Something's missing.
+						</p>
+						<p className='mb-4 text-lg font-light text-gray-500'>
+							Sorry, we can't find that page. You'll find lots to explore on the home
+							page.{' '}
+						</p>
+						<Link
+							to={'/'}
+							className='btn btn-secondary'
+						>
+							Back to Homepage
+						</Link>
+					</div>
+				</div>
+			</section>
+		</div>
+	);
 };
 
 export default PageNotFound;

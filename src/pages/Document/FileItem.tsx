@@ -1,8 +1,11 @@
-import { Download, FileText, MessageSquareMore } from 'lucide-react';
+import { Download, FileText, MessageSquareMore, Trash } from 'lucide-react';
 import { StudentDocumentType, TutorDocumentType } from '../../types';
 import { convertDate } from '../../utils';
 import { useDocumentStore, useGeneralStore } from '../../store';
 import { useShallow } from 'zustand/shallow';
+import { useRef } from 'react';
+import ConfirmModal from '../../components/ConfirmModal';
+import { Overlay } from '../../components';
 
 type PropsType = {
 	role: 'TUTOR' | 'STUDENT' | '';
@@ -17,10 +20,16 @@ const FileItem = ({ data, role }: PropsType) => {
 			state.setIsShowingModal,
 		])
 	);
+	const [deleteDocument, isDeletingDocument, setSelectedDocument] =
+		useDocumentStore(
+			useShallow((state) => [
+				state.deleteDocument,
+				state.isDeletingDocument,
+				state.setSelectedDocument,
+			])
+		);
 
-	const setSelectedDocument = useDocumentStore(
-		(state) => state.setSelectedDocument
-	);
+	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	let fileType;
 	if (data?.fileType === 'application/pdf') {
@@ -82,8 +91,24 @@ const FileItem = ({ data, role }: PropsType) => {
 		setSelectedDocument(data.id);
 	};
 
+	const handleClickDelete = () => {
+		if (dialogRef.current) {
+			dialogRef.current.showModal();
+		}
+	};
+
+	const handleConfirmDelete = () => {
+		deleteDocument(data.id);
+	};
+
 	return (
 		<div className='w-full h-60 max-h-60 border rounded-2xl overflow-hidden border-primary-content/40 hover:-translate-y-1 transition-transform ease-linear duration-150'>
+			<ConfirmModal
+				ref={dialogRef}
+				title='Are you sure you want to delete this document?'
+				events={[handleConfirmDelete]}
+			/>
+			{isDeletingDocument && <Overlay isOpenLoader />}
 			<div className='w-full h-1/2 flex items-center justify-center bg-neutral-content'>
 				<FileText className='size-10 text-secondary' />
 			</div>
@@ -108,6 +133,14 @@ const FileItem = ({ data, role }: PropsType) => {
 					)}
 				</div>
 				<div className='w-full flex flex-row items-center justify-end gap-10'>
+					{role === 'STUDENT' && (
+						<span
+							className='cursor-pointer'
+							onClick={handleClickDelete}
+						>
+							<Trash />
+						</span>
+					)}
 					<span
 						className='text-primary-content cursor-pointer'
 						onClick={handleClickComment}

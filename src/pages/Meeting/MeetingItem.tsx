@@ -5,6 +5,7 @@ import { useAuthStore, useGeneralStore, useMeetingStore } from '../../store';
 import { useRef, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Overlay } from '../../components';
+import ConfirmModal from '../../components/ConfirmModal';
 
 type PropsType = {
 	data: MeetingType;
@@ -20,11 +21,19 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 			state.setModalFor,
 		])
 	);
-	const [storeRecord, isStoringRecord, setSelectedMeeting] = useMeetingStore(
+	const [
+		storeRecord,
+		isStoringRecord,
+		setSelectedMeeting,
+		deleteMeeting,
+		isDeleteMeeting,
+	] = useMeetingStore(
 		useShallow((state) => [
 			state.storeRecord,
 			state.isStoringRecord,
 			state.setSelectedMeeting,
+			state.deleteMeeting,
+			state.isDeleteMeeting,
 		])
 	);
 	const authUser = useAuthStore((state) => state.authUser);
@@ -32,6 +41,7 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
+	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	const startRecording = async () => {
 		try {
@@ -106,9 +116,25 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 		setModalFor('show-record');
 	};
 
+	// Handle delete meeting
+	const handleClickDelete = () => {
+		if (dialogRef.current) {
+			dialogRef.current.showModal();
+		}
+	};
+
+	const handleConfirmDelete = () => {
+		deleteMeeting(data.id);
+	};
+
 	return (
 		<div className='w-full flex flex-col gap-2 rounded-lg border border-primary-content/10 p-2'>
-			{isStoringRecord && <Overlay isOpenLoader />}
+			<ConfirmModal
+				ref={dialogRef}
+				title='Are you sure you want to delete this meeting?'
+				events={[handleConfirmDelete]}
+			/>
+			{(isStoringRecord || isDeleteMeeting) && <Overlay isOpenLoader />}
 			<div className='w-full p-2 flex flex-row items-center justify-between '>
 				<div className='flex flex-col gap-2 max-w-[70%]'>
 					<p className='font-bold line-clamp-2 break-words'>
@@ -185,7 +211,10 @@ const MeetingItem = ({ data, onClickAccept, onClickDecline }: PropsType) => {
 							</button>
 
 							{authUser?.roles[0]?.code === 'TUTOR' && (
-								<button className='btn btn-error btn-sm'>
+								<button
+									className='btn btn-error btn-sm'
+									onClick={handleClickDelete}
+								>
 									<Trash />
 								</button>
 							)}

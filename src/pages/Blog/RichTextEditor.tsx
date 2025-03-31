@@ -5,7 +5,6 @@ import uploadImage from '../../utils/uploadImage';
 
 type RichTextEditorProps = {
 	value?: string;
-	initialValue?: string;
 	onChange: (content: string) => void;
 };
 
@@ -15,11 +14,7 @@ interface BlobInfo {
 	filename: () => string;
 }
 
-const RichTextEditor = ({
-	value = '',
-	initialValue = '',
-	onChange,
-}: RichTextEditorProps) => {
+const RichTextEditor = ({ value = '', onChange }: RichTextEditorProps) => {
 	const editorRef = useRef<TinyMCEEditor | null>(null);
 	// Image upload handler
 	const handleImageUpload = async (blobInfo: BlobInfo): Promise<string> => {
@@ -50,7 +45,6 @@ const RichTextEditor = ({
 		<Editor
 			apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
 			onInit={(_, editor) => (editorRef.current = editor)}
-			initialValue={initialValue}
 			value={value}
 			init={{
 				height: 700,

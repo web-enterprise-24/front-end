@@ -14,6 +14,7 @@ export { default as Theme } from './Dashboard/Theme/Theme';
 export { default as Document } from './Document/Document';
 export { default as Blog } from './Blog/Blog';
 export { default as WritingBlog } from './Blog/WritingBlog';
+export { default as EditBlog } from './Blog/EditBlog';
 export { default as PendingBlog } from './Blog/PendingBlog';
 export { default as DetailedBlog } from './Blog/DetailedBlog';
 export { default as Meeting } from './Meeting/Meeting';

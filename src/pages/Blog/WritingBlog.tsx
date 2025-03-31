@@ -25,7 +25,6 @@ const WritingBlog = () => {
 	const fileRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		console.log(data);
 		if (
 			data.title &&
 			data.description &&

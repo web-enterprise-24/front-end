@@ -58,13 +58,13 @@ const MobileNavbar = ({ items }: PropsType) => {
 					alt='Logo'
 				/>
 			</div>
-			<div className='form-control md:hidden'>
+			{/* <div className='form-control md:hidden'>
 				<input
 					type='text'
 					placeholder='Search'
 					className='input input-bordered border-2 rounded-full w-32 h-10 md:w-auto'
 				/>
-			</div>
+			</div> */}
 			{authUser && (
 				<div className='xl:hidden'>
 					<div className='relative'>

@@ -4,6 +4,8 @@ import {
 	acceptMeeting,
 	createMeeting,
 	declineMeeting,
+	deleteMeeting,
+	deleteRecord,
 	getMyMeetings,
 	getTutorMeetings,
 	storeRecord,
@@ -20,6 +22,8 @@ type MeetingStoreType = {
 	isAcceptingMeeting: boolean;
 	isDeclineMeeting: boolean;
 	isStoringRecord: boolean;
+	isDeleteMeeting: boolean;
+	isDeletingRecord: boolean;
 
 	getMeetings: () => void;
 	getTutorMeetings: () => void;
@@ -28,6 +32,8 @@ type MeetingStoreType = {
 	declineMeeting: (meetingId: string) => void;
 	storeRecord: (fileUrl: string, meetingId: string) => void;
 	setSelectedMeeting: (meeting: MeetingType) => void;
+	deleteMeeting: (id: string) => void;
+	deleteRecord: (id: string) => void;
 };
 
 const useMeetingStore = create<MeetingStoreType>((set, get) => ({
@@ -39,6 +45,8 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 	isAcceptingMeeting: false,
 	isDeclineMeeting: false,
 	isStoringRecord: false,
+	isDeleteMeeting: false,
+	isDeletingRecord: false,
 
 	async getMeetings() {
 		try {
@@ -148,6 +156,40 @@ const useMeetingStore = create<MeetingStoreType>((set, get) => ({
 	},
 	setSelectedMeeting(meeting) {
 		set({ selectedMeeting: meeting });
+	},
+
+	async deleteMeeting(id) {
+		try {
+			set({ isDeleteMeeting: true });
+			await deleteMeeting(id);
+			get().getMeetings();
+			toast.success('Meeting deleted successfully!');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to delete meeting: ${err.response?.data.message}`);
+			}
+		} finally {
+			set({ isDeleteMeeting: false });
+		}
+	},
+
+	async deleteRecord(id) {
+		try {
+			set({ isDeletingRecord: true });
+			await deleteRecord(id);
+			get().getMeetings();
+			toast.success('Recording deleted successfully!');
+
+			setTimeout(() => window.location.reload(), 1000);
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to delete recording: ${err.response?.data.message}`);
+			}
+		} finally {
+			set({ isDeletingRecord: false });
+		}
 	},
 }));
 
