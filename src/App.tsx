@@ -23,6 +23,7 @@ import {
 	Meeting,
 	StudentDashboard,
 	TutorDashboard,
+	EditBlog,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound } from './components';
@@ -148,11 +149,23 @@ const App = () => {
 						/>
 						<Route
 							path='pending'
-							element={authUser ? <PendingBlog /> : <Navigate to={'/'} />}
+							element={
+								authUser ? (
+									<ProtectedRoute allowedRoles={['STAFF']}>
+										<PendingBlog />
+									</ProtectedRoute>
+								) : (
+									<Navigate to={'/'} />
+								)
+							}
 						/>
 						<Route
 							path=':blogId'
 							element={<DetailedBlog />}
+						/>
+						<Route
+							path=':blogId/edit'
+							element={authUser ? <EditBlog /> : <Navigate to={'/'} />}
 						/>
 					</Route>
 					<Route

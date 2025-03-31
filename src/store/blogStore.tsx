@@ -3,7 +3,9 @@ import { BlogSendType, BlogType, CommentType } from '../types';
 import { AxiosError } from 'axios';
 import {
 	approveBlog,
+	deleteBlog,
 	deleteComment,
+	editBlog,
 	editComment,
 	getLatestPosts,
 	getPendingPosts,
@@ -33,6 +35,8 @@ type BlogStoreType = {
 	getPendingPosts: () => void;
 	getPost: (id: string, load?: boolean) => void;
 	postBlog: (data: BlogSendType) => void;
+	updateBlog: (data: BlogSendType, id: string, onSuccess: () => void) => void;
+	deleteBlog: (id: string, onSuccess: () => void) => void;
 	approveBlog: (id: string) => void;
 	rejectBlog: (id: string) => void;
 	getReplies: (parentId: string) => void;
@@ -134,6 +138,46 @@ const useBlogStore = create<BlogStoreType>((set, get) => ({
 			}
 		} finally {
 			set({ isPostingBlog: false });
+		}
+	},
+
+	async updateBlog(data, id, onSuccess) {
+		try {
+			set({ isPostingBlog: true });
+			await editBlog(data, id);
+			toast.success('Blog updated successfully!');
+
+			setTimeout(() => {
+				onSuccess();
+			}, 1000);
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+				console.log(err);
+				toast.error(`Failed to update blog: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isPostingBlog: false });
+		}
+	},
+
+	async deleteBlog(id, onSuccess) {
+		try {
+			set({ isHandlingBlog: true });
+			await deleteBlog(id);
+			toast.success('Blog deleted successfully!');
+
+			setTimeout(() => {
+				onSuccess();
+			}, 1000);
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+				console.log(err);
+				toast.error(`Failed to delete blog: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isHandlingBlog: false });
 		}
 	},
 

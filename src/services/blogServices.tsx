@@ -44,6 +44,22 @@ export const postBlog = async (data: BlogSendType) => {
 	}
 };
 
+export const editBlog = async (data: BlogSendType, id: string) => {
+	try {
+		await axios.put(`/blog/writer/id/${id}`, data);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const deleteBlog = async (id: string) => {
+	try {
+		await axios.delete(`/blog/writer/id/${id}`);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
 export const approveBlog = async (id: string) => {
 	try {
 		await axios.put(`/blog/editor/publish/${id}`);

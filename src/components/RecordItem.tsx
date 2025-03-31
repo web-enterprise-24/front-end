@@ -1,7 +1,11 @@
 import { Download, Trash } from 'lucide-react';
 import { RecordType } from '../types';
 import { convertDate, convertTime } from '../utils';
-import { useAuthStore } from '../store';
+import { useAuthStore, useMeetingStore } from '../store';
+import { useShallow } from 'zustand/shallow';
+import { useRef } from 'react';
+import Overlay from './Overlay';
+import ConfirmModal from './ConfirmModal';
 
 type PropsType = {
 	data: RecordType;
@@ -9,6 +13,11 @@ type PropsType = {
 
 const RecordItem = ({ data }: PropsType) => {
 	const authUser = useAuthStore((state) => state.authUser);
+	const [deleteRecord, isDeletingRecord] = useMeetingStore(
+		useShallow((state) => [state.deleteRecord, state.isDeletingRecord])
+	);
+
+	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	const handleDownload = (fileUrl: string) => {
 		const downloadLink = document.createElement('a');
@@ -16,8 +25,25 @@ const RecordItem = ({ data }: PropsType) => {
 		downloadLink.click();
 	};
 
+	// handle delete record
+	const handleClickDelete = () => {
+		if (dialogRef.current) {
+			dialogRef.current.showModal();
+		}
+	};
+
+	const handleConfirmDelete = () => {
+		deleteRecord(data.id);
+	};
+
 	return (
 		<div className='w-full p-2 flex flex-row items-center justify-between border border-primary-content/10 rounded-lg'>
+			{isDeletingRecord && <Overlay isOpenLoader />}
+			<ConfirmModal
+				ref={dialogRef}
+				title='Are you sure you want to delete this record?'
+				events={[handleConfirmDelete]}
+			/>
 			<div className='flex flex-col gap-2 items-start justify-start'>
 				<p className='truncate max-md:max-w-[200px] md:max-w-[300px]'>
 					ID: {data?.id}
@@ -32,7 +58,10 @@ const RecordItem = ({ data }: PropsType) => {
 					<Download onClick={() => handleDownload(data.fileUrl)} />
 				</button>
 				{authUser?.roles[0]?.code === 'TUTOR' && (
-					<button className='btn btn-error btn-sm'>
+					<button
+						className='btn btn-error btn-sm'
+						onClick={handleClickDelete}
+					>
 						<Trash />
 					</button>
 				)}

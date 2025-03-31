@@ -1,27 +1,42 @@
 import { useShallow } from 'zustand/shallow';
-import { useBlogStore } from '../../store';
+import { useAuthStore, useBlogStore } from '../../store';
 import { convertDate, transformRole } from '../../utils';
 import CommentForm from './CommentForm';
 import CommentLists from './CommentLists';
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { EllipsisVertical, Loader } from 'lucide-react';
 import Dropdown from '../../components/Dropdown';
 import { DetailedBlogDropdownItems } from '../../constants';
+import ConfirmModal from '../../components/ConfirmModal';
+import { Overlay } from '../../components';
 
 const DetailedBlog = () => {
-	const [selectedPost, getPost, postComment, isHandlingComment, isLoadingPost] =
-		useBlogStore(
-			useShallow((state) => [
-				state.selectedPost,
-				state.getPost,
-				state.postComment,
-				state.isHandlingComment,
-				state.isLoadingPost,
-			])
-		);
+	const [
+		selectedPost,
+		getPost,
+		postComment,
+		isHandlingComment,
+		isLoadingPost,
+		deleteBlog,
+		isHandlingBlog,
+	] = useBlogStore(
+		useShallow((state) => [
+			state.selectedPost,
+			state.getPost,
+			state.postComment,
+			state.isHandlingComment,
+			state.isLoadingPost,
+			state.deleteBlog,
+			state.isHandlingBlog,
+		])
+	);
+	const authUser = useAuthStore((state) => state.authUser);
+
+	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	const { blogId } = useParams();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (blogId) {
@@ -43,8 +58,15 @@ const DetailedBlog = () => {
 			// Handle edit action
 			console.log('Edit action clicked');
 		} else if (title === 'Delete') {
-			// Handle delete action
-			console.log('Delete action clicked');
+			if (dialogRef.current) {
+				dialogRef.current.showModal();
+			}
+		}
+	};
+
+	const handleConfirmDelete = () => {
+		if (blogId) {
+			deleteBlog(blogId, () => navigate('/blog'));
 		}
 	};
 
@@ -57,6 +79,12 @@ const DetailedBlog = () => {
 			) : (
 				<>
 					<div className='flex-grow'>
+						<ConfirmModal
+							ref={dialogRef}
+							title='Are you sure you want to delete this blog?'
+							events={[handleConfirmDelete]}
+						/>
+						{isHandlingBlog && <Overlay isOpenLoader />}
 						<div className='w-full flex flex-col gap-2'>
 							{/* Blog title */}
 							<h1 className='font-black text-2xl text-primary-content'>
@@ -100,15 +128,17 @@ const DetailedBlog = () => {
 										</p>
 									</div>
 								</div>
-								<Dropdown
-									items={DetailedBlogDropdownItems}
-									variant='user'
-									onClick={handleClickAction}
-								>
-									<button className='btn btn-ghost btn-xs'>
-										<EllipsisVertical />
-									</button>
-								</Dropdown>
+								{authUser?.id === selectedPost?.authorId && (
+									<Dropdown
+										items={DetailedBlogDropdownItems}
+										variant='user'
+										onClick={handleClickAction}
+									>
+										<button className='btn btn-ghost btn-xs'>
+											<EllipsisVertical />
+										</button>
+									</Dropdown>
+								)}
 							</div>
 						</div>
 						{/* Blog content */}

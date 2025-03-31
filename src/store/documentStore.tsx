@@ -3,6 +3,7 @@ import { StudentDocumentType, TutorDocumentType } from '../types';
 import { AxiosError } from 'axios';
 import {
 	createFeedback,
+	deleteDocument,
 	deleteFeedback,
 	getMyDocuments,
 	getStudentDocuments,
@@ -21,6 +22,7 @@ type DocumentStoreType = {
 	isUploadingDocument: boolean;
 	isCreatingFeedback: boolean;
 	isDeletingFeedback: boolean;
+	isDeletingDocument: boolean;
 
 	upload: (data: FormData) => void;
 	getStudentDocument: (link?: string) => void;
@@ -34,6 +36,7 @@ type DocumentStoreType = {
 		documentId: string
 	) => void;
 	deleteFeedback: (feedbackId: string, documentId: string) => void;
+	deleteDocument: (id: string) => void;
 	reset: () => void;
 };
 
@@ -47,6 +50,7 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
 	isUploadingDocument: false,
 	isCreatingFeedback: false,
 	isDeletingFeedback: false,
+	isDeletingDocument: false,
 
 	async upload(data) {
 		try {
@@ -169,6 +173,21 @@ const useDocumentStore = create<DocumentStoreType>((set, get) => ({
 			}
 		} finally {
 			set({ isDeletingFeedback: false });
+		}
+	},
+	async deleteDocument(id) {
+		try {
+			set({ isDeletingDocument: true });
+			await deleteDocument(id);
+			get().getStudentDocument();
+			toast.success('Document deleted successfully');
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err);
+				toast.error(`Failed to delete document: ${err.response?.data?.message}`);
+			}
+		} finally {
+			set({ isDeletingDocument: false });
 		}
 	},
 }));

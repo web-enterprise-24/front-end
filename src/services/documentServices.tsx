@@ -23,6 +23,14 @@ export const getMyDocuments = async (link: string) => {
 	}
 };
 
+export const deleteDocument = async (id: string) => {
+	try {
+		await axios.delete(`/upload/document/${id}`);
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
 export const getStudentDocuments = async (link: string) => {
 	try {
 		const res = await axios.get(link ? link : '/upload/myStudentsDocuments');
