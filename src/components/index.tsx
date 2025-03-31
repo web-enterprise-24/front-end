@@ -10,4 +10,5 @@ export { default as ProtectedRoute } from './ProtectedRoute';
 export { default as PageNotFound } from './PageNotFound';
 export { default as BlogItem } from './BlogItem';
 export { default as BlogItemSkeleton } from './BlogItemSkeleton';
+export { default as WelcomeModal } from './WelcomeModal';
 export * from './Icons';

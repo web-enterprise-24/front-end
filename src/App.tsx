@@ -26,7 +26,7 @@ import {
 	EditBlog,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
-import { Modal, PageNotFound } from './components';
+import { Modal, PageNotFound, WelcomeModal } from './components';
 import { useAuthStore, useGeneralStore, useThemeStore } from './store';
 import { Loader } from 'lucide-react';
 import ChangePasswordForm from './components/ChangePasswordForm';
@@ -34,14 +34,16 @@ import { ProtectedRoute } from './components';
 import { setRefreshTokenFunction } from './utils/axios';
 
 const App = () => {
-	const [isCheckingAuth, checkAuth, authUser, refreshAccessToken] = useAuthStore(
-		useShallow((state) => [
-			state.isCheckingAuth,
-			state.checkAuth,
-			state.authUser,
-			state.refreshAccessToken,
-		])
-	);
+	const [isCheckingAuth, checkAuth, authUser, refreshAccessToken, showWelcome] =
+		useAuthStore(
+			useShallow((state) => [
+				state.isCheckingAuth,
+				state.checkAuth,
+				state.authUser,
+				state.refreshAccessToken,
+				state.showWelcome,
+			])
+		);
 	const [setModalElement, isShowingModal, isClosingModal, setModalFor] =
 		useGeneralStore(
 			useShallow((state) => [
@@ -55,11 +57,23 @@ const App = () => {
 	const theme = useThemeStore((state) => state.theme);
 
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const welcomeModalRef = useRef<HTMLDialogElement | null>(null);
 
 	useEffect(() => {
 		const htmlElement = document.documentElement;
 		htmlElement.setAttribute('data-theme', theme);
 	}, [theme]);
+
+	useEffect(() => {
+		const isWelcome = JSON.parse(localStorage.getItem('firstLogin') || 'false');
+		if (isWelcome && showWelcome) {
+			if (welcomeModalRef.current) {
+				welcomeModalRef.current.showModal();
+			}
+		}
+
+		console.log('Show welcome:', showWelcome);
+	}, [showWelcome]);
 
 	useEffect(() => {
 		setRefreshTokenFunction(refreshAccessToken);
@@ -73,6 +87,7 @@ const App = () => {
 		if (!isClosingModal) {
 			setModalFor(null);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isClosingModal]);
 
 	useEffect(() => {
@@ -253,6 +268,7 @@ const App = () => {
 				/>
 			</Routes>
 			<Modal ref={modalRef} />
+			<WelcomeModal ref={welcomeModalRef} />
 			{!isShowingModal && (
 				<Toaster
 					position='top-center'
