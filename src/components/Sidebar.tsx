@@ -36,7 +36,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
     {/* Page content here */}
     <label
      htmlFor="my-drawer"
-     className="btn btn-secondary rounded-xl drawer-button"
+     className="btn btn-primary rounded-xl drawer-button"
     >
      <Menu />
     </label>
@@ -71,7 +71,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
        </>
       ) : (
        <button
-        className="btn btn-secondary w-full"
+        className="btn btn-primary w-full"
         onClick={() => {
          modalElement?.showModal();
          setIsShowingModal(true);
@@ -121,7 +121,7 @@ const Sidebar = ({ items, page, onClick = () => {} }: PropsType) => {
         })}
       </div>
       {["management", "dashboard"].includes(page || "") && (
-       <Link to={"/"} className="btn bg-secondary text-base-300">
+       <Link to={"/"} className="btn bg-primary text-base-300">
         Back to home
        </Link>
       )}

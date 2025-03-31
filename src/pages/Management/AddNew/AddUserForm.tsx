@@ -127,7 +127,7 @@ const AddUserForm = ({ role }: PropsType) => {
 		setUserData({ ...userData, city: e.target.value });
 	};
 
-return (
+	return (
 		<form
 			className='w-full flex flex-col gap-4'
 			onSubmit={(e) => handleSubmit(e)}

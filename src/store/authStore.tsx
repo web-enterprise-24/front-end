@@ -27,6 +27,7 @@ type AuthStoreType = {
 	isChangingProfile: boolean;
 	authUser: UserType | null;
 	lastLogin: string | null;
+	showWelcome: boolean;
 	socket: Socket | null;
 	loginUser: (data: UserLoginType) => void;
 	logoutUser: () => void;
@@ -72,6 +73,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 	refreshToken: savedrefreshToken || null,
 	authUser: null,
 	lastLogin: null,
+	showWelcome: false,
 	socket: null,
 	isCheckingAuth: true,
 	isSigningUp: false,
@@ -127,7 +129,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 		try {
 			const res = await getCurrentUser();
 			set({ authUser: res, lastLogin: res.lastLoginMessage });
-
+			set({ showWelcome: true });
 			get().connectSocket();
 		} catch (err) {
 			if (err instanceof AxiosError) {
@@ -149,9 +151,17 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
 				accessToken: res.tokens.accessToken,
 				refreshToken: res.tokens.refreshToken,
 			});
+
 			get().connectSocket();
 			localStorage.setItem('access', res.tokens.accessToken);
 			localStorage.setItem('refresh', res.tokens.refreshToken);
+			// Safely check if loginMessage exists before using it
+			const isFirstLogin =
+				res.loginMessage &&
+				typeof res.loginMessage === 'string' &&
+				res.loginMessage.toLowerCase().includes('welcome');
+
+			localStorage.setItem('firstLogin', JSON.stringify(!!isFirstLogin));
 
 			toast.success('Logged in successfully');
 			setTimeout(() => window.location.reload(), 1500);
