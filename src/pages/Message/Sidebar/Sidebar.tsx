@@ -87,7 +87,7 @@ const Sidebar = () => {
 			<h2 className='text-xl font-bold'>Message</h2>
 			<label
 				ref={refs.setReference}
-				className='input input-bordered input-md flex items-center gap-2 min-h-12 rounded-full'
+				className='input input-bordered input-md flex items-center gap-2 min-h-12 rounded-full '
 			>
 				<input
 					type='text'
