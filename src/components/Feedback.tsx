@@ -92,7 +92,7 @@ const Feedback = () => {
 				)}
 			</div>
 			<hr />
-			<div className='w-full p-4'>
+			<div className='w-full py-4'>
 				{feedback ? (
 					// Feedback item
 					<FeedbackItem data={feedback} />

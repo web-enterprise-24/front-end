@@ -37,3 +37,6 @@ export type { default as StaffActiveUserType } from './StaffActiveUserType';
 export type { default as StaffAccessedPageType } from './StaffAccessedPageType';
 export type { default as StaffUsedBrowserType } from './StaffUsedBrowserType';
 export type { default as StaffUserLoginStatsType } from './StaffUserLoginStatsType';
+export type { default as StaffDashboardUnallocationType } from './StaffDashboardUnallocationType';
+export type { default as StaffDashboardAllocationType } from './StaffDashboardAllocationType';
+export type { default as StaffDashboardType } from './StaffDashboardType';

@@ -17,14 +17,22 @@ import {
 	TutorTuteeActivityType,
 	TutorUpcomingMeetingType,
 	StaffUserLoginStatsType,
+	StaffDashboardAllocationType,
+	StaffDashboardUnallocationType,
+	UserType,
+	StaffDashboardType,
 } from '../types';
 import {
 	getAccessedPages,
 	getActiveUsers,
+	getAllocationCancelers,
+	getAllocationCreators,
 	getFeedbackAnalysis,
 	getOverviewMetrics,
 	getOverviewMetricsTutee,
 	getRecentlyUploadedDocuments,
+	getStaffDashboard,
+	getStaffLists,
 	getStudentActivity,
 	getStudentRecentlyUploadedDocuments,
 	getStudentUpcomingMeetings,
@@ -49,8 +57,12 @@ type DashboardStoreType = {
 	tutorPerformance: StaffTutorPerformanceType[] | null;
 	userLoginStats: StaffUserLoginStatsType[] | null;
 	activeUsers: StaffActiveUserType[] | null;
+	allocations: StaffDashboardAllocationType[] | null;
+	unallocations: StaffDashboardUnallocationType[] | null;
+	staffLists: UserType[] | null;
 	accessedPages: StaffAccessedPageType[] | null;
 	usedBrowsers: StaffUsedBrowserType[] | null;
+	staffDashboard: StaffDashboardType | null;
 	// tutor
 	tuteesInformation: TutorTuteesInformationType[] | null;
 	recentlyUploadedDocuments: TutorRecentlyUploadedDocumentType[] | null;
@@ -68,6 +80,7 @@ type DashboardStoreType = {
 	// staff
 	isGettingTutorActivity: boolean;
 	isGettingTutorPerformance: boolean;
+	isGettingStaffDashboard: boolean;
 	// tutor
 	isGettingTuteesInformation: boolean;
 	isGettingRecentlyUploadedDocuments: boolean;
@@ -85,11 +98,15 @@ type DashboardStoreType = {
 	reset: () => void;
 	// staff
 	getTutorActivity: () => void;
+	getAllocations: () => void;
+	getUnallocations: () => void;
 	getTutorPerformance: () => void;
 	getUserLoginStats: () => void;
 	getActiveUsers: () => void;
 	getAccessedPages: () => void;
 	getUsedBrowser: () => void;
+	getStaffLists: () => void;
+	getStaffDashboard: (id: string) => void;
 	// tutor
 	getTuteesInformation: () => void;
 	getRecentlyUploadedDocuments: () => void;
@@ -109,11 +126,15 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 	overviewMetrics: null,
 	// staff
 	tutorActivity: null,
+	allocations: null,
+	unallocations: null,
+	staffLists: null,
 	tutorPerformance: null,
 	userLoginStats: null,
 	activeUsers: null,
 	accessedPages: null,
 	usedBrowsers: null,
+	staffDashboard: null,
 	// tutor
 	tuteesInformation: null,
 	recentlyUploadedDocuments: null,
@@ -134,6 +155,7 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 	// staff
 	isGettingTutorActivity: false,
 	isGettingTutorPerformance: false,
+	isGettingStaffDashboard: false,
 	// tutor
 	isGettingTuteesInformation: false,
 	isGettingRecentlyUploadedDocuments: false,
@@ -250,6 +272,53 @@ const useDashboardStore = create<DashboardStoreType>((set) => ({
 			if (err instanceof AxiosError) {
 				console.error(err);
 			}
+		}
+	},
+
+	async getAllocations() {
+		try {
+			const res = await getAllocationCreators();
+			set({ allocations: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
+	async getUnallocations() {
+		try {
+			const res = await getAllocationCancelers();
+			set({ unallocations: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
+	async getStaffLists() {
+		try {
+			const res = await getStaffLists();
+			set({ staffLists: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		}
+	},
+
+	async getStaffDashboard(id) {
+		try {
+			set({ isGettingStaffDashboard: true });
+			const res = await getStaffDashboard(id);
+			set({ staffDashboard: res });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.error(err);
+			}
+		} finally {
+			set({ isGettingStaffDashboard: false });
 		}
 	},
 

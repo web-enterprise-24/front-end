@@ -99,7 +99,9 @@ const Modal = forwardRef(
 					{modalFor === 'feedback' && (
 						<>
 							<Toaster position='top-center' />
-							<Feedback />
+							<div className='w-full max-h-[70vh] overflow-hidden'>
+								<Feedback />
+							</div>
 						</>
 					)}
 					{modalFor === 'show-record' && <RecordLists />}

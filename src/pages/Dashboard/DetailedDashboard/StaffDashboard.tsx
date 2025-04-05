@@ -16,6 +16,7 @@ import { useDashboardStore } from '../../../store';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { transformRole } from '../../../utils';
+import { Link } from 'react-router-dom';
 
 // Register the required Chart.js components
 ChartJS.register(
@@ -45,6 +46,12 @@ const StaffDashboard = () => {
 		accessedPages,
 		getUsedBrowser,
 		usedBrowser,
+		getAllocations,
+		allocations,
+		getUnallocations,
+		unallocations,
+		getStaffLists,
+		staffLists,
 		reset,
 	] = useDashboardStore(
 		useShallow((state) => [
@@ -62,6 +69,12 @@ const StaffDashboard = () => {
 			state.accessedPages,
 			state.getUsedBrowser,
 			state.usedBrowsers,
+			state.getAllocations,
+			state.allocations,
+			state.getUnallocations,
+			state.unallocations,
+			state.getStaffLists,
+			state.staffLists,
 			state.reset,
 		])
 	);
@@ -74,6 +87,9 @@ const StaffDashboard = () => {
 		getActiveUsers();
 		getAccessedPages();
 		getUsedBrowser();
+		getAllocations();
+		getUnallocations();
+		getStaffLists();
 
 		return () => {
 			reset();
@@ -81,9 +97,12 @@ const StaffDashboard = () => {
 	}, [
 		getAccessedPages,
 		getActiveUsers,
+		getAllocations,
 		getOverviewMetrics,
+		getStaffLists,
 		getTutorActivity,
 		getTutorPerformance,
+		getUnallocations,
 		getUsedBrowser,
 		getUserLoginStats,
 		reset,
@@ -302,6 +321,201 @@ const StaffDashboard = () => {
 										<td>{user.name}</td>
 										<td>{user.email}</td>
 										<td>{user.lastLogin || 'None'}</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{/* Allocation */}
+			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
+				<h2 className='font-bold'>Allocations</h2>
+				<div className='overflow-x-auto mt-4 max-h-[300px]'>
+					<table className='table table-zebra'>
+						{/* head */}
+						<thead className='bg-neutral text-base-100'>
+							<tr>
+								<th></th>
+								<th>Staff</th>
+								<th>Tutor</th>
+								<th>Student</th>
+							</tr>
+						</thead>
+						<tbody>
+							{allocations &&
+								allocations.map((user, index) => (
+									<tr key={index}>
+										<th>{index + 1}</th>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.creator.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.creator.name}</p>
+													<p>{user.creator.email}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.tutor.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.tutor.name}</p>
+													<p>{user.tutor.email}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.student.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.student.name}</p>
+													<p>{user.student.email}</p>
+												</div>
+											</div>
+										</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{/* Deallocations */}
+			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
+				<h2 className='font-bold'>Deallocations</h2>
+				<div className='overflow-x-auto mt-4 max-h-[300px]'>
+					<table className='table table-zebra'>
+						{/* head */}
+						<thead className='bg-neutral text-base-100'>
+							<tr>
+								<th></th>
+								<th>Staff</th>
+								<th>Tutor</th>
+								<th>Student</th>
+							</tr>
+						</thead>
+						<tbody>
+							{unallocations &&
+								unallocations.map((user, index) => (
+									<tr key={index}>
+										<th>{index + 1}</th>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.canceler.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.canceler.name}</p>
+													<p>{user.canceler.email}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.tutor.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.tutor.name}</p>
+													<p>{user.tutor.email}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.student.avatar}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<div className='flex flex-col gap-1 justify-center'>
+													<p className='font-bold'>{user.student.name}</p>
+													<p>{user.student.email}</p>
+												</div>
+											</div>
+										</td>
+									</tr>
+								))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{/* Staff lists */}
+			<div className='w-full h-full p-4 border border-primary-content/10 rounded-2xl mt-2 shadow-sm'>
+				<h2 className='font-bold'>Staff Lists</h2>
+				<div className='overflow-x-auto mt-4 max-h-[300px]'>
+					<table className='table table-zebra'>
+						{/* head */}
+						<thead className='bg-neutral text-base-100'>
+							<tr>
+								<th></th>
+								<th>Staff</th>
+								<th>Email</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{staffLists &&
+								staffLists.map((user, index) => (
+									<tr key={index}>
+										<th>{index + 1}</th>
+										<td>
+											<div className='flex flex-row gap-2 items-center'>
+												<div className='avatar'>
+													<div className='w-16 rounded-full'>
+														<img
+															src={user.profilePicUrl}
+															alt='Avatar'
+														/>
+													</div>
+												</div>
+												<p className='font-bold'>{user.name}</p>
+											</div>
+										</td>
+										<td>
+											<p>{user.email}</p>
+										</td>
+										<td>
+											<Link
+												to={`/staff-dashboard/${user.id}`}
+												className='btn btn-secondary btn-sm'
+											>
+												View dashboard
+											</Link>
+										</td>
 									</tr>
 								))}
 						</tbody>

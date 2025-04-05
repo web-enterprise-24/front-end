@@ -18,3 +18,4 @@ export { default as EditBlog } from './Blog/EditBlog';
 export { default as PendingBlog } from './Blog/PendingBlog';
 export { default as DetailedBlog } from './Blog/DetailedBlog';
 export { default as Meeting } from './Meeting/Meeting';
+export { default as StaffDashboard } from './components/StaffDashboard';

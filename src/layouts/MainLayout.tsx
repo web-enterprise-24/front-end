@@ -1,15 +1,15 @@
-import { Outlet } from "react-router-dom";
-import { Navbar } from "../components";
-import {Footer} from "../components";
+import { Outlet } from 'react-router-dom';
+import { Navbar } from '../components';
+import { Footer } from '../components';
 
 const MainLayout = () => {
- return (
-  <div className="w-screen h-screen">
-   <Navbar />
-   <Outlet />
-   <Footer />
-  </div>
- );
+	return (
+		<div className='w-screen min-h-screen'>
+			<Navbar />
+			<Outlet />
+			<Footer />
+		</div>
+	);
 };
 
 export default MainLayout;
