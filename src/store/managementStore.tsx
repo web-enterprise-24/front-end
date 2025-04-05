@@ -279,9 +279,11 @@ const useManagementStore = create<ManagementStoreType>((set, get) => ({
 			}
 		}
 	},
+
 	setAllocation(allocate) {
 		set({ allocation: allocate });
 	},
+
 	async getDashboard(id, label) {
 		try {
 			set({ isGettingDashboard: true });

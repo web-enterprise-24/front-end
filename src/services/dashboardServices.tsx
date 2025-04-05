@@ -65,6 +65,42 @@ export const getUserLoginStats = async () => {
 	}
 };
 
+export const getAllocationCreators = async () => {
+	try {
+		const res = await axios.get('/admin/allocationCreators');
+		return res.data.data.allocationCreators;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getAllocationCancelers = async () => {
+	try {
+		const res = await axios.get('/admin/allocationCancelers');
+		return res.data.data.allocationCancelers;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getStaffLists = async () => {
+	try {
+		const res = await axios.get('/account/?role=STAFF&limit=9999');
+		return res.data.data.data;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
+export const getStaffDashboard = async (id: string) => {
+	try {
+		const res = await axios.get(`/admin/viewStaffDashboard/${id}`);
+		return res.data.data;
+	} catch (err) {
+		if (isAxiosError(err)) throw err;
+	}
+};
+
 // Tutor
 export const getTutorOverviewMetrics = async () => {
 	try {

@@ -24,6 +24,7 @@ import {
 	StudentDashboard,
 	TutorDashboard,
 	EditBlog,
+	StaffDashboard,
 } from './pages';
 import { MainLayout, LayoutSidebar } from './layouts';
 import { Modal, PageNotFound, WelcomeModal } from './components';
@@ -71,8 +72,6 @@ const App = () => {
 				welcomeModalRef.current.showModal();
 			}
 		}
-
-		console.log('Show welcome:', showWelcome);
 	}, [showWelcome]);
 
 	useEffect(() => {
@@ -189,6 +188,18 @@ const App = () => {
 							authUser ? (
 								<ProtectedRoute allowedRoles={['STUDENT', 'TUTOR']}>
 									<Meeting />
+								</ProtectedRoute>
+							) : (
+								<Navigate to={'/'} />
+							)
+						}
+					/>
+					<Route
+						path='/staff-dashboard/:staffId'
+						element={
+							authUser ? (
+								<ProtectedRoute allowedRoles={['STAFF']}>
+									<StaffDashboard />
 								</ProtectedRoute>
 							) : (
 								<Navigate to={'/'} />
