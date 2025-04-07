@@ -187,7 +187,7 @@ const StaffDashboard = () => {
 	}
 
 	return (
-		<div className='w-2/3 max-[1025px]:w-full max-[1025px]:p-2 h-full mx-auto my-6'>
+		<div className='w-2/3 max-[1025px]:w-full max-[1025px]:p-2 min-h-screen mx-auto my-6'>
 			<Link
 				to={'/dashboard/detailed-dashboard'}
 				className='btn btn-secondary btn-sm mb-4'

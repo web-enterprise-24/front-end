@@ -26,12 +26,12 @@ const Message = () => {
 
 	return (
 		<>
-			<div className='xl:hidden w-3/4 max-md:w-full max-md:px-2 h-screen flex flex-row gap-2 mx-auto py-6'>
+			<div className='xl:hidden w-3/4 max-md:w-full max-md:px-2 h-full flex flex-row gap-2 mx-auto py-6'>
 				{selectedUser ? <Container /> : <Sidebar />}
 			</div>
 			<div
 				ref={chatContainerRef}
-				className='xl:w-full xl:px-4 2xl:w-5/6 h-screen hidden xl:flex flex-row gap-2 mx-auto py-6 px-0'
+				className='xl:w-full xl:px-4 2xl:w-5/6 h-full hidden xl:flex flex-row gap-2 mx-auto py-6 px-0'
 			>
 				<Sidebar />
 				<Container />

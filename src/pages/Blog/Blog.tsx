@@ -62,7 +62,7 @@ const Blog = () => {
 	}
 
 	return (
-		<div className='w-full min-h-screen my-6'>
+		<div className='w-full min-h-full my-6'>
 			<Outlet />
 			{isMainBlogPage && (
 				<div className='w-5/6 h-full mx-auto flex flex-col gap-4'>
