@@ -182,6 +182,11 @@ const StaffDashboard = () => {
 		],
 	};
 
+	// Add fallback values and better default handling
+	const tutorCount = staffDashboard?.overviewMetrics?.tutors ?? 0;
+	const studentCount = staffDashboard?.overviewMetrics?.students ?? 0;
+	const messageCount = staffDashboard?.overviewMetrics?.messages ?? 0;
+
 	if (isGettingStaffDashboard) {
 		return (
 			<div className='w-screen h-screen flex items-center justify-center'>
@@ -199,24 +204,24 @@ const StaffDashboard = () => {
 				<ArrowLeftToLine />
 				Back
 			</Link>
-			<h1 className='font-black text-xl'>Student dashboard</h1>
+			<h1 className='font-black text-xl'>Staff dashboard</h1>
 
 			<div className='w-full mt-4'>
 				{/* Items */}
 				<div className='flex flex-row min-[820px]:items-center min-[820px]:gap-4 flex-wrap max-[769px]:flex-col max-[769px]:gap-2 gap-2'>
 					<StatisticItem
 						title='tutors'
-						number={staffDashboard?.overviewMetrics?.tutors || 0}
+						number={tutorCount}
 						color='text-accent border-accent'
 					/>
 					<StatisticItem
 						title='students'
-						number={staffDashboard?.overviewMetrics?.students || 0}
+						number={studentCount}
 						color='text-warning border-warning'
 					/>
 					<StatisticItem
 						title='messages'
-						number={staffDashboard?.overviewMetrics?.messages || 0}
+						number={messageCount}
 						color='text-info border-info'
 					/>
 				</div>
