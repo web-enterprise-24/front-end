@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 
 import StatisticItem from '../../components/StatisticItem';
-import { useDashboardStore } from '../../../store';
+import { useAuthStore, useDashboardStore } from '../../../store';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { transformRole } from '../../../utils';
@@ -78,6 +78,8 @@ const StaffDashboard = () => {
 			state.reset,
 		])
 	);
+
+	const authUser = useAuthStore((state) => state.authUser);
 
 	useEffect(() => {
 		getOverviewMetrics();
@@ -489,35 +491,41 @@ const StaffDashboard = () => {
 						</thead>
 						<tbody>
 							{staffLists &&
-								staffLists.map((user, index) => (
-									<tr key={index}>
-										<th>{index + 1}</th>
-										<td>
-											<div className='flex flex-row gap-2 items-center'>
-												<div className='avatar'>
-													<div className='w-16 rounded-full'>
-														<img
-															src={user.profilePicUrl}
-															alt='Avatar'
-														/>
+								staffLists.map((user, index) => {
+									if (authUser?.id === user.id) {
+										staffLists.splice(index, 1);
+									}
+
+									return (
+										<tr key={index}>
+											<th>{index + 1}</th>
+											<td>
+												<div className='flex flex-row gap-2 items-center'>
+													<div className='avatar'>
+														<div className='w-16 rounded-full'>
+															<img
+																src={user.profilePicUrl}
+																alt='Avatar'
+															/>
+														</div>
 													</div>
+													<p className='font-bold'>{user.name}</p>
 												</div>
-												<p className='font-bold'>{user.name}</p>
-											</div>
-										</td>
-										<td>
-											<p>{user.email}</p>
-										</td>
-										<td>
-											<Link
-												to={`/staff-dashboard/${user.id}`}
-												className='btn btn-secondary btn-sm'
-											>
-												View dashboard
-											</Link>
-										</td>
-									</tr>
-								))}
+											</td>
+											<td>
+												<p>{user.email}</p>
+											</td>
+											<td>
+												<Link
+													to={`/staff-dashboard/${user.id}`}
+													className='btn btn-secondary btn-sm'
+												>
+													View dashboard
+												</Link>
+											</td>
+										</tr>
+									);
+								})}
 						</tbody>
 					</table>
 				</div>
