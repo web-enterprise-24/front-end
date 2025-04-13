@@ -165,13 +165,17 @@ const StaffDashboard = () => {
 		datasets: [
 			{
 				label: 'Meetings',
-				data: [1, 2, 3, 4],
+				data: staffDashboard
+					? staffDashboard.tutorActivity.map((activity) => activity.meetings)
+					: [],
 				borderColor: 'rgb(255, 99, 132)',
 				backgroundColor: 'rgba(255, 99, 132, 0.5)',
 			},
 			{
 				label: 'Messages',
-				data: [5, 6, 7, 8],
+				data: staffDashboard
+					? staffDashboard.tutorActivity.map((activity) => activity.messages)
+					: [],
 				borderColor: 'rgb(53, 162, 235)',
 				backgroundColor: 'rgba(53, 162, 235, 0.5)',
 			},
