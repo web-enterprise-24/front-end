@@ -14,7 +14,7 @@ import {
 import StatisticItem from '../../components/StatisticItem';
 import { Link, useParams } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
-import { useManagementStore } from '../../../store';
+import { useGeneralStore, useManagementStore } from '../../../store';
 import { useShallow } from 'zustand/shallow';
 import UpcomingMeeting from '../../components/UpcomingMeeting';
 import { convertTimeShortMonth } from '../../../utils';
@@ -44,6 +44,7 @@ const transformUpcomingMeetingData = (date: string) => {
 };
 
 const TutorDashboard = () => {
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
 	const [tutorDashboard, getDashboard, isGettingDashboard, reset] =
 		useManagementStore(
 			useShallow((state) => [
@@ -54,6 +55,10 @@ const TutorDashboard = () => {
 			])
 		);
 	const { tutorId } = useParams();
+
+	useEffect(() => {
+		pageAccumulator('tutor_dashboard');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		getDashboard(tutorId || '', 'TUTOR');

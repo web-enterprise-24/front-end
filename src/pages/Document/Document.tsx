@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useAuthStore, useDocumentStore } from '../../store';
+import { useAuthStore, useDocumentStore, useGeneralStore } from '../../store';
 import FileItem from './FileItem';
 import UploadWidget from './UploadWidget';
 import ConfirmModal from '../../components/ConfirmModal';
@@ -35,10 +35,15 @@ const Document = () => {
 			state.reset,
 		])
 	);
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
 	const [isOpenUpload, setIsOpenUpload] = useState(false);
 
 	const uploadFileRef = useRef<File | null>(null);
 	const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+	useEffect(() => {
+		pageAccumulator('document');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		let role;

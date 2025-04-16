@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 
 import StatisticItem from './StatisticItem';
-import { useDashboardStore } from '../../store';
+import { useDashboardStore, useGeneralStore } from '../../store';
 import { useShallow } from 'zustand/shallow';
 import { useEffect } from 'react';
 import { transformRole } from '../../utils';
@@ -32,6 +32,7 @@ ChartJS.register(
 );
 
 const StaffDashboard = () => {
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
 	const [staffDashboard, getStaffDashboard, isGettingStaffDashboard] =
 		useDashboardStore(
 			useShallow((state) => [
@@ -42,6 +43,10 @@ const StaffDashboard = () => {
 		);
 
 	const { staffId } = useParams();
+
+	useEffect(() => {
+		pageAccumulator('staff_dashboard');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		getStaffDashboard(staffId || '');

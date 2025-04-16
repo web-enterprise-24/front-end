@@ -5,7 +5,7 @@ import UpcomingMeeting from '../../components/UpcomingMeeting';
 import { convertTimeShortMonth } from '../../../utils';
 import { Link, useParams } from 'react-router-dom';
 import { Fragment, useEffect } from 'react';
-import { useManagementStore } from '../../../store';
+import { useGeneralStore, useManagementStore } from '../../../store';
 import { useShallow } from 'zustand/shallow';
 import RecentlyUploadedDocumentItem from '../../components/RecentlyUploadedDocumentItem';
 import { ArrowLeftToLine, Loader } from 'lucide-react';
@@ -23,6 +23,7 @@ const transformUpcomingMeetingData = (date: string) => {
 };
 
 const StudentDashboard = () => {
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
 	const [dashboard, getDashboard, isGettingDashboard, reset] =
 		useManagementStore(
 			useShallow((state) => [
@@ -33,6 +34,10 @@ const StudentDashboard = () => {
 			])
 		);
 	const { studentId } = useParams();
+
+	useEffect(() => {
+		pageAccumulator('student_dashboard');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		getDashboard(studentId || '', 'STUDENT');
