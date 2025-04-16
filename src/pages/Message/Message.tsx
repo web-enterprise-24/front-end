@@ -1,5 +1,5 @@
 import { useShallow } from 'zustand/shallow';
-import { useMessageStore } from '../../store';
+import { useGeneralStore, useMessageStore } from '../../store';
 import Container from './Container/Container';
 import Sidebar from './Sidebar/Sidebar';
 import { useEffect, useRef } from 'react';
@@ -8,8 +8,14 @@ const Message = () => {
 	const [selectedUser, getUsers] = useMessageStore(
 		useShallow((state) => [state.selectedUser, state.getUsers])
 	);
-
+	const pageAccumulator = useGeneralStore(
+		useShallow((state) => state.pageAccumulator)
+	);
 	const chatContainerRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		pageAccumulator('chat');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		getUsers();

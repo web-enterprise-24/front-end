@@ -2,10 +2,17 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { NavbarOnlyAvatar, SidebarFixed } from '../../components';
 
 import { SidebarManagementItems } from '../../constants';
+import { useGeneralStore } from '../../store';
+import { useEffect } from 'react';
 
 const Management = () => {
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
 	const location = useLocation();
 	const isManagementPage = !location.pathname.includes('dashboard');
+
+	useEffect(() => {
+		pageAccumulator('management');
+	}, [pageAccumulator]);
 
 	return (
 		<>

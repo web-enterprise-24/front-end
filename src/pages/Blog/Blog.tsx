@@ -8,13 +8,15 @@ import { BlogItem, BlogItemSkeleton } from '../../components';
 
 const Blog = () => {
 	const authUser = useAuthStore((state) => state.authUser);
-	const [modalElement, setIsShowingModal, setModalFor] = useGeneralStore(
-		useShallow((state) => [
-			state.modalElement,
-			state.setIsShowingModal,
-			state.setModalFor,
-		])
-	);
+	const [modalElement, setIsShowingModal, setModalFor, pageAccumulator] =
+		useGeneralStore(
+			useShallow((state) => [
+				state.modalElement,
+				state.setIsShowingModal,
+				state.setModalFor,
+				state.pageAccumulator,
+			])
+		);
 
 	const [
 		posts,
@@ -40,6 +42,10 @@ const Blog = () => {
 
 	const location = useLocation();
 	const isMainBlogPage = location.pathname === '/blog';
+
+	useEffect(() => {
+		pageAccumulator('blog');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		if (isMainBlogPage) {

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ProvinceType } from '../types';
-import { getProvinces } from '../services';
+import { getProvinces, pageAccumulator } from '../services';
 import { AxiosError } from 'axios';
 import { transformProvince } from '../utils';
 
@@ -35,6 +35,7 @@ type GeneralType = {
 	setShowConfirm: (show: boolean) => void;
 	setIsConfirmEdit: (isConfirm: boolean) => void;
 	getProvinces: () => void;
+	pageAccumulator: (page: string) => void;
 };
 
 const useGeneralStore = create<GeneralType>((set) => ({
@@ -76,6 +77,15 @@ const useGeneralStore = create<GeneralType>((set) => ({
 				transformProvince(province.name)
 			);
 			set({ provinces: provinceLists });
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				console.log(err.response?.data?.message);
+			}
+		}
+	},
+	async pageAccumulator(page) {
+		try {
+			await pageAccumulator(page);
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				console.log(err.response?.data?.message);

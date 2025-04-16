@@ -13,3 +13,5 @@ export * from './notificationServices';
 export * from './dashboardServices';
 
 export * from './meetingServices';
+
+export * from './generalServices';

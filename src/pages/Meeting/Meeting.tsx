@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
 import Calendar from './Calendar';
 import MeetingSchedule from './MeetingSchedule';
-import { useMeetingStore } from '../../store';
+import { useGeneralStore, useMeetingStore } from '../../store';
 
 const Meeting = () => {
 	const getMeetings = useMeetingStore((state) => state.getMeetings);
+	const pageAccumulator = useGeneralStore((state) => state.pageAccumulator);
+
+	useEffect(() => {
+		pageAccumulator('meeting_schedule');
+	}, [pageAccumulator]);
 
 	useEffect(() => {
 		getMeetings();
